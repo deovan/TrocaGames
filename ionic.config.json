@@ -1,0 +1,8 @@
+{
+  "name": "TrocaGames",
+  "app_id": "01536728",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
