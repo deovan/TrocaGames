@@ -3,21 +3,59 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>List</ion-title>
+    <ion-title>
+
+      Lista de Jogos
+
+    </ion-title>
   </ion-navbar>
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+  
 </ion-header>
 
 <ion-content>
+
   <ion-list>
-    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
-      <ion-icon [name]="item.icon" item-start></ion-icon>
-      {{item.title}}
-      <div class="item-note" item-end>
-        {{item.note}}
-      </div>
-    </button>
+    <ion-card ion-item *ngFor="let item of items">
+
+      <ion-item (click)="itemTapped($event, item)">
+        <ion-avatar item-left>
+          <img src="assets/imgs/avatar.jpg">
+        </ion-avatar>
+        <h2>{{item.title}}</h2>
+        <p>Tony Stark</p>
+      </ion-item>
+
+      <img src="assets/imgs/iron-man.jpg">
+      <ion-card-content>
+        <p> {{item.note}}</p>
+      </ion-card-content>
+
+      <ion-row>
+
+        <ion-col>
+          <button ion-button clear small icon-left>
+            <ion-icon name="thumbs-up"></ion-icon>
+            <div>12k likes </div>
+          </button>
+        </ion-col>
+
+        <ion-col>
+          <button ion-button clear small icon-left>
+            <ion-icon name="text"></ion-icon>
+            <div>4 coments</div>
+          </button>
+        </ion-col>
+        <ion-col text-center center>
+          <ion-note>
+            {{myDate| date}}
+          </ion-note>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+    <!--<ion-scroll zooming="true" direction="xy" style="width: 320px; height: 500px">
+     <div class="scroll-container"></div>
+    </ion-scroll>
+  -->
   </ion-list>
-  <div *ngIf="selectedItem" padding>
-    You navigated here from <b>{{selectedItem.title}}</b>
-  </div>
 </ion-content>
