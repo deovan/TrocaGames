@@ -6,24 +6,24 @@
 
 
 <ion-content padding class="auth-page">
-  <img src="http://placehold.it/300x150" alt="Banner for the login page" />
+  <h1 text-center>
+    <img src="http://placehold.it/300x150" alt="Banner for the login page" />
+  </h1>
   <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
-    <ion-item [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.touched"
-      [class.valid]="loginForm.controls.email.valid && loginForm.controls.email.touched">
+    <ion-item [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.touched" [class.valid]="loginForm.controls.email.valid && loginForm.controls.email.touched">
+      <ion-icon name="mail" item-left color="primary"></ion-icon>
       <ion-label stacked>Email</ion-label>
-      <ion-input formControlName="email" type="email" placeholder="Your email address">
-      </ion-input>
+      <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid &&
      loginForm.controls.email.touched">
       <p>Please enter a valid email address.</p>
     </ion-item>
 
-    <ion-item [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.touched"
-      [class.valid]="loginForm.controls.password.valid && loginForm.controls.password.touched">
+    <ion-item [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.touched" [class.valid]="loginForm.controls.password.valid && loginForm.controls.password.touched">
+      <ion-icon name="lock" item-left color="primary"></ion-icon>
       <ion-label stacked>Password</ion-label>
-      <ion-input formControlName="password" type="password" placeholder="Your password">
-      </ion-input>
+      <ion-input type="password" placeholder="Senha" formControlName="password"></ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid
     && loginForm.controls.password.touched">

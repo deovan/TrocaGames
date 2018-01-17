@@ -4,9 +4,11 @@ import { User } from '@firebase/auth-types';
 
 @Injectable()
 export class AuthProvider {
+  emailUser: String;
   constructor() {}
 
   loginUser(email: string, password: string): Promise<User> {
+    this.emailUser = email;
     return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
@@ -33,4 +35,10 @@ export class AuthProvider {
   logoutUser(): Promise<void> {
     return firebase.auth().signOut();
   }
+   
+  getCurrentUser(): String{
+    return this.emailUser;
+  }
+
+
 }

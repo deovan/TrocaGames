@@ -5,10 +5,11 @@
 </ion-header>
 
 <ion-content padding class="auth-page">
-  <img src="http://placehold.it/300x150" alt="Banner for the signup page" />
+  <h1 text-center>
+    <img src="http://placehold.it/300x150" alt="Banner for the login page" />
+  </h1>
   <form [formGroup]="signupForm" (submit)="signupUser()" novalidate>
-    <ion-item [class.invalid]="!signupForm.controls.email.valid && signupForm.controls.email.touched"
-      [class.valid]="signupForm.controls.email.valid && signupForm.controls.email.touched">
+    <ion-item [class.invalid]="!signupForm.controls.email.valid && signupForm.controls.email.touched" [class.valid]="signupForm.controls.email.valid && signupForm.controls.email.touched">
       <ion-label stacked>Email</ion-label>
       <ion-input formControlName="email" type="email" placeholder="Your email address">
       </ion-input>
@@ -18,8 +19,7 @@
       <p>Please enter a valid email address.</p>
     </ion-item>
 
-    <ion-item [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.touched"
-      [class.valid]="signupForm.controls.password.valid && signupForm.controls.password.touched">
+    <ion-item [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.touched" [class.valid]="signupForm.controls.password.valid && signupForm.controls.password.touched">
       <ion-label stacked>Password</ion-label>
       <ion-input formControlName="password" type="password" placeholder="Your password">
       </ion-input>

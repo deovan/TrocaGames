@@ -1,3 +1,4 @@
+
 import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
@@ -12,6 +13,7 @@ import { InserirJogoPage } from '../pages/inserir-jogo/inserir-jogo';
 import { ChatPage } from '../pages/chat/chat';
 import { MinhaContaPage } from '../pages/minha-conta/minha-conta';
 import { AuthProvider } from '../providers/auth/auth';
+import { HomePage } from '../pages/home/home';
 
 
 @Component({
@@ -41,10 +43,12 @@ export class MyApp {
       };
 
       this.pages = [
+        {title: 'Menu', component: HomePage},
         { title: 'Lista de Jogos', component: ListPage },
          {title: 'Inserir Games', component: InserirJogoPage},
          {title: 'Chat', component: ChatPage},
         {title: 'Minha Conta', component: MinhaContaPage}
+      
       ];
     });
 
