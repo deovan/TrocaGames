@@ -1,3 +1,4 @@
+import { TestePage } from './../pages/teste/teste';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicErrorHandler, IonicModule, IonicApp } from 'ionic-angular';
@@ -20,6 +21,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { AuthProvider } from '../providers/auth/auth';
 import { MinhaContaPage } from '../pages/minha-conta/minha-conta';
 import { firebaseConfig } from './credentials.backup';
+import { JogoService } from '../providers/jogo.service';
 
 
 
@@ -33,14 +35,15 @@ import { firebaseConfig } from './credentials.backup';
     MinhaContaPage,
     MyApp,
     ResetPasswordPage,
-    SignupPage
+    SignupPage,
+    TestePage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
-    AngularFireAuthModule, // imports firebase/auth, only needed for auth features
+    AngularFireAuthModule // imports firebase/auth, only needed for auth features
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -52,13 +55,15 @@ import { firebaseConfig } from './credentials.backup';
     MinhaContaPage,
     MyApp,
     ResetPasswordPage,
-    SignupPage
+    SignupPage,
+    TestePage
   ],
   providers: [
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
+    JogoService
   ]
 })
 export class AppModule {}

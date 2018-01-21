@@ -1,3 +1,4 @@
+import { TestePage } from './../pages/teste/teste';
 
 import { Component, ViewChild } from '@angular/core';
 import { Platform, MenuController, Nav } from 'ionic-angular';
@@ -47,7 +48,8 @@ export class MyApp {
         { title: 'Lista de Jogos', component: ListPage },
          {title: 'Inserir Games', component: InserirJogoPage},
          {title: 'Chat', component: ChatPage},
-        {title: 'Minha Conta', component: MinhaContaPage}
+        {title: 'Minha Conta', component: MinhaContaPage},
+        {title: 'TEste', component: TestePage}
       
       ];
     });

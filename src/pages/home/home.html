@@ -11,25 +11,23 @@
       </button>
     </ion-buttons>
   </ion-navbar>
+  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
 </ion-header>
-
-
-
 <ion-content padding>
   <ion-list>
-      <ion-card ion-item *ngFor="let item of items | async">
+      <ion-card ion-item *ngFor="let todo of todos ">
   
-        <ion-item (click)="itemTapped($event, item)">
+        <ion-item (click)="itemTapped($event, todo)">
           <ion-avatar item-left>
             <img src="assets/imgs/avatar.jpg">
           </ion-avatar>
-          <h2>{{item.user}}</h2>
-          <p>Tony Stark</p>
+          <h2>{{todo.nome}}</h2>
+          <p>{{todo.user}}</p>
         </ion-item>
   
         <img src="assets/imgs/iron-man.jpg">
         <ion-card-content>
-          <p> {{item.descricao}}</p>
+          <p> {{todo.descricao}}</p>
         </ion-card-content>
   
         <ion-row>
@@ -49,7 +47,7 @@
           </ion-col>
           <ion-col text-center center>
             <ion-note>
-              {{item.datetime}}
+              {{todo.datetime}}
             </ion-note>
           </ion-col>
         </ion-row>
