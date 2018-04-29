@@ -1,3 +1,4 @@
+
 import { Component } from '@angular/core';
 import {
   Alert,
@@ -9,10 +10,13 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { HomePage } from '../home/home';
-
 import firebase from 'firebase/app';
-import { AuthProvider } from '../../providers/auth/auth';
+import { UserService } from '../../providers/user/user.service';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AuthService } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
+
 
 @Component({
   selector: 'page-signup',
@@ -24,10 +28,16 @@ export class SignupPage {
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
-    public authProvider:AuthProvider,
+    public authService: AuthService,
+    public userService: UserService,
+    public db: AngularFireDatabase,
+    public afAuth: AngularFireAuth,
     formBuilder: FormBuilder
   ) {
     this.signupForm = formBuilder.group({
+      name: [
+        '',
+        [Validators.required, Validators.minLength(3)]],
       email: [
         '',
         Validators.compose([Validators.required, EmailValidator.isValid])
@@ -35,11 +45,15 @@ export class SignupPage {
       password: [
         '',
         Validators.compose([Validators.required, Validators.minLength(6)])
-      ]
+      ],
+      telefone: [
+        '',
+        Validators.compose([Validators.required])
+      ],
     });
   }
 
-  async signupUser(): Promise<void> {
+  async signupUser() {
     if (!this.signupForm.valid) {
       console.log(
         `Form is not valid yet, current value: ${this.signupForm.value}`
@@ -47,25 +61,37 @@ export class SignupPage {
     } else {
       const loading: Loading = this.loadingCtrl.create();
       loading.present();
-
-      const email = this.signupForm.value.email;
-      const password = this.signupForm.value.password;
-
-      try {
-        const signupUser: firebase.User = await this.authProvider.signupUser(
-          email,
-          password
-        );
-        await loading.dismiss();
-        this.navCtrl.setRoot(HomePage);
-      } catch (error) {
-        await loading.dismiss();
-        const alert: Alert = this.alertCtrl.create({
-          message: error.message,
-          buttons: [{ text: 'Ok', role: 'cancel' }]
+      let formUser = this.signupForm.value;
+      formUser.admin = false;
+      let email: string = formUser.email;
+      let password: string = formUser.password
+      this.authService.signupUser(email, password)
+        .then((authState: firebase.User) => {
+          delete formUser.password;
+          let uuid: string = authState.uid;
+          this.userService.create(formUser, uuid)
+            .then(() => {
+              console.log('Usuário Cadastrado!');
+              this.navCtrl.setRoot(HomePage);
+              loading.dismiss();
+            }).catch((error: any) => {
+              console.log(error);
+              loading.dismiss();
+              this.showAlert(error);
+            });
+        }).catch((error: any) => {
+          console.log(error);
+          loading.dismiss();
+          this.showAlert(error);
         });
-        alert.present();
-      }
     }
   }
+
+
+  private showAlert(message: string): void {
+  this.alertCtrl.create({
+    message: message,
+    buttons: ['Ok']
+  }).present();
+}
 }

@@ -1,8 +1,17 @@
 export class Jogo {
-  user: string;
-  nome: string;
-  descricao: string;
-  preco: string;
-  datetime: string;
-  done: boolean;
+
+
+  private $key: string;
+
+
+  constructor(
+    public user: string,
+    public nome: string,
+    public console: string,
+    public categoria: string,
+    public descricao: string,
+    public preco: string,
+    public datetime: string,
+    public fotos :string[]=[],  
+    public done: boolean = false) { }
 }

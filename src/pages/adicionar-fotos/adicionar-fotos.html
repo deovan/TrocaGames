@@ -1,0 +1,66 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+
+      Adicionar Fotos
+
+    </ion-title>
+
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <div class="container" >
+    <img [src]="image0 ||  'assets/imgs/no-image-available.jpg'" alt="Norway" width="200" height="200">
+    <div *ngIf="!image0" class="center">
+      <button  id="image0"  value="image0" ion-button icon-left (click)="buttonP='image0';onActionSheet()">
+        <ion-icon name="add"></ion-icon>
+      
+      </button>
+    </div>
+  </div>
+  <div class="container" *ngIf="image0">
+      <img [src]="image1 ||  'assets/imgs/no-image-available.jpg'" alt="Norway" width="250" height="200">
+      <div *ngIf="!image1" class="center">
+        <button  id="image1" value="image1" ion-button icon-left (click)=" buttonP='image1'; onActionSheet()" >
+          <ion-icon name="add"></ion-icon>
+
+        </button>
+      </div>
+    </div>
+    <div class="container"  *ngIf="image1">
+        <img [src]="image2 ||  'assets/imgs/no-image-available.jpg'" alt="Norway" width="250" height="200">
+        <div  *ngIf="!image2" class="center">
+          <button  id="image2"  value="image2" ion-button icon-left (click)="buttonP='image2';onActionSheet()" >
+            <ion-icon name="add"></ion-icon>
+          </button>
+        </div>
+      </div>
+      <div class="container"  *ngIf="image2">
+          <img [src]="image3 ||  'assets/imgs/no-image-available.jpg'" alt="Norway" width="250" height="200">
+          <div class="center" *ngIf="!image3">
+            <button   id="image3" value="image3" ion-button icon-left (click)="buttonP='image3';onActionSheet()" >
+              <ion-icon name="add"></ion-icon>
+          
+            </button>
+          </div>
+        </div>
+
+
+
+
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <button ion-button block (click)="save()" [disabled]="qtdPhotos===0">
+      Concluir
+    </button>
+  </ion-toolbar>
+</ion-footer>

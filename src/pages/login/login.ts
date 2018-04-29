@@ -5,14 +5,16 @@ import {
   AlertController,
   Loading,
   LoadingController,
-  NavController
+  NavController,
+  MenuController,
 } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthProvider } from '../../providers/auth/auth';
 import { HomePage } from '../home/home';
-import { EmailValidator } from '../../validators/email';
 import firebase from 'firebase/app';
 import { SignupPage } from '../signup/signup';
+import { AuthService } from '../../providers/auth/auth';
+import { EmailValidator } from '../../validators/email';
+
 
 @Component({
   selector: 'page-login',
@@ -21,10 +23,11 @@ import { SignupPage } from '../signup/signup';
 export class LoginPage {
   public loginForm: FormGroup;
   constructor(
+    public menu: MenuController,
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
-    public authProvider: AuthProvider,
+    public authService: AuthService,
     formBuilder: FormBuilder
   ) {
     this.loginForm = formBuilder.group({
@@ -39,6 +42,9 @@ export class LoginPage {
     });
   }
 
+  ionViewCanEnter(){
+    this.menu.enable(false);
+  }
   goToSignup(): void {
     this.navCtrl.push(SignupPage);
   }
@@ -60,7 +66,7 @@ export class LoginPage {
       const password = this.loginForm.value.password;
 
       try {
-        const loginUser: firebase.User = await this.authProvider.loginUser(
+        const loginUser: firebase.User = await this.authService.loginUser(
           email,
           password
         );

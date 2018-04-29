@@ -7,9 +7,11 @@ import {
   NavController
 } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthProvider } from '../../providers/auth/auth';
 import { HomePage } from '../home/home';
+import { AuthService } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
+
+
 
 @Component({
   selector: 'page-reset-password',
@@ -21,7 +23,7 @@ export class ResetPasswordPage {
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
-    public authProvider: AuthProvider,
+    public authService: AuthService,
     formBuilder: FormBuilder
   ) {
     this.resetPasswordForm = formBuilder.group({
@@ -44,7 +46,7 @@ export class ResetPasswordPage {
       const email = this.resetPasswordForm.value.email;
 
       try {
-        const loginUser: void = await this.authProvider.resetPassword(email);
+        const loginUser: void = await this.authService.resetPassword(email);
         await loading.dismiss();
         const alert: Alert = this.alertCtrl.create({
           message: 'Check your inbox for a password reset link',

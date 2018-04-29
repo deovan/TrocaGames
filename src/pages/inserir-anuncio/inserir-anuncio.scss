@@ -1,0 +1,23 @@
+page-inserir-anuncio {
+    .error-message{
+        color: red;
+    }
+}
+
+.newEstab{
+    background: rgb(56, 56, 56);
+}
+
+#descricao {
+    width: calc(100% - 10px);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+
+ion-input, button , ion-title, ion-label{
+    font-family: "Champagne & Limousines";
+}
+
+

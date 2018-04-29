@@ -1,0 +1,121 @@
+<!--
+  Generated template for the NovoEstabelecimentoPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar color="primary">
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+
+            Novo Anúncio
+
+        </ion-title>
+
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+
+
+
+    <form [formGroup]="newAnuncio" (submit)="save()">
+        <ion-item>
+            <ion-label stacked>Nome</ion-label>
+            <ion-input type="text" placeholder="Nome" formControlName="nome"></ion-input>
+        </ion-item>
+
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.nome.valid &&
+                            newAnuncio.controls.nome.touched">
+            <p>Insira um nome</p>
+        </ion-item>
+
+
+        <ion-item>
+            <ion-label stacked color="primary">Console</ion-label>
+            <ion-select type="text" placeholder="Console" formControlName="console" [(ngModel)]="console">
+                <ion-option value="Xbox One">Xbox One</ion-option>
+                <ion-option value="XBOX 360">XBOX 360</ion-option>
+                <ion-option value="PS4">PS4</ion-option>
+                <ion-option value="PS3">PS3</ion-option>
+                <ion-option value="PS Vita">PS Vita</ion-option>
+                <ion-option value="Wii U">Wii U</ion-option>
+                <ion-option value="Wii">Wii</ion-option>
+                <ion-option value="3DS">3DS</ion-option>
+                <ion-option value="PC">PC</ion-option>
+                <ion-option value="Outros">Outros</ion-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.console.valid &&
+                            newAnuncio.controls.console.touched">
+            <p>Selecione o console!</p>
+        </ion-item>
+
+
+
+        <ion-item>
+            <ion-label stacked color="primary">Categoria</ion-label>
+            <ion-select type="text" placeholder="Categoria" formControlName="categoria" [(ngModel)]="categoria">
+                <ion-option value="Ação">Ação</ion-option>
+                <ion-option value="Aventura">Aventura</ion-option>
+                <ion-option value="Esportes">Esportes</ion-option>
+                <ion-option value="Corrida">Corrida</ion-option>
+                <ion-option value="RPG">RPG</ion-option>
+                <ion-option value="Shooter">Shooter</ion-option>
+                <ion-option value="Luta">Luta</ion-option>
+                <ion-option value="Simulação">Simulação</ion-option>
+                <ion-option value="Musical">Musical</ion-option>
+                <ion-option value="Fitness">Fitness</ion-option>
+                <ion-option value="MMO">MMO</ion-option>
+                <ion-option value="Estratégia">Estratégia</ion-option>
+                <ion-option value="Casual">Casual</ion-option>
+                <ion-option value="Outros">Outros</ion-option>
+            </ion-select>
+        </ion-item>
+
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.categoria.valid &&
+                                newAnuncio.controls.categoria.touched">
+            <p>Selecione o console!</p>
+        </ion-item>
+
+
+
+        <ion-item>
+            <ion-label stacked>Preço</ion-label>
+            <ion-input formControlName="preco" [(ngModel)]="preco" type="text" name="money" placeholder="(R$) Real" [brmasker]="{money: true,decimal: 2,type:  'num'} ">
+            </ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.preco.valid &&
+        newAnuncio.controls.preco.touched">
+            <p>Insira um valor!</p>
+        </ion-item>
+
+
+        <ion-item>
+            <ion-label stacked>Descrição</ion-label>
+            <ion-textarea type="text" placeholder="Descrição" formControlName="descricao" autocorrect="on" #descricao rows="4" id="descricao"
+                maxLength="500" name="descricao"></ion-textarea>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.descricao.valid &&
+                            newAnuncio.controls.descricao.touched">
+            <p>Insira uma descrição</p>
+        </ion-item>
+
+
+        <ion-footer>
+            <ion-toolbar>
+                <button ion-button block type="submit" [disabled]="!newAnuncio.valid">
+                    Avançar
+                </button>
+            </ion-toolbar>
+        </ion-footer>
+
+
+    </form>
+
+</ion-content>

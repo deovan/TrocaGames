@@ -1,62 +1,50 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="primary">
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
 
     <ion-buttons end>
-      <button ion-button icon-only (click)="logOut()">
-        <ion-icon name="log-out"></ion-icon>
+      <button ion-button (click)="canSearch= !canSearch">
+        <ion-icon *ngIf="canSearch" ios="ios-close-circle" md="md-close-circle" icon-end></ion-icon>
+        <ion-icon *ngIf="!canSearch" ios="ios-earch" md="md-search" icon-end>
+        </ion-icon>
       </button>
     </ion-buttons>
+    <ion-title *ngIf="!canSearch" style="background:transparent">
+      Lista de Jogos
+    </ion-title>
+    <ion-searchbar *ngIf="canSearch" (ionInput)="getItems($event)"></ion-searchbar>
   </ion-navbar>
-  <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+
+  <ion-toolbar no-border center toolbar-ios-height>
+    <ion-scroll scrollX="true" style="white-space:nowrap;height: 30px;">
+      <ion-buttons>
+        <button *ngFor="let i of categorias" ion-button (click)="exibirPorCategorias($event)">{{i}}</button>
+      </ion-buttons>
+
+    </ion-scroll>
+  </ion-toolbar>
 </ion-header>
+
 <ion-content padding>
-  <ion-list>
-      <ion-card ion-item *ngFor="let todo of todos ">
-  
-        <ion-item (click)="itemTapped($event, todo)">
-          <ion-avatar item-left>
-            <img src="assets/imgs/avatar.jpg">
-          </ion-avatar>
-          <h2>{{todo.nome}}</h2>
-          <p>{{todo.user}}</p>
-        </ion-item>
-  
-        <img src="assets/imgs/iron-man.jpg">
-        <ion-card-content>
-          <p> {{todo.descricao}}</p>
-        </ion-card-content>
-  
-        <ion-row>
-  
-          <ion-col>
-            <button ion-button clear small icon-left>
-              <ion-icon name="thumbs-up"></ion-icon>
-              <div>12k likes </div>
-            </button>
-          </ion-col>
-  
-          <ion-col>
-            <button ion-button clear small icon-left>
-              <ion-icon name="text"></ion-icon>
-              <div>4 coments</div>
-            </button>
-          </ion-col>
-          <ion-col text-center center>
-            <ion-note>
-              {{todo.datetime}}
-            </ion-note>
-          </ion-col>
-        </ion-row>
-      </ion-card>
-      <!--<ion-scroll zooming="true" direction="xy" style="width: 320px; height: 500px">
-       <div class="scroll-container"></div>
-      </ion-scroll>
-    -->
-    </ion-list>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
 
+  <ion-card ion-item *ngFor="let todo of todos">
+    <ion-thumbnail item-start>
+      <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg'">
+    </ion-thumbnail>
+    <h1>{{todo.nome}}</h1>
+    <h3>R$ {{todo.preco}}</h3>
+    <p>{{todo.descricao}}</p>
+    <button ion-button item-end color="primary" (click)="itemTapped($event, todo)">Ver</button>
+  </ion-card>
+
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 </ion-content>

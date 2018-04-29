@@ -1,75 +1,56 @@
-import { TestePage } from './../pages/teste/teste';
+import { UserService } from './../providers/user/user.service';
+import { auth } from 'firebase/app';
+import { Unsubscribe } from 'firebase';
+import firebase from 'firebase';
 
+import { HomePage } from './../pages/home/home';
+
+import { User } from './../todo/user.model';
 import { Component, ViewChild } from '@angular/core';
-import { Platform, MenuController, Nav } from 'ionic-angular';
+import { Platform, Nav, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
-import firebase, { Unsubscribe } from 'firebase';
-
-import { firebaseConfig } from './credentials.backup';
-import { ListPage } from './../pages/list/list';
 import { LoginPage } from '../pages/login/login';
-import { InserirJogoPage } from '../pages/inserir-jogo/inserir-jogo';
-import { ChatPage } from '../pages/chat/chat';
-import { MinhaContaPage } from '../pages/minha-conta/minha-conta';
-import { AuthProvider } from '../providers/auth/auth';
-import { HomePage } from '../pages/home/home';
+import { UserProfilePage } from '../pages/user-profile/user-profile';
+
 
 
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp {
-  @ViewChild(Nav) nav: Nav;
+  @ViewChild(Nav) nav;
   rootPage: any;
-  pages: Array<{ title: string, component: any }>;
-
+  public currentUser: User;
   constructor(
-    platform: Platform,
-    statusBar: StatusBar,
+    public platform: Platform,
+    public statusBar: StatusBar,
     public menu: MenuController,
-    splashScreen: SplashScreen,
-    public authProvider: AuthProvider
-  ) {
-    firebase.initializeApp(firebaseConfig);
+    public splashScreen: SplashScreen,
+    public userService: UserService) {
+
 
     const unsubscribe: Unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.rootPage = ListPage;
+        this.rootPage = HomePage;
         unsubscribe();
       } else {
         this.rootPage = LoginPage;
         unsubscribe();
       };
 
-      this.pages = [
-        {title: 'Menu', component: HomePage},
-        { title: 'Lista de Jogos', component: ListPage },
-         {title: 'Inserir Games', component: InserirJogoPage},
-         {title: 'Chat', component: ChatPage},
-        {title: 'Minha Conta', component: MinhaContaPage},
-        {title: 'TEste', component: TestePage}
-      
-      ];
+      // this.pages = [
+      //   { title: 'Home', component: HomePage },
+      //   { title: 'Perfil', component: UserProfilePage },
+      //   { title: 'Novo', component: NovoEstabelecimentoPage }
+      // ];
+   
     });
 
-    platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
     });
-  }
-
-  openPage(page) {
-    // close the menu when clicking a link from the menu
-    this.menu.close();
-    // navigate to the new page if it is not the current page
-    this.nav.setRoot(page.component);
-  }
-  async logOut(): Promise<void> {
-    await this.authProvider.logoutUser();
-    this.nav.setRoot(LoginPage);
+ 
   }
 }
