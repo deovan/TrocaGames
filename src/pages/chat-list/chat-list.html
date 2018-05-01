@@ -1,0 +1,30 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+      Chats
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+    <ion-list no-lines>
+        <button ion-item *ngFor="let chat of chats" (click) = "onChatOpen(chat)">
+          <ion-avatar item-start>
+            <img [src]="chat.photo|| 'assets/imgs/no-photo.jpg'">
+          </ion-avatar>
+           <h2>{{chat.title}}</h2>
+           <p *ngIf = "chat.lastMessage;else customMessage">{{ chat.timestamp | date:'dd/MM/y H:mm '}} -  {{ chat.lastMessage }}</p>
+   
+           <ng-template #customMessage>
+             <p>
+               Sem Mensagens
+             </p>
+           </ng-template>
+        </button>
+       </ion-list>
+
+</ion-content>

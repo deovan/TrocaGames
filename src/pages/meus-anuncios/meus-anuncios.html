@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>
+
+      Meus Anúncioss
+
+    </ion-title>
+
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card ion-item *ngFor="let todo of anuncios" >
+    <ion-thumbnail item-start>
+      <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg'">
+    </ion-thumbnail>
+    <h1>{{todo.nome}}</h1>
+    <h3>R$ {{todo.preco}}</h3>
+    <p>{{todo.descricao}}</p>
+    <button ion-button item-end color="danger" (click)="presentConfirm(todo)">Excluir</button>
+    <button ion-button item-end color="primary" (click)="presentConfirm(todo)">Editar</button>
+  </ion-card>
+</ion-content>
