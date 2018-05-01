@@ -1,3 +1,4 @@
+import { ChatListPage } from './../pages/chat-list/chat-list';
 import { AdicionarFotosPage } from './../pages/adicionar-fotos/adicionar-fotos';
 import { MessageService } from './../providers/message/message.service';
 import { MessageBoxComponent } from './../components/message-box/message-box.component';
@@ -37,6 +38,7 @@ import { ChatService } from '../providers/chat/chat.service';
 import { UserService } from '../providers/user/user.service';
 import { SuperTabsModule } from 'ionic2-super-tabs';
 import { CameraService } from '../providers/camera/camera.service';
+import { MeusAnunciosPage } from '../pages/meus-anuncios/meus-anuncios';
 
 
 
@@ -45,11 +47,13 @@ import { CameraService } from '../providers/camera/camera.service';
     AdicionarFotosPage,
     AnuncioDetalhesPage,
     CapitalizePipe,
+    ChatListPage,
     ChatPage,
     CustomLoggedHeaderComponent,
     HomePage,
     InserirAnuncioPage,
     LoginPage,
+    MeusAnunciosPage,
     MessageBoxComponent,
     MyApp,
     ProgressBarComponent,
@@ -66,17 +70,19 @@ import { CameraService } from '../providers/camera/camera.service';
     AngularFireModule.initializeApp(firebaseConfig),
     HttpModule,
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
-    AngularFireAuthModule, 
+    AngularFireAuthModule,
     SuperTabsModule.forRoot()// imports firebase/auth, only needed for auth features
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     AdicionarFotosPage,
     AnuncioDetalhesPage,
+    ChatListPage,
     ChatPage,
     HomePage,
     InserirAnuncioPage,
     LoginPage,
+    MeusAnunciosPage,
     MyApp,
     ResetPasswordPage,
     SignupPage,
@@ -97,7 +103,7 @@ import { CameraService } from '../providers/camera/camera.service';
     MessageService,
     UserService,
     PreloaderService,
-    
+
   ]
 })
 export class AppModule { }

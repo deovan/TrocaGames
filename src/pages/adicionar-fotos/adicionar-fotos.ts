@@ -182,6 +182,7 @@ export class AdicionarFotosPage {
 
     }).catch((error) => alert(error));
   }
+
   private showToast(message: string): void {
     this.toastCtrl.create({
       message: message,
@@ -198,5 +199,3 @@ export class AdicionarFotosPage {
     }).present();
   }
 }
-
-

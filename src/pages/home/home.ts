@@ -1,3 +1,4 @@
+import  firebase  from 'firebase';
 import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
 import { ChatPage } from './../chat/chat';
 import { PreloaderService } from './../../providers/preloader/preloader.service';
@@ -11,6 +12,7 @@ import { Component, ViewChild } from '@angular/core';
 import { NavController, MenuController, ToastController } from 'ionic-angular';
 
 import { AuthService } from '../../providers/auth/auth';
+import { Jogo } from '../../todo/jogo.model';
 
 
 @Component({
@@ -20,8 +22,9 @@ import { AuthService } from '../../providers/auth/auth';
 export class HomePage {
   public todos = [];
   private categorias = [];
-  limit: number = 6;
+  limit: number = 50;
   canSearch: boolean = false;
+  currentUser = '';
 
 
   constructor(
@@ -32,6 +35,7 @@ export class HomePage {
     public navCtrl: NavController,
     public toastCtrl: ToastController) {
     this.initializeItems();
+    this.currentUser = firebase.auth().currentUser.uid;
     menu.enable(true);
   }
 
@@ -45,8 +49,7 @@ export class HomePage {
     let that = this;
     this.todos = [];
     console.log(event);
-    
-    this._jogoService.getPorCategoria(this.limit,event).subscribe((value) => {
+    this._jogoService.getPorCategoria(this.limit, event).subscribe((value) => {
       console.log('passou', value);
       value.forEach((jogo) => {
         this.todos.push(jogo);
@@ -64,11 +67,10 @@ export class HomePage {
   }
 
   initializeItems() {
-    let that = this;
     this._jogoService.allOpened(this.limit).subscribe((value) => {
       console.log('passou', value);
-      value.forEach((jogo) => {
-        this.todos.push(jogo);
+      value.forEach((jogo:Jogo) => {
+      if(jogo.user !=this.currentUser)   this.todos.push(jogo);
       });
     });
   }
@@ -87,17 +89,17 @@ export class HomePage {
       this.todos = this.todos.filter((todo) => {
         return (todo.nome.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
-    }
+    } 
+
+
   }
 
   doInfinite(infiniteScroll) {
     console.log('Begin async operation');
-    this.limit = this.limit + 10;
     setTimeout(() => {
       for (let i = 0; i < 1; i++) {
         this.initializeItems();
       }
-
       console.log('Async operation has ended');
       infiniteScroll.complete();
     }, 500);
@@ -112,7 +114,6 @@ export class HomePage {
   }
 
   itemTapped(event, todo) {
-    // That's right, we're pushing to ourselves!
     this.navCtrl.push(AnuncioDetalhesPage, {
       todo: todo
     });

@@ -1,8 +1,7 @@
 export class Jogo {
 
 
-  private $key: string;
-
+   key: any;
 
   constructor(
     public user: string,
@@ -12,6 +11,6 @@ export class Jogo {
     public descricao: string,
     public preco: string,
     public datetime: string,
-    public fotos :string[]=[],  
+    public fotos: string[] = [],
     public done: boolean = false) { }
 }

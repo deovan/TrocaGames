@@ -1,3 +1,4 @@
+import { auth } from 'firebase/app';
 import { Entry } from '@ionic-native/file';
 
 import { Injectable, Inject } from '@angular/core';
@@ -16,18 +17,21 @@ declare var window: any;
 
 @Injectable()
 export class JogoService extends BaseService {
-  items: any;
-  private basePath: string = '/anuncios/';
+  private basePath = '/anuncios';
   private _todos$: any;
   private _db: any;
   private _openRef: any;
   private _opens$: any;
+  anuncios = [];
+  meusAnuncios: any;
   firedataJogo = firebase.database().ref('/jogos');
   firedataCategorias = firebase.database().ref('/categorias');
   itemList: any[] = [];
   loadeditemList: any = [];
   lastKey: any = '';
   finished = false;
+
+
   constructor(@Inject(FirebaseApp) public firebaseApp: any, ) {
     super();
   }
@@ -57,7 +61,9 @@ export class JogoService extends BaseService {
 
   handleData(snap) {
     try {
-      this._todos$.next(snap.val());
+      let item = snap.val();
+      item.key = snap.key;
+      this._todos$.next(item);
       if (this.lastKey === snap.key) {
         this.finished = true;
       }
@@ -68,7 +74,7 @@ export class JogoService extends BaseService {
     }
   }
 
-  getPorCategoria( limit ?: number  ,categoria ?: string){
+  getPorCategoria(limit?: number, categoria?: string) {
     return new Observable<Jogo[]>((observer) => {
       var item = [];
       console.log("passou no observe");
@@ -78,10 +84,45 @@ export class JogoService extends BaseService {
         .limitToFirst(limit)
         .on('child_added', this.handleData, this);
       this._todos$ = new ReplaySubject();
+
       observer.next(this._todos$);
     });
   }
 
+  getAnunciosDoUser(): Observable<any[]> {
+    return new Observable<Jogo[]>((observer) => {
+      this.firedataJogo
+        .orderByChild('/user')
+        .equalTo(firebase.auth().currentUser.uid)
+        .on('child_added', snap => {
+          let item = snap.val();
+          item.key = snap.key;
+          this.meusAnuncios.next(item);
+        });
+      this.meusAnuncios = new ReplaySubject();
+      observer.next(this.meusAnuncios);
+    });
+  }
+
+
+  getAllAnuncios(limit: number, lastKey?: string): Observable<any[]> {
+    if (this.finished) {
+      return
+    }
+    return new Observable<Jogo[]>((observer) => {
+      var item = [];
+      console.log("passou no observe");
+      this.firedataJogo
+        .orderByKey()
+        .startAt(this.lastKey + 1)
+        .limitToFirst(limit)
+        .on('child_added', snapshotChanges => {
+          this.anuncios = snapshotToArray(snapshotChanges);
+        });
+
+      observer.next(this.anuncios);
+    });
+  }
 
 
   allOpened(limit: number, lastKey?: string): Observable<any[]> {
@@ -89,7 +130,6 @@ export class JogoService extends BaseService {
       return
     }
     return new Observable<Jogo[]>((observer) => {
-      var item = [];
       console.log("passou no observe");
       this.firedataJogo
         .orderByKey()
@@ -154,4 +194,23 @@ export class JogoService extends BaseService {
     let storageRef = this.firebaseApp.storage().ref();
     storageRef.child(fullPath).delete();
   }
+
+  public removeAnuncio(key:string){
+    console.log('key',key);
+    
+    return firebase.database().ref(`/jogos/${key}`)  
+    .remove();
+  }
 }
+
+export const snapshotToArray = snapshot => {
+  let returnArr = [];
+  snapshot.forEach(childSnapshot => {
+    let item = childSnapshot.val();
+    item.key = childSnapshot.key;
+    returnArr.push(item);
+  });
+  console.log(returnArr);
+
+  return returnArr;
+};

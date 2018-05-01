@@ -1,6 +1,3 @@
-import { AngularFireList } from 'angularfire2/database';
-//import { InfiniteScroll } from 'ionic-angular';
-
 
 import { NavController, NavParams, Content } from 'ionic-angular';
 
@@ -16,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { ChatModel } from '../../todo/chat.model';
 import { ChatService } from '../../providers/chat/chat.service';
 import { Jogo } from '../../todo/jogo.model';
+import {FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
 
 
 @Component({
@@ -23,19 +21,15 @@ import { Jogo } from '../../todo/jogo.model';
   templateUrl: 'chat.html',
 })
 export class ChatPage {
-
-  // @ViewChild(InfiniteScroll) infiniteScroll: InfiniteScroll;
-  // items: number[] = [];
-
   @ViewChild(Content) content: Content;
-
+  foto: string;
   jogo: Jogo;
-  messages: AngularFireList<Message[]>;
+  messages:any;
   pageTitle: string;
-  sender: User;
-  recipient: User;
-  private chat1: Observable<ChatModel[]>;
-  private chat2: Observable<ChatModel[]>;
+  sender: string;
+  recipient: string;
+  private chat1: any;
+  private chat2: any;
 
   constructor(
     public authService: AuthService,
@@ -45,13 +39,57 @@ export class ChatPage {
     public messageService: MessageService,
     public chatService: ChatService
   ) {
-    this.jogo = navParams.get('jogo')
-    console.log(this.jogo.descricao,this.jogo.nome)
+    this.jogo =navParams.get('jogo');
+
+  }
+  ionViewDidLoad(){
+      
+  
+    this.recipient = this.jogo.user;
+    this.sender = firebase.auth().currentUser.uid;
+  
+    this.chat1 = this.chatService.getDeepChat(this.sender, this.recipient);
+    this.chat2 = this.chatService.getDeepChat(this.recipient, this.sender);
+  
   }
 
-  // ionViewCanEnter(): Promise<boolean> {
-  //   // return this.authService.authenticated;
-  // }
+
+  sendMessage(newMessage: string): void {
+    if(newMessage) {
+      let currentTimestamp: Object = firebase.database.ServerValue.TIMESTAMP;
+  
+      this.messageService.create(
+        new Message(
+          this.sender,
+          newMessage,
+          currentTimestamp
+      )).then(() => {
+  
+        this.chat1
+          .set({
+            lastMessage: newMessage,
+            timestamp: currentTimestamp
+          });
+  
+        this.chat2
+          .set({
+            lastMessage: newMessage,
+            timestamp: currentTimestamp
+          });
+  
+      });
+    }
+  }
+  
+  private scrollToBotton(duration?: number): void {
+    setTimeout(() => {
+      if (this.content) {
+        this.content.scrollToBottom(duration || 300);
+      }
+    }, 50);
+
+
+  }
 
 
 }

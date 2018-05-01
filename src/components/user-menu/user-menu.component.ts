@@ -1,3 +1,4 @@
+import { ChatListPage } from './../../pages/chat-list/chat-list';
 import { User } from './../../todo/user.model';
 import { Component, Input } from "@angular/core";
 import { BaseComponent } from "../base.component";
@@ -39,6 +40,7 @@ export class UserMenuComponent extends BaseComponent {
               { title: 'Home', component: HomePage },
               { title: 'Perfil', component: UserProfilePage },
               { title: 'Anunciar', component: InserirAnuncioPage },
+              { title: 'Chat', component: ChatListPage },
             ]
           console.log("passoi aqui" + this.currentUser.email);
         });

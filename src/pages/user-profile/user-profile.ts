@@ -1,3 +1,4 @@
+import { MeusAnunciosPage } from './../meus-anuncios/meus-anuncios';
 import { Input } from '@angular/core';
 import { User } from './../../todo/user.model';
 import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
@@ -57,6 +58,10 @@ export class UserProfilePage {
     } else {
       this.editUser();
     }
+  }
+
+  onMeusAnuncios(){
+    this.navCtrl.push(MeusAnunciosPage);
   }
 
   onPhoto(event): void {
