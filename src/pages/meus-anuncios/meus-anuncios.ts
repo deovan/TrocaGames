@@ -9,32 +9,39 @@ import { Jogo } from '../../todo/jogo.model';
 })
 export class MeusAnunciosPage {
 
-  anuncios = [];
+  anuncios;
   constructor(
     private alertCtrl: AlertController,
     public jogoService: JogoService,
     public navCtrl: NavController,
     public navParams: NavParams,
-    public toastCtrl:ToastController
+    public toastCtrl: ToastController
   ) {
-    
+    console.log('constissiF');
+
+    this.inicializarItems()
   }
 
-  ionViewDidLoad() {
+  private doRefresh(refresher) {
+    console.log('Begin async operation', refresher);
     this.inicializarItems();
+    setTimeout(() => {
+      this.showToast('Atualizado com sucesso!')
+      refresher.complete();
+    }, 2000);
   }
 
-  inicializarItems(){
+  private inicializarItems() {
     this.anuncios = [];
     this.jogoService.getAnunciosDoUser().subscribe((value) => {
-      value.forEach((jogo: Jogo) => {
+      value.forEach((jogo) => {
         this.anuncios.push(jogo);
       });
     });
   }
 
 
-  presentConfirm(todo) {
+  private presentConfirm(todo) {
     let alert = this.alertCtrl.create({
       title: 'Quer mesmo deletar?',
       message: 'Ao confirma o anuncio será excluido!',
@@ -51,21 +58,19 @@ export class MeusAnunciosPage {
           handler: () => {
             this.deleteAnuncio(todo);
           },
-          cssClass:'alertDanger'
+          cssClass: '.alertDanger'
         }
       ]
     });
     alert.present();
   }
-  
 
-  deleteAnuncio(todo:Jogo){
 
-    this.jogoService.removeAnuncio(todo.key).then((sucess)=>{
-
+  private deleteAnuncio(todo: Jogo) {
+    this.jogoService.removeAnuncio(todo.key).then((sucess) => {
       this.inicializarItems();
       this.showToast('Anuncio removido com Sucesso!')
-    }).catch(error=> alert(error))
+    }).catch(error => alert(error))
   }
 
   private showToast(message: string): void {

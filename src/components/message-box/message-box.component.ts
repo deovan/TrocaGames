@@ -13,7 +13,7 @@ import { Message } from '../../todo/message.model';
 })
 export class MessageBoxComponent{
 
-  @Input() message: Message;
+  @Input() message;
   @Input() isFromSender: boolean;
 
   constructor() {

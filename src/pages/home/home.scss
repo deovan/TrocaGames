@@ -1,28 +1,13 @@
 page-home {
-    ion-buttons.button {
-        background: powderblue;
-        color: black;
-        border-style: groove;
+   
+   .cards-bg {
+        background-color: #f4f4f7;
+      }
+
+    .ty-ion-card {
+        border: 10px;
+        margin: 10px;
+        background: black;
     }
-}
 
-ion-card {
-    .h1 {
-        color: green
-    }
-}
-
-h1 {
-    color: green
-}
-
-h2,
-h3 {
-    color: rgb(5, 5, 5);
-    font-family: "Champagne & Limousines";
-}
-
-.round {
-    width: 50%;
-    border-radius: 100%;
-}
+} 

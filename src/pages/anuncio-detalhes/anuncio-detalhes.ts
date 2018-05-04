@@ -32,25 +32,10 @@ export class AnuncioDetalhesPage {
 
 
   onChatCreate(): void {
-
-
-    this.chatService.getDeepChat(firebase.auth().currentUser.uid, this.jogo.user)
-      .first()
-      .subscribe((chat: ChatModel) => {
-
-        if (chat.hasOwnProperty('$value')) {
-          let timestamp: Object = firebase.database.ServerValue.TIMESTAMP;
-
-          let chat1 = new ChatModel('', timestamp, this.jogo.user, '');
-          this.chatService.create(chat1, this.currentUser, this.jogo.user);
-
-          let chat2 = new ChatModel('', timestamp, this.currentUser, '');
-          this.chatService.create(chat2, this.jogo.user, this.currentUser);
-        }
-      });
-
+    this.chatService.initializebuddy(this.jogo, this.jogo.user);
     this.navCtrl.push(ChatPage, {
-      jogo: this.jogo
+      jogo: this.jogo,
+      sender: this.jogo.user
     });
 
   }

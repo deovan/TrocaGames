@@ -20,6 +20,8 @@ import { Jogo } from '../../todo/jogo.model';
 })
 
 export class HomePage {
+
+  
   public todos = [];
   private categorias = [];
   limit: number = 50;

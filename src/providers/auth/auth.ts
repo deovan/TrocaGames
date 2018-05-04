@@ -13,6 +13,7 @@ export class AuthService extends BaseService {
     super();
   }
 
+  
   loginUser(email: string, password: string): Promise<User> {
     this.emailUser = email;
     return firebase.auth().signInWithEmailAndPassword(email, password);

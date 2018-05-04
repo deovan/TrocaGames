@@ -29,7 +29,7 @@ export class MyApp {
     public splashScreen: SplashScreen,
     public userService: UserService) {
 
-
+   
     const unsubscribe: Unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.rootPage = HomePage;

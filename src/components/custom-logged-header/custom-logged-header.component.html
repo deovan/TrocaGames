@@ -1,19 +1,10 @@
-<ion-header>
+
   <ion-navbar color="primary">
-    <button ion-button  menuToggle="user-menu">
+    <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
     <ion-title>
-      <ion-item detail-none no-lines color="transparent" *ngIf="user; else titleTemplate">
-        <ion-avatar item-left>
-          <img [src]="user.foto || 'assets/imgs/no-photo.jpg'">
-        </ion-avatar>
-        {{title}}
-      </ion-item>
-      <ng-template #titleTemplate>
-        {{title}}
-      </ng-template>
-
+      {{title}}
     </ion-title>
     <!-- <ion-buttons end>
     <button ion-button icon-only (click)="onLogout()">
@@ -21,3 +12,4 @@
       </button>
   </ion-buttons> -->
   </ion-navbar>
+ 

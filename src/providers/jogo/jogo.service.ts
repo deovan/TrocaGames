@@ -74,6 +74,17 @@ export class JogoService extends BaseService {
     }
   }
 
+
+  getJogo(jogoKey: string) {
+    let jogo;
+    this.firedataJogo.child(jogoKey).on(('value'), data => {
+        let item = data.val();
+        item.key = data.key;
+        jogo = item
+      });
+    return jogo;
+  }
+
   getPorCategoria(limit?: number, categoria?: string) {
     return new Observable<Jogo[]>((observer) => {
       var item = [];
@@ -195,11 +206,11 @@ export class JogoService extends BaseService {
     storageRef.child(fullPath).delete();
   }
 
-  public removeAnuncio(key:string){
-    console.log('key',key);
-    
-    return firebase.database().ref(`/jogos/${key}`)  
-    .remove();
+  public removeAnuncio(key: string) {
+    console.log('key', key);
+
+    return firebase.database().ref(`/jogos/${key}`)
+      .remove();
   }
 }
 

@@ -2,8 +2,8 @@
 import { AlertController, App, MenuController } from 'ionic-angular';
 import { Component, Input } from '@angular/core';
 import { BaseComponent } from "../base.component";
-import { User } from '../../todo/user.model';
 import { AuthService } from '../../providers/auth/auth';
+
 
 
 @Component({
@@ -13,7 +13,7 @@ import { AuthService } from '../../providers/auth/auth';
 export class CustomLoggedHeaderComponent extends BaseComponent {
 
   @Input() title: string;
-  @Input() user: User;
+  @Input() jogo;
 
   constructor(
     public alertCtrl: AlertController,
@@ -23,5 +23,7 @@ export class CustomLoggedHeaderComponent extends BaseComponent {
   ) {
     super(alertCtrl, authService, app, menuCtrl);
   }
+
+
 
 }
