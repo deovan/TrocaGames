@@ -1,8 +1,6 @@
 <ion-header>
   <custom-logged-header [title]="jogo.nome" [jogo]="jogo"> </custom-logged-header>
   <ion-toolbar>
-   
-
       <ion-card ion-item (click)="itemTapped($event, jogo)">
         <ion-avatar item-start>
           <img  [src]="jogo.fotos || 'assets/imgs/no-image-available.jpg'">
@@ -21,23 +19,18 @@
           </ion-row>
         </ion-grid>
       </ion-card>
-  
-
-  </ion-toolbar>
+    </ion-toolbar>
 </ion-header>
 
 
 <ion-content class='campo' isScrolling="true" #content>
-
-
-  <message-box *ngFor="let m of allmessages " [message]="m" [isFromSender]="(m.sentby != jogo.user)"></message-box>
-
+  <message-box *ngFor="let m of allmessages " [message]="m" [isFromSender]="(m.sentby === currentUser)"></message-box>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <ion-item no-lines>
-      <ion-input type="text" (keyup.enter)="addmessage()" placeholder="Message..." [(ngModel)]="newMessage"></ion-input>
+      <ion-input type="text" (keyup.enter)="addmessage()" placeholder="Mensagem..." [(ngModel)]="newMessage"></ion-input>
       <button ion-button item-right (click)="addmessage()" [disabled]="isVazio()">
         <ion-icon name="send"></ion-icon>
       </button>

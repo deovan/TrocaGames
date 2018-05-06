@@ -23,7 +23,7 @@ export class JogoService extends BaseService {
   private _openRef: any;
   private _opens$: any;
   anuncios = [];
-  meusAnuncios: any;
+
   firedataJogo = firebase.database().ref('/jogos');
   firedataCategorias = firebase.database().ref('/categorias');
   itemList: any[] = [];
@@ -39,7 +39,7 @@ export class JogoService extends BaseService {
 
 
 
-  getCategorias(): any[] {
+  getCategorias() {
     var result = [];
     // load data from firebase...
     this.firedataCategorias.orderByKey().once('value', (snapshot: any) => {
@@ -48,7 +48,6 @@ export class JogoService extends BaseService {
         var element = childSnapshot.val();
         result.push(element);
       });
-
     });
     return result;
   }
@@ -57,7 +56,6 @@ export class JogoService extends BaseService {
   save(jogo: Jogo) {
     return this.firedataJogo.push(jogo).key;
   }
-
 
   handleData(snap) {
     try {
@@ -77,11 +75,11 @@ export class JogoService extends BaseService {
 
   getJogo(jogoKey: string) {
     let jogo;
-    this.firedataJogo.child(jogoKey).on(('value'), data => {
-        let item = data.val();
-        item.key = data.key;
-        jogo = item
-      });
+    this.firedataJogo.child(jogoKey).once(('value'), data => {
+      let item = data.val();
+      item.key = data.key;
+      jogo = item
+    });
     return jogo;
   }
 
@@ -100,19 +98,22 @@ export class JogoService extends BaseService {
     });
   }
 
-  getAnunciosDoUser(): Observable<any[]> {
-    return new Observable<Jogo[]>((observer) => {
-      this.firedataJogo
-        .orderByChild('/user')
-        .equalTo(firebase.auth().currentUser.uid)
-        .on('child_added', snap => {
+  getAnunciosDoUser() {
+    let meusAnuncios =[];
+    this.firedataJogo
+      .orderByChild('/user')
+      .equalTo(firebase.auth().currentUser.uid)
+      .once('value', snap => {
+        snap.forEach((jogos)=>{
           let item = snap.val();
           item.key = snap.key;
-          this.meusAnuncios.next(item);
-        });
-      this.meusAnuncios = new ReplaySubject();
-      observer.next(this.meusAnuncios);
-    });
+          meusAnuncios.push(item);
+          return false;
+        })
+      });
+    console.log(meusAnuncios);
+
+    return meusAnuncios;
   }
 
 
@@ -127,7 +128,7 @@ export class JogoService extends BaseService {
         .orderByKey()
         .startAt(this.lastKey + 1)
         .limitToFirst(limit)
-        .on('child_added', snapshotChanges => {
+        .on('value', snapshotChanges => {
           this.anuncios = snapshotToArray(snapshotChanges);
         });
 

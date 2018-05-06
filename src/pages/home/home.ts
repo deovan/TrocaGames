@@ -77,13 +77,16 @@ export class HomePage {
     });
   }
 
+
+
   ionViewDidLoad() {
     this.categorias = this._jogoService.getCategorias();
+    this._jogoService.lastKey ='';
   }
 
   getItems(ev) {
+   
     // Reset items back to all of the items
-    this.initializeItems();
     // set val to the value of the ev target
     var val = ev.target.value;
     // if the value is an empty string don't filter the items
@@ -91,7 +94,13 @@ export class HomePage {
       this.todos = this.todos.filter((todo) => {
         return (todo.nome.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
-    } 
+    } else{
+      this.todos=[];
+      this._jogoService.lastKey='';
+      this.initializeItems()
+    }
+
+    
 
 
   }

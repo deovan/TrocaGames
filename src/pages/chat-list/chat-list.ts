@@ -20,17 +20,16 @@ export class ChatListPage {
 
   ionViewDidLoad() {
     console.log('get chats to user');
+    this.chats =[];
     this.chats = this.chatService.getChatsUser();
-
-    console.log(this.chats);
+    console.log('chatsss',this.chats);
 
   }
 
   buddychat(jogo) {
-
     let jogoDados = this.jogoService.getJogo(jogo.key)
     console.log('jogoChat', jogoDados);
-    this.chatService.initializebuddy(jogoDados,jogo.sender);
+    this.chatService.initializebuddy(jogoDados, jogo.sender);
     this.navCtrl.push(ChatPage, {
       jogo: jogoDados,
       sender: jogo.sender

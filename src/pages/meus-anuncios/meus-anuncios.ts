@@ -17,11 +17,13 @@ export class MeusAnunciosPage {
     public navParams: NavParams,
     public toastCtrl: ToastController
   ) {
-    console.log('constissiF');
-
-    this.inicializarItems()
+    
   }
 
+
+  ionViewCanEnter(){
+    this.inicializarItems()
+  }
   private doRefresh(refresher) {
     console.log('Begin async operation', refresher);
     this.inicializarItems();
@@ -33,11 +35,7 @@ export class MeusAnunciosPage {
 
   private inicializarItems() {
     this.anuncios = [];
-    this.jogoService.getAnunciosDoUser().subscribe((value) => {
-      value.forEach((jogo) => {
-        this.anuncios.push(jogo);
-      });
-    });
+    this.anuncios = this.jogoService.getAnunciosDoUser()
   }
 
 

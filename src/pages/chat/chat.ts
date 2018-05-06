@@ -1,8 +1,9 @@
 
+import { AngularFireDatabase } from 'angularfire2/database';
+import { MeusAnunciosPage } from './../meus-anuncios/meus-anuncios';
+import firebase from 'firebase/app';
+
 import { NavController, NavParams, Content, Events, LoadingController } from 'ionic-angular';
-
-
-import firebase from 'firebase';
 import { Component, ViewChild, NgZone } from '@angular/core';
 import { Message } from '../../todo/message.model';
 import { User } from '../../todo/user.model';
@@ -25,13 +26,17 @@ export class ChatPage {
   @ViewChild('content') content: Content;
   sendTo: any;
   newMessage;
+  message:Observable<Message[]>
   allmessages = [];
   photoURL;
   imgornot;
   public jogo: Jogo;
   pageTitle: string;
+  currentUser = firebase.auth().currentUser.uid;
 
   constructor(
+    public db: AngularFireDatabase,
+    public messageService: MessageService,
     public navCtrl: NavController,
     public navParams: NavParams,
     public events: Events,
@@ -39,24 +44,45 @@ export class ChatPage {
     public loadingCtrl: LoadingController,
     public chatService: ChatService
   ) {
+
     this.jogo = navParams.get('jogo');
     this.sendTo = navParams.get('sender');
-    this.scrollto();
-    this.events.subscribe('newMessage', () => {
-      this.allmessages = [];
-      this.imgornot = [];
-      this.zone.run(() => {
-        this.allmessages = this.chatService.buddymessages;
-        console.log(this.allmessages);
-        for (var key in this.allmessages) {
-          if (this.allmessages[key].message.substring(0, 4) == 'http')
-            this.imgornot.push(true);
-          else
-            this.imgornot.push(false);
-        }
-      })
+  
+   
+
+
+   
+    // this.events.subscribe('newMessage', () => {
+    //   this.allmessages = [];
+    //   this.imgornot = [];
+    //   this.zone.run(() => {
+    //     this.allmessages = this.chatService.buddymessages;
+    //     for (var key in this.allmessages) {
+    //       if (this.allmessages[key].message.substring(0, 4) == 'http')
+    //         this.imgornot.push(true);
+    //       else
+    //         this.imgornot.push(false);
+    //     }
+    //   });
+    // });
+  }
+
+  // ionViewWillEnter(){
+  //  this.message
+  // }
+
+  ionViewDidLoad() {
+    this.scrollTo();
+    this.message = this.chatService.getbuddymessages(this.sendTo, this.currentUser);
+    this.message.subscribe((value)=>{
+      console.log('valor',value);
+      this.allmessages = value;
+      // this.content.scrollToBottom();
     });
-}
+   
+  }
+
+
   addmessage() {
     this.chatService.addnewmessage(this.newMessage, this.sendTo).then(() => {
       this.content.scrollToBottom();
@@ -64,28 +90,33 @@ export class ChatPage {
     })
   }
 
-  isVazio(){
-    if(this.newMessage){
+
+  isVazio() {
+    if (this.newMessage) {
       return false;
-    }else{
+    } else {
       return true;
     }
   }
-  ionViewDidEnter() {
-    this.chatService.getbuddymessages(this.sendTo);
-  }
 
-  scrollto() {
+
+  scrollTo() {
     setTimeout(() => {
       this.content.scrollToBottom();
     }, 1000);
   }
 
   itemTapped(event, todo) {
-    this.navCtrl.push(AnuncioDetalhesPage, {
-      todo: todo
-    });
-  }
+    if (todo.user != this.currentUser) {
+      this.navCtrl.push(AnuncioDetalhesPage, {
+        todo: todo
+      });
+    } else {
+      this.navCtrl.push(MeusAnunciosPage);
+    }
+
+  };
+}
   // sendPicMsg() {
   //   let loader = this.loadingCtrl.create({
   //     content: 'Please wait'
@@ -104,4 +135,3 @@ export class ChatPage {
   // }
 
 
-}

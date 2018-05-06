@@ -1,8 +1,8 @@
 export class Message {
 
     constructor(
-        public userId: string,
-        public text: string,
+        public sentby: string,
+        public message: string,
         public timestamp: any
     ){ }
 }

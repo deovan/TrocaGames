@@ -14,10 +14,10 @@
     <ion-list no-lines  >
         <button ion-item *ngFor="let chat of chats" (click) = "buddychat(chat)">
           <ion-avatar item-start>
-            <img [src]="chat.photo|| 'assets/imgs/no-photo.jpg'">
+            <img [src]="chat.foto|| 'assets/imgs/no-photo.jpg'">
           </ion-avatar>
            <h2>{{chat.title}}</h2>
-           <p *ngIf = "chat.message;else customMessage">{{ chat.timestamp | date:'dd/MM/y H:mm '}} -  {{ chat.message }}</p>
+           <p *ngIf = "chat.key;else customMessage">{{ chat.timestamp | date:'dd/MM/y H:mm '}} -  {{ chat.message }}</p>
    
            <ng-template #customMessage>
              <p>
