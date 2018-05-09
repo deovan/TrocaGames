@@ -50,7 +50,6 @@ export class UserMenuComponent extends BaseComponent {
    
   }
   openPage(page) {
-
     let view = this.navCtrl.getActive();
     if (view.name == page.component.name) {
       this.menuCtrl.close();
@@ -58,7 +57,7 @@ export class UserMenuComponent extends BaseComponent {
       // close the menu when clicking a link from the menu
       this.menuCtrl.close();
       // navigate to the new page if it is not the current page
-      this.navCtrl.push(page.component);
+      this.navCtrl.setRoot(page.component);
     }
 
   }

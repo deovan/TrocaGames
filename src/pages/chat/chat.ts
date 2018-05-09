@@ -16,6 +16,7 @@ import { ChatService } from '../../providers/chat/chat.service';
 import { Jogo } from '../../todo/jogo.model';
 import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database-deprecated';
 import { AnuncioDetalhesPage } from '../anuncio-detalhes/anuncio-detalhes';
+import { Subscription } from 'rxjs/Subscription';
 
 
 @Component({
@@ -26,13 +27,15 @@ export class ChatPage {
   @ViewChild('content') content: Content;
   sendTo: any;
   newMessage;
-  message:Observable<Message[]>
+  message: Observable<Message[]>
   allmessages = [];
   photoURL;
   imgornot;
   public jogo: Jogo;
   pageTitle: string;
   currentUser = firebase.auth().currentUser.uid;
+  private _someListener: Subscription = new Subscription();
+
 
   constructor(
     public db: AngularFireDatabase,
@@ -44,42 +47,31 @@ export class ChatPage {
     public loadingCtrl: LoadingController,
     public chatService: ChatService
   ) {
-
     this.jogo = navParams.get('jogo');
     this.sendTo = navParams.get('sender');
-  
    
-
-
-   
-    // this.events.subscribe('newMessage', () => {
-    //   this.allmessages = [];
-    //   this.imgornot = [];
-    //   this.zone.run(() => {
-    //     this.allmessages = this.chatService.buddymessages;
-    //     for (var key in this.allmessages) {
-    //       if (this.allmessages[key].message.substring(0, 4) == 'http')
-    //         this.imgornot.push(true);
-    //       else
-    //         this.imgornot.push(false);
-    //     }
-    //   });
-    // });
   }
 
-  // ionViewWillEnter(){
-  //  this.message
-  // }
 
   ionViewDidLoad() {
-    this.scrollTo();
-    this.message = this.chatService.getbuddymessages(this.sendTo, this.currentUser);
-    this.message.subscribe((value)=>{
-      console.log('valor',value);
+    this.chatService.getbuddymessages(this.sendTo, this.currentUser);
+    this._someListener = this.chatService.getbuddymessages(this.sendTo, this.currentUser).subscribe((value) => {
+      console.log('valor', value);
       this.allmessages = value;
-      // this.content.scrollToBottom();
+      this.scrollTo()
     });
-   
+
+  }
+
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave');
+   this._someListener.unsubscribe();
+  }
+
+  ionViewWillUnload() {
+    console.log('ionViewWillUnload');
+
+
   }
 
 

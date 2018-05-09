@@ -1,4 +1,5 @@
-import  firebase  from 'firebase';
+import { Subscription } from 'rxjs/Subscription';
+import firebase from 'firebase';
 import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
 import { ChatPage } from './../chat/chat';
 import { PreloaderService } from './../../providers/preloader/preloader.service';
@@ -21,12 +22,13 @@ import { Jogo } from '../../todo/jogo.model';
 
 export class HomePage {
 
-  
+
   public todos = [];
   private categorias = [];
   limit: number = 50;
   canSearch: boolean = false;
   currentUser = '';
+  private _someListener: Subscription = new Subscription();
 
 
   constructor(
@@ -69,10 +71,10 @@ export class HomePage {
   }
 
   initializeItems() {
-    this._jogoService.allOpened(this.limit).subscribe((value) => {
+    this._someListener = this._jogoService.allOpened(this.limit).subscribe((value) => {
       console.log('passou', value);
-      value.forEach((jogo:Jogo) => {
-      if(jogo.user !=this.currentUser)   this.todos.push(jogo);
+      value.forEach((jogo: Jogo) => {
+        if (jogo.user != this.currentUser) this.todos.push(jogo);
       });
     });
   }
@@ -81,11 +83,19 @@ export class HomePage {
 
   ionViewDidLoad() {
     this.categorias = this._jogoService.getCategorias();
-    this._jogoService.lastKey ='';
+    this._jogoService.lastKey = '';
+    this._jogoService.allOpened(this.limit);
+  }
+
+
+  ionViewWillLeave() {
+    console.log('ionViewWillLeave');
+    this._jogoService.lastKey = '';
+    this._someListener.unsubscribe();
   }
 
   getItems(ev) {
-   
+
     // Reset items back to all of the items
     // set val to the value of the ev target
     var val = ev.target.value;
@@ -94,13 +104,13 @@ export class HomePage {
       this.todos = this.todos.filter((todo) => {
         return (todo.nome.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
-    } else{
-      this.todos=[];
-      this._jogoService.lastKey='';
+    } else {
+      this.todos = [];
+      this._jogoService.lastKey = '';
       this.initializeItems()
     }
 
-    
+
 
 
   }

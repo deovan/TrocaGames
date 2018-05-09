@@ -12,7 +12,7 @@
 
 <ion-content padding>
     <ion-list no-lines  >
-        <button ion-item *ngFor="let chat of chats" (click) = "buddychat(chat)">
+        <button ion-item *ngFor="let chat of chats;async" (click) = "buddychat(chat)">
           <ion-avatar item-start>
             <img [src]="chat.foto|| 'assets/imgs/no-photo.jpg'">
           </ion-avatar>

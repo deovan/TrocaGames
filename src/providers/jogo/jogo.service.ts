@@ -23,6 +23,7 @@ export class JogoService extends BaseService {
   private _openRef: any;
   private _opens$: any;
   anuncios = [];
+  meusAnuncios= [];
 
   firedataJogo = firebase.database().ref('/jogos');
   firedataCategorias = firebase.database().ref('/categorias');
@@ -35,9 +36,6 @@ export class JogoService extends BaseService {
   constructor(@Inject(FirebaseApp) public firebaseApp: any, ) {
     super();
   }
-
-
-
 
   getCategorias() {
     var result = [];
@@ -99,21 +97,18 @@ export class JogoService extends BaseService {
   }
 
   getAnunciosDoUser() {
-    let meusAnuncios =[];
+    this.meusAnuncios = [];
     this.firedataJogo
       .orderByChild('/user')
       .equalTo(firebase.auth().currentUser.uid)
-      .once('value', snap => {
-        snap.forEach((jogos)=>{
-          let item = snap.val();
-          item.key = snap.key;
-          meusAnuncios.push(item);
-          return false;
-        })
+      .on('value', snap => {
+        this.meusAnuncios = snapshotToArray(snap);
       });
-    console.log(meusAnuncios);
+    console.log(this.meusAnuncios);
+    return this.meusAnuncios;
 
-    return meusAnuncios;
+
+
   }
 
 

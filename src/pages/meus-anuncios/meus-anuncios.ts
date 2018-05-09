@@ -21,9 +21,10 @@ export class MeusAnunciosPage {
   }
 
 
-  ionViewCanEnter(){
+  ionViewDidLoad(){
     this.inicializarItems()
   }
+
   private doRefresh(refresher) {
     console.log('Begin async operation', refresher);
     this.inicializarItems();
@@ -34,8 +35,8 @@ export class MeusAnunciosPage {
   }
 
   private inicializarItems() {
-    this.anuncios = [];
-    this.anuncios = this.jogoService.getAnunciosDoUser()
+    this.jogoService.getAnunciosDoUser();
+    this.anuncios = this.jogoService.meusAnuncios;
   }
 
 

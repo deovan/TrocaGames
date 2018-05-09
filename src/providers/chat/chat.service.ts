@@ -12,7 +12,7 @@ import { importExpr } from '@angular/compiler/src/output/output_ast';
 
 import firebase from 'firebase'
 import { FirebaseObjectObservable } from 'angularfire2/database-deprecated';
-import { Events } from 'ionic-angular';
+import { Events, NavController } from 'ionic-angular';
 
 
 @Injectable()
@@ -38,23 +38,27 @@ export class ChatService extends BaseService {
     this.sendTo = jogoSender;
   }
 
-  getChatsUser(): Array<any> {
+  getChatsUser(): Observable<any> {
     let userId = firebase.auth().currentUser.uid;
-    this.chats = [];
-    this.firechats.child(userId).orderByKey().on('value', dataSnapshot => {
-      dataSnapshot.forEach((value) => {
-        value.forEach((elemet) => {
-          let item = elemet.val();
-          item.sender = value.key;
-          item.key = elemet.key;
-          this.chats.push(item);
+
+    return new Observable<any>((observable) => {
+      this.firechats.child(userId).on('value', dataSnapshot => {
+        var temp = [];
+        dataSnapshot.forEach((value) => {
+          value.forEach((elemet) => {
+            let item = elemet.val();
+            item.sender = value.key;
+            item.key = elemet.key;
+            temp.push(item);
+            console.log('item', item);
+            return false;
+          });
           return false;
-        })
-        return false;
-      })
+        });
+        console.log('chats service', temp);
+        observable.next(temp);
+      });
     });
-    console.log(this.chats);
-    return this.chats;
   }
 
   addnewmessage(msg, sendUser?: string) {
@@ -118,11 +122,21 @@ export class ChatService extends BaseService {
     }
   }
 
-  getbuddymessages(userId1: string, userId2: string, jogoKey?: string):Observable<Message[]> {
+  getbuddymessages(userId1: string, userId2: string) {
+
+    console.log('user1', userId1, 'user2', userId2);
+
+
 
     return new Observable<Message[]>((observer) => {
 
-      this.firemessagens = firebase.database().ref(`/mensagens/${userId1}-${userId2}${this.jogo.key}`)
+
+      if (userId1 === this.jogo.user) {
+        this.firemessagens = firebase.database().ref(`/mensagens/${userId2}-${userId1}${this.jogo.key}`)
+      } else {
+        this.firemessagens = firebase.database().ref(`/mensagens/${userId1}-${userId2}${this.jogo.key}`)
+      }
+
       let temp;
       this.firemessagens.on('value', (snapshot) => {
         this.buddymessages = [];
@@ -130,23 +144,11 @@ export class ChatService extends BaseService {
         for (var tempkey in temp) {
           this.buddymessages.push(temp[tempkey]);
         }
-        if (this.buddymessages.length === 0) {
-          this.firemessagens.off('value');
-          this.firemessagens = firebase.database().ref(`/mensagens/${userId2}-${userId1}${this.jogo.key}`);
-          this.firemessagens.on('value', (snapshot) => {
-            this.buddymessages = [];
-            temp = snapshot.val();
-            for (var tempkey in temp) {
-              this.buddymessages.push(temp[tempkey]);
-            }
-          });
-        }
-        console.log('chat',this.buddymessages);
-        
+        // this.events.publish('newMessage');
         observer.next(this.buddymessages);
       });
-    
-      // this.events.publish('newMessage');
+
+
     });
   }
 }

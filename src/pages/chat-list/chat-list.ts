@@ -10,25 +10,27 @@ import { NavController, NavParams } from 'ionic-angular';
   templateUrl: 'chat-list.html',
 })
 export class ChatListPage {
-  chats = [];
+  chats=[];
   constructor(
     private jogoService: JogoService,
     public chatService: ChatService,
     public navCtrl: NavController,
     public navParams: NavParams) {
+   
   }
 
-  ionViewDidLoad() {
-    console.log('get chats to user');
-    this.chats =[];
-    this.chats = this.chatService.getChatsUser();
-    console.log('chatsss',this.chats);
 
+
+  ionViewDidLoad() {
+    this.chatService.getChatsUser().subscribe((chats)=>{
+      this.chats = chats;
+      console.log('chatsss', this.chats);
+    });
+    
   }
 
   buddychat(jogo) {
     let jogoDados = this.jogoService.getJogo(jogo.key)
-    console.log('jogoChat', jogoDados);
     this.chatService.initializebuddy(jogoDados, jogo.sender);
     this.navCtrl.push(ChatPage, {
       jogo: jogoDados,
