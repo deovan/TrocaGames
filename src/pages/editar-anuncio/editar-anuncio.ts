@@ -16,13 +16,11 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Http } from '@angular/http';
 import { Entry } from '@ionic-native/file';
 
-
-
 @Component({
-  selector: 'page-inserir-anuncio',
-  templateUrl: 'inserir-anuncio.html',
+  selector: 'page-editar-anuncio',
+  templateUrl: 'editar-anuncio.html',
 })
-export class InserirAnuncioPage {
+export class EditarAnuncioPage {
   photo: Array<any> = new Array;
   key: string;
   qtdPhotos: number = 0;
@@ -34,7 +32,6 @@ export class InserirAnuncioPage {
   public newAnuncio: any;
   public jogo: Jogo;
   myDate: string = new Date().toISOString();
-
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -51,35 +48,38 @@ export class InserirAnuncioPage {
     public alertCtrl: AlertController,
     private formBuilder: FormBuilder,
   ) {
+    
+    this.jogo = navParams.get('jogo');
+    this.qtdPhotos = this.jogo.fotos.length;
+    this.photo = [];
+
     this._imageViewerCtrl = imageViewerCtrl;
     this.newAnuncio = formBuilder.group({
-      'nome': [
+      'editarNome': [
         '',
         Validators.compose([Validators.required])
       ],
-      'descricao': [
+      'editarDescricao': [
         '',
         Validators.compose([Validators.required])
       ],
-      'categoria': [
+      'editarCategoria': [
         '',
         Validators.compose([Validators.required])
       ],
-      'console': [
+      'editarConsole': [
         '',
         Validators.compose([Validators.required])
       ],
-      'preco': [
+      'editarPreco': [
         '',
         Validators.compose([Validators.required])
       ]
 
     });
   }
-
   ionViewWillLeave() {
-    this.qtdPhotos = 0;
-    this.photo = [];
+   
   }
 
   async save() {
@@ -91,11 +91,11 @@ export class InserirAnuncioPage {
       try {
         this.jogo = new Jogo(
           firebase.auth().currentUser.uid,
-          this.newAnuncio.value.nome,
-          this.newAnuncio.value.console,
-          this.newAnuncio.value.categoria,
-          this.newAnuncio.value.descricao,
-          this.newAnuncio.value.preco,
+          this.newAnuncio.value.editarNome,
+          this.newAnuncio.value.editarConsole,
+          this.newAnuncio.value.editarCategoria,
+          this.newAnuncio.value.editarDescricao,
+          this.newAnuncio.value.editarPreco,
           this.myDate);
         this.key = this.jogoService.save(this.jogo);
         if (this.key) {

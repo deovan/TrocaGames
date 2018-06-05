@@ -1,15 +1,19 @@
+import { Observable } from 'rxjs/Observable';
+import { EditarAnuncioPage } from './../editar-anuncio/editar-anuncio';
+import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
 import { JogoService } from './../../providers/jogo/jogo.service';
 import { Component } from '@angular/core';
 import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
 import { Jogo } from '../../todo/jogo.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'page-meus-anuncios',
   templateUrl: 'meus-anuncios.html',
 })
 export class MeusAnunciosPage {
-
-  anuncios;
+  private subAnunciosUser: Subscription = new Subscription();
+  anuncios: Observable<any[]>;
   constructor(
     private alertCtrl: AlertController,
     public jogoService: JogoService,
@@ -17,13 +21,20 @@ export class MeusAnunciosPage {
     public navParams: NavParams,
     public toastCtrl: ToastController
   ) {
-    
   }
 
-
-  ionViewDidLoad(){
-    this.inicializarItems()
+  inicializarItems() {
+    this.anuncios = this.jogoService.getAnunciosDoUser();
   }
+  
+  ionViewDidLoad() {
+    this.inicializarItems();
+  }
+
+  ionViewWillLeave() {
+    this.subAnunciosUser.unsubscribe();
+  }
+
 
   private doRefresh(refresher) {
     console.log('Begin async operation', refresher);
@@ -34,10 +45,6 @@ export class MeusAnunciosPage {
     }, 2000);
   }
 
-  private inicializarItems() {
-    this.jogoService.getAnunciosDoUser();
-    this.anuncios = this.jogoService.meusAnuncios;
-  }
 
 
   private presentConfirm(todo) {
@@ -64,6 +71,11 @@ export class MeusAnunciosPage {
     alert.present();
   }
 
+  private editarAnuncio(todo: Jogo) {
+    this.navCtrl.push(EditarAnuncioPage, {
+      jogo: todo
+    })
+  }
 
   private deleteAnuncio(todo: Jogo) {
     this.jogoService.removeAnuncio(todo.key).then((sucess) => {

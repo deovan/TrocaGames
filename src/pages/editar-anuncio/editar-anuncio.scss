@@ -1,4 +1,4 @@
-page-inserir-anuncio {
+page-editar-anuncio {
     border-radius: 50%;
     .image-container {
         background-size: cover;
@@ -43,7 +43,7 @@ page-inserir-anuncio {
     background: rgb(56, 56, 56);
 }
 
-#descricao {
+#editarDescricao {
     width: calc(100% - 10px);
     border: 0;
     border-radius: 0;

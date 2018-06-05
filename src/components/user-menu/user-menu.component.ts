@@ -10,8 +10,6 @@ import firebase, { Unsubscribe } from 'firebase';
 import { UserService } from '../../providers/user/user.service';
 import { AuthService } from '../../providers/auth/auth';
 import { InserirAnuncioPage } from '../../pages/inserir-anuncio/inserir-anuncio';
-import { AdicionarFotosPage } from '../../pages/adicionar-fotos/adicionar-fotos';
-
 @Component({
   selector: 'user-menu',
   templateUrl: 'user-menu.component.html'

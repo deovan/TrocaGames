@@ -23,7 +23,6 @@ export class JogoService extends BaseService {
   private _openRef: any;
   private _opens$: any;
   anuncios = [];
-  meusAnuncios= [];
 
   firedataJogo = firebase.database().ref('/jogos');
   firedataCategorias = firebase.database().ref('/categorias');
@@ -49,7 +48,6 @@ export class JogoService extends BaseService {
     });
     return result;
   }
-
 
   save(jogo: Jogo) {
     return this.firedataJogo.push(jogo).key;
@@ -97,20 +95,19 @@ export class JogoService extends BaseService {
   }
 
   getAnunciosDoUser() {
-    this.meusAnuncios = [];
-    this.firedataJogo
-      .orderByChild('/user')
-      .equalTo(firebase.auth().currentUser.uid)
-      .on('value', snap => {
-        this.meusAnuncios = snapshotToArray(snap);
-      });
-    console.log(this.meusAnuncios);
-    return this.meusAnuncios;
 
-
+    return new Observable<Jogo[]>((observer) => {
+      var meusAnuncios = [];
+      this.firedataJogo
+        .orderByChild('/user')
+        .equalTo(firebase.auth().currentUser.uid)
+        .on('value', snap => {
+          meusAnuncios = snapshotToArray(snap);
+        });
+      observer.next(meusAnuncios);
+    });
 
   }
-
 
   getAllAnuncios(limit: number, lastKey?: string): Observable<any[]> {
     if (this.finished) {
@@ -154,6 +151,13 @@ export class JogoService extends BaseService {
       .catch(this.handlePromiseError);
   }
 
+
+  update(jogo: Jogo, key: string): Promise<void> {
+    return this.firedataJogo.child(key)
+      .update(jogo)
+      .catch(this.handlePromiseError);
+  }
+  
   uploadPhoto(file: string, jogoId: string): Promise<string> {
     return this.makeFileIntoBlob(file)
       .then((fileBlob) => {

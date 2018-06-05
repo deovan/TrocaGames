@@ -1,5 +1,4 @@
 import { ChatListPage } from './../pages/chat-list/chat-list';
-import { AdicionarFotosPage } from './../pages/adicionar-fotos/adicionar-fotos';
 import { MessageService } from './../providers/message/message.service';
 import { MessageBoxComponent } from './../components/message-box/message-box.component';
 import { ProgressBarComponent } from './../components/progress-bar/progress-bar.component';
@@ -39,17 +38,17 @@ import { UserService } from '../providers/user/user.service';
 import { SuperTabsModule } from 'ionic2-super-tabs';
 import { CameraService } from '../providers/camera/camera.service';
 import { MeusAnunciosPage } from '../pages/meus-anuncios/meus-anuncios';
-
-
-
+import { IonicImageViewerModule } from 'ionic-img-viewer';
+import { EditarAnuncioPage } from '../pages/editar-anuncio/editar-anuncio';
+ 
 @NgModule({
   declarations: [
-    AdicionarFotosPage,
     AnuncioDetalhesPage,
     CapitalizePipe,
     ChatListPage,
     ChatPage,
     CustomLoggedHeaderComponent,
+    EditarAnuncioPage,
     HomePage,
     InserirAnuncioPage,
     LoginPage,
@@ -67,6 +66,7 @@ import { MeusAnunciosPage } from '../pages/meus-anuncios/meus-anuncios';
     BrMaskerModule,
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicImageViewerModule,
     AngularFireModule.initializeApp(firebaseConfig),
     HttpModule,
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
@@ -75,10 +75,10 @@ import { MeusAnunciosPage } from '../pages/meus-anuncios/meus-anuncios';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    AdicionarFotosPage,
     AnuncioDetalhesPage,
     ChatListPage,
     ChatPage,
+    EditarAnuncioPage,
     HomePage,
     InserirAnuncioPage,
     LoginPage,

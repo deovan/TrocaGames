@@ -16,14 +16,14 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-card ion-item *ngFor="let todo of anuncios">
+  <ion-card ion-item *ngFor="let todo of anuncios | async ">
     <ion-thumbnail item-start>
-      <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg'">
+      <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' ">
     </ion-thumbnail>
     <h1>{{todo.nome}}</h1>
     <h3>R$ {{todo.preco}}</h3>
     <p>{{todo.descricao}}</p>
     <button ion-button item-end color="danger" (click)="presentConfirm(todo)">Excluir</button>
-    <button ion-button item-end color="primary" (click)="presentConfirm(todo)">Editar</button>
+    <button ion-button item-end color="primary" (click)="editarAnuncio(todo)">Editar</button>
   </ion-card>
 </ion-content>

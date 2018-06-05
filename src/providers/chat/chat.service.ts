@@ -124,11 +124,7 @@ export class ChatService extends BaseService {
 
   getbuddymessages(userId1: string, userId2: string) {
 
-    console.log('user1', userId1, 'user2', userId2);
-
-
-
-    return new Observable<Message[]>((observer) => {
+      return new Observable<Message[]>((observer) => {
 
 
       if (userId1 === this.jogo.user) {

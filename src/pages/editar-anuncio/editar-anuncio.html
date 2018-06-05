@@ -1,9 +1,4 @@
-<!--
-  Generated template for the NovoEstabelecimentoPage page.
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header>
     <ion-navbar color="primary">
         <button ion-button menuToggle>
@@ -17,7 +12,7 @@
         </ion-buttons>
         <ion-title>
 
-            Novo Anúncio
+          Editar Anúncio
 
         </ion-title>
 
@@ -28,7 +23,7 @@
         <ion-scroll scrollX="true" style="white-space:nowrap;height: 70px;">
             <div class="scroll-item">
                 <ion-col col-xs-3 col-sm-1 col-lg-2 nowrap>
-                    <ion-row class="card card-1" *ngFor="let p of photo">
+                    <ion-row class="card card-1" *ngFor="let p of jogo.fotos">
                         <img src="{{p}}" #myImage (click)="presentImage(myImage)">
                         <ion-icon name="trash" class="deleteIcon" (click)="removeItem(p)"></ion-icon>
                     </ion-row>
@@ -50,15 +45,15 @@
     <form [formGroup]="newAnuncio" (submit)="save()">
         <ion-item>
             <ion-label stacked>Nome</ion-label>
-            <ion-input type="text" placeholder="Nome" formControlName="nome"></ion-input>
+            <ion-input type="text" placeholder="Nome" formControlName="editarNome"  [(ngModel)]="jogo.nome"></ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.nome.valid &&
-                            newAnuncio.controls.nome.touched">
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.editarNome.valid &&
+                            newAnuncio.controls.editarNome.touched">
             <p>Insira um nome</p>
         </ion-item>
         <ion-item>
             <ion-label stacked color="primary">Console</ion-label>
-            <ion-select type="text" placeholder="Console" formControlName="console">
+            <ion-select type="text" placeholder="Console" formControlName="editarConsole" [(ngModel)]="jogo.console">
                 <ion-option value="Xbox One">Xbox One</ion-option>
                 <ion-option value="XBOX 360">XBOX 360</ion-option>
                 <ion-option value="PS4">PS4</ion-option>
@@ -72,14 +67,14 @@
             </ion-select>
         </ion-item>
 
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.console.valid &&
-                            newAnuncio.controls.console.touched">
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.editarConsole.valid &&
+                            newAnuncio.controls.editarConsole.touched">
             <p>Selecione o console!</p>
         </ion-item>
 
         <ion-item>
             <ion-label stacked color="primary">Categoria</ion-label>
-            <ion-select type="text" placeholder="Categoria" formControlName="categoria" >
+            <ion-select type="text" placeholder="Categoria" formControlName="editarCategoria" [(ngModel)]="jogo.categoria">
                 <ion-option value="Ação">Ação</ion-option>
                 <ion-option value="Aventura">Aventura</ion-option>
                 <ion-option value="Esportes">Esportes</ion-option>
@@ -97,28 +92,28 @@
             </ion-select>
         </ion-item>
 
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.categoria.valid &&
-                                newAnuncio.controls.categoria.touched">
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.editarCategoria.valid &&
+                                newAnuncio.controls.editarCategoria.touched">
             <p>Selecione o console!</p>
         </ion-item>
 
         <ion-item>
             <ion-label stacked>Preço</ion-label>
-            <ion-input formControlName="preco" type="text" name="money" placeholder="(R$) Real" [brmasker]="{money: true,decimal: 2,type:  'num'} ">
+            <ion-input formControlName="editarPreco" [(ngModel)]="jogo.preco" type="text" name="money" placeholder="(R$) Real" [brmasker]="{money: true,decimal: 2,type:  'num'} ">
             </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.preco.valid &&
-        newAnuncio.controls.preco.touched">
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.editarPreco.valid &&
+        newAnuncio.controls.editarPreco.touched">
             <p>Insira um valor!</p>
         </ion-item>
 
         <ion-item>
             <ion-label stacked>Descrição</ion-label>
-            <ion-textarea type="text" placeholder="Descrição" formControlName="descricao" autocorrect="on" #descricao rows="4" id="descricao"
-                maxLength="500" name="descricao"></ion-textarea>
+            <ion-textarea  [(ngModel)]="jogo.descricao" type="text" placeholder="Descrição" formControlName="editarDescricao" autocorrect="on" #editarDescricao rows="4" id="editarDescricao"
+                maxLength="500" name="editarDescricao"></ion-textarea>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.descricao.valid &&
-                            newAnuncio.controls.descricao.touched">
+        <ion-item class="error-message" *ngIf="!newAnuncio.controls.editarDescricao.valid &&
+                            newAnuncio.controls.editarDescricao.touched">
             <p>Insira uma descrição</p>
         </ion-item>
         <button ion-button block type="submit" [disabled]="!newAnuncio.valid">

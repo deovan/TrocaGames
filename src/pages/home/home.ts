@@ -95,7 +95,6 @@ export class HomePage {
   }
 
   getItems(ev) {
-
     // Reset items back to all of the items
     // set val to the value of the ev target
     var val = ev.target.value;
@@ -109,10 +108,6 @@ export class HomePage {
       this._jogoService.lastKey = '';
       this.initializeItems()
     }
-
-
-
-
   }
 
   doInfinite(infiniteScroll) {
