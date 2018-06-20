@@ -1,8 +1,16 @@
 page-chat {
-    .campo{
-        background:seashell;
+    .campo {
+        background: seashell;
         margin-bottom: 100px;
         margin-right: 150px;
-       
+    }
+    ion-toolbar {
+        border-style: outset;
+        background: #000080;
+    }
+    .card {
+        border-style: solid;
+        height: 70px;
+        background: white;
     }
 }

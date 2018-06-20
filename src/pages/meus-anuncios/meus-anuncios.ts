@@ -1,11 +1,14 @@
+import { OnInit } from '@angular/core';
+import { Jogo } from './../../todo/jogo.model';
 import { Observable } from 'rxjs/Observable';
 import { EditarAnuncioPage } from './../editar-anuncio/editar-anuncio';
 import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
 import { JogoService } from './../../providers/jogo/jogo.service';
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
-import { Jogo } from '../../todo/jogo.model';
+import { NavController, NavParams, ToastController, AlertController, LoadingController } from 'ionic-angular';
+
 import { Subscription } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 
 @Component({
   selector: 'page-meus-anuncios',
@@ -13,28 +16,41 @@ import { Subscription } from 'rxjs';
 })
 export class MeusAnunciosPage {
   private subAnunciosUser: Subscription = new Subscription();
-  anuncios: Observable<any[]>;
+  private anuncios: any;
   constructor(
     private alertCtrl: AlertController,
     public jogoService: JogoService,
+    public loadingCtrl: LoadingController,
     public navCtrl: NavController,
     public navParams: NavParams,
     public toastCtrl: ToastController
   ) {
+    this.inicializarItems();
   }
 
-  inicializarItems() {
-    this.anuncios = this.jogoService.getAnunciosDoUser();
+  async inicializarItems() {
+    this.anuncios = [];
+    await this.jogoService.getAnunciosDoUser().then(observable => {
+      this.subAnunciosUser = observable.subscribe(jogos => {
+        this.anuncios = jogos;
+      });
+    })
   }
-  
+
   ionViewDidLoad() {
-    this.inicializarItems();
+    let loader = this.loadingCtrl.create({
+      content: "",
+    });
+    loader.present().then(() => {
+      this.inicializarItems().then(() => {
+        loader.dismiss();
+      });
+    })
   }
 
   ionViewWillLeave() {
     this.subAnunciosUser.unsubscribe();
   }
-
 
   private doRefresh(refresher) {
     console.log('Begin async operation', refresher);
@@ -44,8 +60,6 @@ export class MeusAnunciosPage {
       refresher.complete();
     }, 2000);
   }
-
-
 
   private presentConfirm(todo) {
     let alert = this.alertCtrl.create({

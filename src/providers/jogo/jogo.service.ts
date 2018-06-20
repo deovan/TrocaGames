@@ -18,19 +18,17 @@ declare var window: any;
 @Injectable()
 export class JogoService extends BaseService {
   private basePath = '/anuncios';
-  private _todos$: any;
+  public _todos$: any = [];
   private _db: any;
   private _openRef: any;
   private _opens$: any;
   anuncios = [];
-
   firedataJogo = firebase.database().ref('/jogos');
   firedataCategorias = firebase.database().ref('/categorias');
   itemList: any[] = [];
   loadeditemList: any = [];
   lastKey: any = '';
   finished = false;
-
 
   constructor(@Inject(FirebaseApp) public firebaseApp: any, ) {
     super();
@@ -53,22 +51,6 @@ export class JogoService extends BaseService {
     return this.firedataJogo.push(jogo).key;
   }
 
-  handleData(snap) {
-    try {
-      let item = snap.val();
-      item.key = snap.key;
-      this._todos$.next(item);
-      if (this.lastKey === snap.key) {
-        this.finished = true;
-      }
-      this.lastKey = snap.key;
-      console.log(snap.key);
-    } catch (error) {
-      console.log('catching', error);
-    }
-  }
-
-
   getJogo(jogoKey: string) {
     let jogo;
     this.firedataJogo.child(jogoKey).once(('value'), data => {
@@ -88,15 +70,14 @@ export class JogoService extends BaseService {
         .equalTo(categoria)
         .limitToFirst(limit)
         .on('child_added', this.handleData, this);
-      this._todos$ = new ReplaySubject();
+
 
       observer.next(this._todos$);
     });
   }
 
-  getAnunciosDoUser() {
-
-    return new Observable<Jogo[]>((observer) => {
+  async getAnunciosDoUser() {
+    return await new Observable<Jogo[]>((observer) => {
       var meusAnuncios = [];
       this.firedataJogo
         .orderByChild('/user')
@@ -109,11 +90,9 @@ export class JogoService extends BaseService {
 
   }
 
-  getAllAnuncios(limit: number, lastKey?: string): Observable<any[]> {
-    if (this.finished) {
-      return
-    }
-    return new Observable<Jogo[]>((observer) => {
+  async getAllAnuncios(limit: number, lastKey?: string) {
+  
+    return await new Observable<Jogo[]>((observer) => {
       var item = [];
       console.log("passou no observe");
       this.firedataJogo
@@ -121,26 +100,40 @@ export class JogoService extends BaseService {
         .startAt(this.lastKey + 1)
         .limitToFirst(limit)
         .on('value', snapshotChanges => {
-          this.anuncios = snapshotToArray(snapshotChanges);
+          snapshotChanges.forEach((snap) => {
+            if (this.lastKey === snap.key) {
+              this.finished = true;
+            } else {
+              let item = snap.val();
+              item.key = snap.key;
+              this.lastKey = snap.key;
+              console.log(snap.key);
+              this.anuncios.push(item);
+            }
+            return false;
+          })
         });
-
+        console.log(this.anuncios);
       observer.next(this.anuncios);
     });
   }
 
 
   allOpened(limit: number, lastKey?: string): Observable<any[]> {
-    if (this.finished) {
-      return
-    }
     return new Observable<Jogo[]>((observer) => {
       console.log("passou no observe");
-      this.firedataJogo
-        .orderByKey()
-        .startAt(this.lastKey + 1)
-        .limitToFirst(limit)
-        .on('child_added', this.handleData, this);
-      this._todos$ = new ReplaySubject();
+      if (this.finished) {
+
+      } else {
+        this.firedataJogo
+          .orderByKey()
+          .startAt(this.lastKey + 1)
+          .limitToFirst(limit)
+          .on('child_added', this.handleData, this);
+        this._todos$ = new ReplaySubject();
+      }
+
+
       observer.next(this._todos$);
     });
   }
@@ -151,13 +144,12 @@ export class JogoService extends BaseService {
       .catch(this.handlePromiseError);
   }
 
-
   update(jogo: Jogo, key: string): Promise<void> {
     return this.firedataJogo.child(key)
       .update(jogo)
       .catch(this.handlePromiseError);
   }
-  
+
   uploadPhoto(file: string, jogoId: string): Promise<string> {
     return this.makeFileIntoBlob(file)
       .then((fileBlob) => {
@@ -211,6 +203,24 @@ export class JogoService extends BaseService {
 
     return firebase.database().ref(`/jogos/${key}`)
       .remove();
+  }
+
+  handleData(snap) {
+    let tempJogos = []
+    if (this.lastKey === snap.key) {
+      this.finished = true;
+    } else {
+      try {
+        let item = snap.val();
+        item.key = snap.key;
+        this._todos$.next(item);
+        this.lastKey = snap.key;
+        console.log(snap.key);
+      } catch (error) {
+        console.log('catching', error);
+      }
+    }
+
   }
 }
 

@@ -10,9 +10,33 @@
 </ion-header>
 
 
-<ion-content padding>
-  <ion-list no-lines>
-    <button ion-item *ngFor="let chat of chats;async" (click)="buddychat(chat)">
+<ion-content >
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let chat of chats |  orderBy: order:reverse " (click)="buddychat(chat)">
+      <ion-item>
+        <ion-avatar item-start>
+          <img [src]="chat.foto|| 'assets/imgs/no-photo.jpg'">
+        </ion-avatar>
+        <h2>{{chat.title}}</h2>
+        <p *ngIf="chat.key;else customMessage">{{ chat.timestamp | date:'dd/MM/y H:mm '}} - {{ chat.message }}</p>
+
+        <ng-template #customMessage>
+          <p>
+            Sem Mensagens
+          </p>
+        </ng-template>
+
+      </ion-item>
+      <ion-item-options>
+        <button ion-button color=danger>
+          <ion-icon name="trash"></ion-icon>
+          Excluir
+        </button>
+
+      </ion-item-options>
+    </ion-item-sliding>
+    <!-- <button ion-item *ngFor="let chat of chats;async" (click)="buddychat(chat)">
       <ion-avatar item-start>
         <img [src]="chat.foto|| 'assets/imgs/no-photo.jpg'">
       </ion-avatar>
@@ -24,7 +48,7 @@
           Sem Mensagens
         </p>
       </ng-template>
-    </button>
+    </button> -->
   </ion-list>
 
 </ion-content>

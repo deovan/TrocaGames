@@ -1,3 +1,21 @@
 page-chat-list {
-
+    .content {
+        background: transparentize($color: #000000, $amount: 0.97);
+        background-size: cover;
+        background-position-x: 50%;
+        color: transparentize($color: black, $amount:0.1);
+        margin:0;padding:0;
+     
+        .card {
+            border: hidden;
+            background: transparentize($color: #000000, $amount: 0.1);
+            border-radius: 3%;
+            color: transparentize($color: black, $amount:0.1);
+    
+            .label {
+                color: black;
+            }
+        }
+  
+    }
 }

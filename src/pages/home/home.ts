@@ -1,3 +1,5 @@
+import { timeout } from 'rxjs/operators';
+import { LoadingController } from 'ionic-angular';
 import { Subscription } from 'rxjs/Subscription';
 import firebase from 'firebase';
 import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
@@ -14,6 +16,7 @@ import { NavController, MenuController, ToastController } from 'ionic-angular';
 
 import { AuthService } from '../../providers/auth/auth';
 import { Jogo } from '../../todo/jogo.model';
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 
 
 @Component({
@@ -21,11 +24,9 @@ import { Jogo } from '../../todo/jogo.model';
 })
 
 export class HomePage {
-
-
-  public todos = [];
+  public todos: any;
   private categorias = [];
-  limit: number = 50;
+  limit: number = 20;
   canSearch: boolean = false;
   currentUser = '';
   private _someListener: Subscription = new Subscription();
@@ -33,15 +34,95 @@ export class HomePage {
 
   constructor(
     public authService: AuthService,
+    public admob: AdMobFree,
     private _jogoService: JogoService,
     private _LOADER: PreloaderService,
+    public loadingCtrl: LoadingController,
     public menu: MenuController,
     public navCtrl: NavController,
     public toastCtrl: ToastController) {
-    this.initializeItems();
+    this.todos = []
     this.currentUser = firebase.auth().currentUser.uid;
     menu.enable(true);
+    this.showBanner();
   }
+
+
+  showBanner() {
+
+    let bannerConfig: AdMobFreeBannerConfig = {
+      id: 'ca-app-pub-9146010147596764/5044195931',
+      isTesting: true, // Remove in production
+      autoShow: true,
+      offsetTopBar: true
+    };
+
+    this.admob.banner.config(bannerConfig);
+
+    this.admob.banner.prepare().then(() => {
+      // success
+    }).catch(e => console.log(e));
+
+  }
+
+
+  ionViewCanEnter() {
+    console.log('passou no ionviewcanenter');
+    this.todos = [];
+    this.categorias = this._jogoService.getCategorias();
+    let loader = this.loadingCtrl.create({
+      content: "",
+    });
+    loader.present().then(() => {
+      this.initializeItems().then(() => {
+        loader.dismiss();
+      });
+    })
+  }
+
+
+  ionViewDidLoad() {
+    console.log('passou no ionViewDidLoad');
+
+
+  }
+
+
+  // ionViewDidLoad() {
+  //   console.log('passou no ionViewDidLoad');
+
+  //   let loader = this.loadingCtrl.create({
+  //     content: "Buscando Anúncios",
+  //     duration: 2000,
+  //   });
+  //   loader.present().then(() => {
+  //     console.log('loaderrssss');
+  //     this.initializeItems().then(() => {
+  //       loader.dismiss();
+  //     });
+  //   });
+
+  // }
+
+  ionViewWillLeave() {
+    this._someListener.unsubscribe();
+    this.todos = [];
+    this._jogoService.anuncios = [];
+    this._jogoService.lastKey = '';
+    this._jogoService.finished = false;
+  }
+
+  async initializeItems() {
+    this.todos = []
+    await this._jogoService.getAllAnuncios(this.limit).then((observer) => {
+      this._someListener = observer.subscribe((value) => {
+        value.forEach((jogo: Jogo) => {
+          if (jogo.user != this.currentUser) this.todos.push(jogo);
+        });
+      });
+    })
+  }
+
 
   exibirPorCategorias(categoria) {
     // this._jogoService.finished = false;
@@ -54,7 +135,6 @@ export class HomePage {
     this.todos = [];
     console.log(event);
     this._jogoService.getPorCategoria(this.limit, event).subscribe((value) => {
-      console.log('passou', value);
       value.forEach((jogo) => {
         this.todos.push(jogo);
       });
@@ -62,36 +142,11 @@ export class HomePage {
   }
 
   doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
     this.initializeItems();
     setTimeout(() => {
-      this.showToast('Atualizado com sucesso!')
+      // this.showToast('Atualizado com sucesso!')
       refresher.complete();
     }, 3000);
-  }
-
-  initializeItems() {
-    this._someListener = this._jogoService.allOpened(this.limit).subscribe((value) => {
-      console.log('passou', value);
-      value.forEach((jogo: Jogo) => {
-        if (jogo.user != this.currentUser) this.todos.push(jogo);
-      });
-    });
-  }
-
-
-
-  ionViewDidLoad() {
-    this.categorias = this._jogoService.getCategorias();
-    this._jogoService.lastKey = '';
-    this._jogoService.allOpened(this.limit);
-  }
-
-
-  ionViewWillLeave() {
-    console.log('ionViewWillLeave');
-    this._jogoService.lastKey = '';
-    this._someListener.unsubscribe();
   }
 
   getItems(ev) {
@@ -111,12 +166,10 @@ export class HomePage {
   }
 
   doInfinite(infiniteScroll) {
-    console.log('Begin async operation');
     setTimeout(() => {
       for (let i = 0; i < 1; i++) {
         this.initializeItems();
       }
-      console.log('Async operation has ended');
       infiniteScroll.complete();
     }, 500);
   }

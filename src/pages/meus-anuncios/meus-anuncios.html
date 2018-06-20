@@ -12,18 +12,49 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-card ion-item *ngFor="let todo of anuncios | async ">
-    <ion-thumbnail item-start>
-      <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' ">
-    </ion-thumbnail>
-    <h1>{{todo.nome}}</h1>
-    <h3>R$ {{todo.preco}}</h3>
-    <p>{{todo.descricao}}</p>
-    <button ion-button item-end color="danger" (click)="presentConfirm(todo)">Excluir</button>
-    <button ion-button item-end color="primary" (click)="editarAnuncio(todo)">Editar</button>
-  </ion-card>
+  <ion-list>
+    <ion-card *ngFor="let todo of anuncios">
+      <ion-item-sliding>
+
+        <ion-item>
+          <ion-thumbnail item-start>
+            <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' ">
+          </ion-thumbnail>
+          <ion-grid>
+            <ion-row align-items-center>
+              <ion-col col-6 col-sm>
+                <h1>{{todo.nome}}</h1>
+              </ion-col>
+              <ion-col col-3 col-sm offset-2 pull-md-6>
+                <ion-badge #badge>R${{todo.preco}}</ion-badge>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <p>{{todo.descricao}}</p>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+        <ion-item-options side="left">
+          <button ion-button color=danger (click)="presentConfirm(todo)">
+            <ion-icon name="trash"></ion-icon>
+          </button>
+        </ion-item-options>
+        <ion-item-options side="right">
+          <button ion-button color="primary" (click)="editarAnuncio(todo)">
+            <ion-icon name="create"></ion-icon>
+          </button>
+        </ion-item-options>
+
+
+      </ion-item-sliding>
+    </ion-card>
+  </ion-list>
+
+
+
+
 </ion-content>

@@ -30,6 +30,9 @@ import { AngularFireDatabaseModule } from "angularfire2/database";
 import { AngularFireAuthModule } from "angularfire2/auth";
 import { SplashScreen } from "@ionic-native/splash-screen";
 import { BrMaskerModule } from 'brmasker-ionic-3';
+import { AdMobFree } from '@ionic-native/admob-free';
+import { OrderModule } from 'ngx-order-pipe';
+
 import { CapitalizePipe } from "../pipes/capitalize/capitalize";
 import { CustomLoggedHeaderComponent } from "../components/custom-logged-header/custom-logged-header.component";
 import { ChatPage } from '../pages/chat/chat';
@@ -39,8 +42,7 @@ import { SuperTabsModule } from 'ionic2-super-tabs';
 import { CameraService } from '../providers/camera/camera.service';
 import { MeusAnunciosPage } from '../pages/meus-anuncios/meus-anuncios';
 import { IonicImageViewerModule } from 'ionic-img-viewer';
-import { EditarAnuncioPage } from '../pages/editar-anuncio/editar-anuncio';
- 
+import { EditarAnuncioPage } from '../pages/editar-anuncio/editar-anuncio'; 
 @NgModule({
   declarations: [
     AnuncioDetalhesPage,
@@ -65,6 +67,7 @@ import { EditarAnuncioPage } from '../pages/editar-anuncio/editar-anuncio';
   imports: [
     BrMaskerModule,
     BrowserModule,
+    OrderModule,
     IonicModule.forRoot(MyApp),
     IonicImageViewerModule,
     AngularFireModule.initializeApp(firebaseConfig),
@@ -89,6 +92,7 @@ import { EditarAnuncioPage } from '../pages/editar-anuncio/editar-anuncio';
     UserProfilePage
   ],
   providers: [
+    AdMobFree,
     AuthService,
     Camera,
     CameraService,

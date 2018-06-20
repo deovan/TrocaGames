@@ -29,23 +29,22 @@ export class UserMenuComponent extends BaseComponent {
   ) {
 
     super(alertCtrl, authService, app, menuCtrl);
-   
+
     const unsubscribe: Unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.userService.getUser(user.uid).subscribe((user: User) => {
           this.currentUser = user;
-            this.pages = [
-              { title: 'Home', component: HomePage },
-              { title: 'Perfil', component: UserProfilePage },
-              { title: 'Anunciar', component: InserirAnuncioPage },
-              { title: 'Chat', component: ChatListPage },
-            ]
-          console.log("passoi aqui" + this.currentUser.email);
+          this.pages = [
+            { title: 'Home', component: HomePage },
+            { title: 'Perfil', component: UserProfilePage },
+            { title: 'Anunciar', component: InserirAnuncioPage },
+            { title: 'Chat', component: ChatListPage },
+          ]
         });
       }
 
     });
-   
+
   }
   openPage(page) {
     let view = this.navCtrl.getActive();
@@ -56,6 +55,7 @@ export class UserMenuComponent extends BaseComponent {
       this.menuCtrl.close();
       // navigate to the new page if it is not the current page
       this.navCtrl.setRoot(page.component);
+
     }
 
   }

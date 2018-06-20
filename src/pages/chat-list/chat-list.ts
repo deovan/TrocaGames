@@ -5,28 +5,27 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 
+
 @Component({
   selector: 'page-chat-list',
   templateUrl: 'chat-list.html',
 })
 export class ChatListPage {
-  chats=[];
+  chats = [];
+  order: string = 'timestamp';
+  reverse: boolean = true;
   constructor(
     private jogoService: JogoService,
     public chatService: ChatService,
     public navCtrl: NavController,
     public navParams: NavParams) {
-   
+
   }
 
-
-
   ionViewDidLoad() {
-    this.chatService.getChatsUser().subscribe((chats)=>{
+    this.chatService.getChatsUser().subscribe((chats) => {
       this.chats = chats;
-      console.log('chatsss', this.chats);
     });
-    
   }
 
   buddychat(jogo) {

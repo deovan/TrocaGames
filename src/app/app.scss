@@ -1,6 +1,4 @@
 // http://ionicframework.com/docs/theming/
-
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -29,3 +27,29 @@
     border-radius: 100%;
 }
 
+.content {
+    background: transparentize($color: #000000, $amount: 0.96);
+    background-size: cover;
+    background-position-x: 50%;
+    color: transparentize($color: black, $amount:0.1);
+    margin:0;padding:0;
+ 
+    .card {
+        border-radius: 3%;
+        .label {
+            color: black;
+        }
+    }
+    ion-option {
+        background: transparent;
+    }
+    ion-select {
+        background: transparent;
+    }
+    ion-title {
+        text-align: center;
+    }
+    ion-label {
+        background: transparent;
+    }
+}

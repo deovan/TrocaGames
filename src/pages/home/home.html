@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-navbar color="primary">
+  <ion-navbar color=primary>
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
@@ -17,44 +17,53 @@
     <ion-searchbar *ngIf="canSearch" (ionInput)="getItems($event)"></ion-searchbar>
   </ion-navbar>
 
-  <ion-toolbar no-border center toolbar-ios-height>
-
+  <!-- <ion-toolbar no-border center toolbar-ios-height>
     <ion-scroll scrollX="true" style="white-space:nowrap;height: 30px;">
       <ion-buttons>
         <button *ngFor="let i of categorias" ion-button (click)="exibirPorCategorias($event)">{{i}}</button>
       </ion-buttons>
     </ion-scroll>
+  </ion-toolbar> -->
 
-  </ion-toolbar>
 </ion-header>
 
-<ion-content  class="cards-bg">
+<ion-content>
 
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <div *ngIf="todos.length==0">
+    <p align="center">Algo deu errado! Tente atualizar
+      <i class="em em-arrow_down"></i>
+    </p>
+  </div>
 
-  <ion-card ion-item *ngFor="let todo of todos" (click)="itemTapped($event, todo)">
-    <ion-thumbnail item-start>
-      <img class="round" [src]="todo.fotos ||  assets/imgs/no-image-available.jpg || async">
-    </ion-thumbnail>
+  <ion-card *ngFor="let todo of todos" (click)="itemTapped($event, todo)">
+    <ion-item>
+      <ion-thumbnail item-start>
+        <img class="round" [src]="todo.fotos ||  assets/imgs/no-image-available.jpg || async">
+      </ion-thumbnail>
+      <ion-grid>
+        <ion-row align-items-end>
+          <ion-col col-6 col-sm>
+            <h1>{{todo.nome}}</h1>
+          </ion-col>
+          <ion-col col-3 col-sm offset-2 pull-md-6>
+            <ion-badge>R${{todo.preco}}</ion-badge>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <p>{{todo.descricao}}</p>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
 
-    <ion-grid>
-      <ion-row align-items-end >
-        <ion-col col-6  col-sm>
-          <h1>{{todo.nome}}</h1>
-        </ion-col>
-        <ion-col col-3  col-sm offset-2  pull-md-6>
-         <h1>R${{todo.preco}}</h1> 
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <p>{{todo.descricao}}</p>
-      </ion-row>
-    </ion-grid>
   </ion-card>
 
+  <p *ngIf="todos.length!=0" align="center"> Não temos mais anúncios
+    <i class="em em-hushed"></i>
+  </p>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>

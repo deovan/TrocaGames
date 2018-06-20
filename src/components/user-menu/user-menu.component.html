@@ -2,8 +2,8 @@
 
   <user-info [user]="currentUser" [isMenu]=true></user-info>
 
-  <ion-list no-lines>
-    <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">
+  <ion-list>
+    <button menuClose  ion-item *ngFor="let p of pages" (click)="openPage(p)">
       {{p.title}}
     </button>
    

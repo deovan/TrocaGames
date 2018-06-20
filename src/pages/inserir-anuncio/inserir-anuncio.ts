@@ -15,6 +15,8 @@ import { CameraService } from '../../providers/camera/camera.service';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Http } from '@angular/http';
 import { Entry } from '@ionic-native/file';
+import { UserService } from '../../providers/user/user.service';
+import { User } from '../../todo/user.model';
 
 
 
@@ -23,6 +25,7 @@ import { Entry } from '@ionic-native/file';
   templateUrl: 'inserir-anuncio.html',
 })
 export class InserirAnuncioPage {
+  currentUser:User;
   photo: Array<any> = new Array;
   key: string;
   qtdPhotos: number = 0;
@@ -50,7 +53,9 @@ export class InserirAnuncioPage {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     private formBuilder: FormBuilder,
+    public userService: UserService
   ) {
+    this.loaduserdetails();
     this._imageViewerCtrl = imageViewerCtrl;
     this.newAnuncio = formBuilder.group({
       'nome': [
@@ -82,6 +87,12 @@ export class InserirAnuncioPage {
     this.photo = [];
   }
 
+  loaduserdetails() {
+    this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
+      this.currentUser = res;
+    })
+  }
+
   async save() {
     if (!this.newAnuncio.valid) {
       console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`);
@@ -91,12 +102,13 @@ export class InserirAnuncioPage {
       try {
         this.jogo = new Jogo(
           firebase.auth().currentUser.uid,
+          this.currentUser.name,
           this.newAnuncio.value.nome,
           this.newAnuncio.value.console,
           this.newAnuncio.value.categoria,
           this.newAnuncio.value.descricao,
           this.newAnuncio.value.preco,
-          this.myDate);
+          firebase.database.ServerValue.TIMESTAMP);
         this.key = this.jogoService.save(this.jogo);
         if (this.key) {
           let cont = 0;

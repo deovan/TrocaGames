@@ -91,6 +91,7 @@ export class EditarAnuncioPage {
       try {
         this.jogo = new Jogo(
           firebase.auth().currentUser.uid,
+          '',
           this.newAnuncio.value.editarNome,
           this.newAnuncio.value.editarConsole,
           this.newAnuncio.value.editarCategoria,

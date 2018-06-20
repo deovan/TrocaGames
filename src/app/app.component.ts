@@ -28,8 +28,6 @@ export class MyApp {
     public menu: MenuController,
     public splashScreen: SplashScreen,
     public userService: UserService) {
-
-   
     const unsubscribe: Unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
         this.rootPage = HomePage;
@@ -44,13 +42,22 @@ export class MyApp {
       //   { title: 'Perfil', component: UserProfilePage },
       //   { title: 'Novo', component: NovoEstabelecimentoPage }
       // ];
-   
+
     });
 
     this.platform.ready().then(() => {
+      this.hideSplashScreen();
+      // this.splashScreen.hide();
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
+
     });
- 
+
+  }
+  hideSplashScreen() {
+    if (this.splashScreen) {
+      setTimeout(() => {
+        this.splashScreen.hide();
+      }, 100);
+    }
   }
 }

@@ -1,5 +1,4 @@
 page-editar-anuncio {
-    border-radius: 50%;
     .image-container {
         background-size: cover;
         min-height: 50px;
@@ -37,22 +36,22 @@ page-editar-anuncio {
     .card-1:hover {
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
+    .newEstab {
+        background: rgb(56, 56, 56);
+    }
+    
+    #editarDescricao {
+        width: calc(100% - 10px);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+    
+    ion-input,
+    button,
+    ion-title,
+    ion-label {
+        font-family: "Champagne & Limousines";
+    }
 }
 
-.newEstab {
-    background: rgb(56, 56, 56);
-}
-
-#editarDescricao {
-    width: calc(100% - 10px);
-    border: 0;
-    border-radius: 0;
-    background: transparent;
-}
-
-ion-input,
-button,
-ion-title,
-ion-label {
-    font-family: "Champagne & Limousines";
-}

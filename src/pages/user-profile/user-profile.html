@@ -16,7 +16,7 @@
 
 
 </ion-header>
-<ion-content padding>
+<ion-content padding="true">
   <user-info [isMenu]="false" [user]="currentUser"></user-info>
 
   <form (ngSubmit)="onSubmit($event)" *ngIf="canEdit" #profileForm="ngForm">
@@ -43,7 +43,7 @@
 
     <br>
 
-    <button ion-button block type="submit" [disabled]="profileForm.form.invalid"> Salvar</button>
+    <button ion-button block light type="submit" [disabled]="profileForm.form.invalid"> Salvar</button>
 
   </form>
 

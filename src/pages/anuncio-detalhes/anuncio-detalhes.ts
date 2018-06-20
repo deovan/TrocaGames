@@ -25,8 +25,6 @@ export class AnuncioDetalhesPage {
     public navParams: NavParams,
     public modalCtrl: ModalController) {
     this.jogo = navParams.get('todo');
-
-
     this.fotos = this.jogo.fotos;
   }
 
