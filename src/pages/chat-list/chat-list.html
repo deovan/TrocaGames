@@ -10,13 +10,19 @@
 </ion-header>
 
 
-<ion-content >
+<ion-content>
 
+
+  <div *ngIf="chats.length===0">
+    <p align="center">Você ainda não possui nenhuma mensagem. 
+        <i class="em em--1"></i>
+    </p>
+  </div>
   <ion-list>
     <ion-item-sliding *ngFor="let chat of chats |  orderBy: order:reverse " (click)="buddychat(chat)">
       <ion-item>
         <ion-avatar item-start>
-          <img [src]="chat.foto|| 'assets/imgs/no-photo.jpg'">
+          <img [src]="chat?.foto ||  'assets/imgs/no-image-available.jpg'">
         </ion-avatar>
         <h2>{{chat.title}}</h2>
         <p *ngIf="chat.key;else customMessage">{{ chat.timestamp | date:'dd/MM/y H:mm '}} - {{ chat.message }}</p>
@@ -29,7 +35,7 @@
 
       </ion-item>
       <ion-item-options>
-        <button ion-button color=danger>
+        <button ion-button color=danger (click)="deleteChat(chat)">
           <ion-icon name="trash"></ion-icon>
           Excluir
         </button>

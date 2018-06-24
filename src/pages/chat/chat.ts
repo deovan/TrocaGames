@@ -53,7 +53,8 @@ export class ChatPage {
   }
 
 
-  ionViewDidLoad() {
+  ionViewCanEnter(){
+  
     this.chatService.getbuddymessages(this.sendTo, this.currentUser);
     this._someListener = this.chatService.getbuddymessages(this.sendTo, this.currentUser).subscribe((value) => {
       console.log('valor', value);
@@ -65,13 +66,12 @@ export class ChatPage {
 
   ionViewWillLeave() {
     console.log('ionViewWillLeave');
-   this._someListener.unsubscribe();
+  
   }
 
   ionViewWillUnload() {
     console.log('ionViewWillUnload');
-
-
+    this._someListener.unsubscribe();
   }
 
 

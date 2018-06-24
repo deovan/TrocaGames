@@ -16,10 +16,16 @@
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
+
+
+  <div *ngIf="anuncios.length===0">
+      <p align="center">Você não anunciou nada ainda. 
+          <i class="em em--1"></i>
+      </p>
+    </div>
   <ion-list>
     <ion-card *ngFor="let todo of anuncios">
       <ion-item-sliding>
-
         <ion-item>
           <ion-thumbnail item-start>
             <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' ">
@@ -48,8 +54,6 @@
             <ion-icon name="create"></ion-icon>
           </button>
         </ion-item-options>
-
-
       </ion-item-sliding>
     </ion-card>
   </ion-list>

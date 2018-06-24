@@ -1,4 +1,11 @@
-<ion-menu [content]=" content" enabled="false" id = "user-menu" persistent="false">
+<div class="custom-overlay" *ngIf="splash">
+  <svg width="200" height="200" viewBox="0 0 40 60">
+    <polygon class="triangle" fill="none" stroke="#000" stroke-width="1" points="16,1 32,32 1,32"></polygon>
+    <text class="loading" x="0" y="45" fill="#000">Loading...</text>
+  </svg>
+</div>
+
+<ion-menu [content]=" content" enabled="false" id="user-menu" persistent="false">
   <user-menu [userId]="userId"></user-menu>
 </ion-menu>
 

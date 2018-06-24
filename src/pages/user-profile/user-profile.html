@@ -22,7 +22,6 @@
   <form (ngSubmit)="onSubmit($event)" *ngIf="canEdit" #profileForm="ngForm">
     <ion-item>
       <ion-icon name="person" item-left></ion-icon>
-
       <ion-input type="text" placeholder="Nome" name="name" [(ngModel)]="currentUser.name" required minlenght="3">
       </ion-input>
     </ion-item>
@@ -33,7 +32,6 @@
     </ion-item>
     <ion-item>
       <ion-icon name="image" item-left></ion-icon>
-      <button ion-button icon-left (click)="onActionSheet()"></button>
       <input type="file" accept="image/*" (change)="onPhoto($event)">
     </ion-item>
 

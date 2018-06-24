@@ -4,31 +4,24 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-row justify-content-center>
-    <div class="slider-fotos">
-      <ion-slides pager (ionSlideDidChange)="slideChanged()">
-        <ion-slide *ngFor="let img of fotos " class="swiper-zoom-container">
-          <img class="slide-image" src="{{img}}">
-        </ion-slide>
+<ion-content fullscreen>
+  <div class="slider-fotos">
+    <ion-slides pager (ionSlideDidChange)="slideChanged()">
+      <ion-slide *ngFor="let img of fotos " class="swiper-zoom-container">
+        <img class="slide-image" src="{{img}}">
+      </ion-slide>
 
-      </ion-slides>
-    </div>
-  </ion-row>
-  <ion-row justify-content-start>
-    <ion-col align-self-start >
-      <ion-item>
-        <label>Nome:</label>
-        <h1 style="white-space: nowrap ">{{jogo.nome}}</h1>
-      </ion-item>
-    </ion-col>
-    <ion-col align-self-end>
-      <ion-item>
-        <label>Preço:</label>
-        <ion-badge danger>R${{jogo.preco}}</ion-badge>
-      </ion-item>
-    </ion-col>
-  </ion-row>
+    </ion-slides>
+  </div>
+
+
+  <ion-item>
+    <h1 style="white-space: nowrap ">{{jogo.nome}}</h1>
+  </ion-item>
+
+  <ion-item>
+    <ion-badge danger>R${{jogo.preco}}</ion-badge>
+  </ion-item>
   <ion-item>
     <label>Descrição:</label>
     <p style="white-space: normal ">{{jogo.descricao}}</p>

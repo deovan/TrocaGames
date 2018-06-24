@@ -1,42 +1,14 @@
 page-detalhes-estabelecimento {
     .content {
         background: transparentize($color: #000000, $amount: 0.97);
-        background-size: cover;
-        background-position-x: 50%;
+ 
         p {
             white-space: pre-wrap;
             word-wrap: break-word;
             font-size: 1.1em;
             margin: 0;
         }
-        .text {
-            word-wrap: break-word;
-            background-color: #efefef;
-            padding: 7px 5px 5px 5px;
-            box-shadow: 1px 1px 3px #ccc;
-            color: #333;
-            p {
-                white-space: pre-wrap;
-                word-wrap: break-word;
-                font-size: 1.1em;
-                margin: 0;
-            }
-            p.timestamp {
-                font-size: 0.8em;
-                margin-top: 5px;
-                color: #999;
-            }
-        }
-        ion-badge {
-            padding: 3px 8px;
-            text-align: center;
-            display: inline-block;
-            min-width: 10px;
-            font-size:  !important 10rem;
-            font-weight: bold;
-            line-height: 1;
-            white-space: nowrap;
-            vertical-align: baseline;
-        }
+    
+ 
     }
 }

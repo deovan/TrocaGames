@@ -1,22 +1,22 @@
-import { AuthService } from './../../providers/auth/auth';
-import { auth } from 'firebase/app';
-import { JogoService } from './../../providers/jogo/jogo.service';
+import { AuthService } from './../../providers/auth/auth'
+import { auth } from 'firebase/app'
+import { JogoService } from './../../providers/jogo/jogo.service'
 
-import { TelefoneValidator } from './../../validators/telefone.validator';
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, NavParams, ToastController, Loading, LoadingController, AlertController, Alert, ActionSheetController } from 'ionic-angular';
-import { HomePage } from '../home/home';
-import { Jogo } from '../../todo/jogo.model';
-import { EmailValidator } from '../../validators/email';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import firebase from 'firebase';
-import { ImageViewerController } from 'ionic-img-viewer';
-import { CameraService } from '../../providers/camera/camera.service';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { Http } from '@angular/http';
-import { Entry } from '@ionic-native/file';
-import { UserService } from '../../providers/user/user.service';
-import { User } from '../../todo/user.model';
+import { TelefoneValidator } from './../../validators/telefone.validator'
+import { Component, ViewChild, ElementRef } from '@angular/core'
+import { NavController, NavParams, ToastController, Loading, LoadingController, AlertController, Alert, ActionSheetController } from 'ionic-angular'
+import { HomePage } from '../home/home'
+import { Jogo } from '../../todo/jogo.model'
+import { EmailValidator } from '../../validators/email'
+import { FormGroup, FormBuilder, Validators } from '@angular/forms'
+import firebase from 'firebase'
+import { ImageViewerController } from 'ionic-img-viewer'
+import { CameraService } from '../../providers/camera/camera.service'
+import { Camera, CameraOptions } from '@ionic-native/camera'
+import { Http } from '@angular/http'
+import { Entry } from '@ionic-native/file'
+import { UserService } from '../../providers/user/user.service'
+import { User } from '../../todo/user.model'
 
 
 
@@ -25,18 +25,18 @@ import { User } from '../../todo/user.model';
   templateUrl: 'inserir-anuncio.html',
 })
 export class InserirAnuncioPage {
-  currentUser:User;
-  photo: Array<any> = new Array;
-  key: string;
-  qtdPhotos: number = 0;
-  uploadProgress: number;
-  _imageViewerCtrl: ImageViewerController;
-  private console: string;
-  private categoria: string;
-  private preco: string;
-  public newAnuncio: any;
-  public jogo: Jogo;
-  myDate: string = new Date().toISOString();
+  currentUser: User
+  photo: Array<any> = new Array
+  key: string
+  qtdPhotos: number = 0
+  uploadProgress: number
+  _imageViewerCtrl: ImageViewerController
+  private console: string
+  private categoria: string
+  private preco: string
+  public newAnuncio: any
+  public jogo: Jogo
+  myDate: string = new Date().toISOString()
 
 
   constructor(
@@ -55,8 +55,8 @@ export class InserirAnuncioPage {
     private formBuilder: FormBuilder,
     public userService: UserService
   ) {
-    this.loaduserdetails();
-    this._imageViewerCtrl = imageViewerCtrl;
+    this.loaduserdetails()
+    this._imageViewerCtrl = imageViewerCtrl
     this.newAnuncio = formBuilder.group({
       'nome': [
         '',
@@ -79,84 +79,95 @@ export class InserirAnuncioPage {
         Validators.compose([Validators.required])
       ]
 
-    });
+    })
   }
 
   ionViewWillLeave() {
-    this.qtdPhotos = 0;
-    this.photo = [];
+    this.qtdPhotos = 0
+    this.photo = []
   }
 
   loaduserdetails() {
     this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
-      this.currentUser = res;
+      this.currentUser = res
     })
   }
 
-  async save() {
+  save() {
     if (!this.newAnuncio.valid) {
-      console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`);
+      console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`)
     } else {
-      const loading: Loading = this.loadingCtrl.create();
-      loading.present();
-      try {
-        this.jogo = new Jogo(
-          firebase.auth().currentUser.uid,
-          this.currentUser.name,
-          this.newAnuncio.value.nome,
-          this.newAnuncio.value.console,
-          this.newAnuncio.value.categoria,
-          this.newAnuncio.value.descricao,
-          this.newAnuncio.value.preco,
-          firebase.database.ServerValue.TIMESTAMP);
-        this.key = this.jogoService.save(this.jogo);
+      const loading: Loading = this.loadingCtrl.create()
+      loading.present()
+      this.jogo = new Jogo(
+        firebase.auth().currentUser.uid,
+        this.currentUser.name,
+        this.newAnuncio.value.nome,
+        this.newAnuncio.value.console,
+        this.newAnuncio.value.categoria,
+        this.newAnuncio.value.descricao,
+        this.newAnuncio.value.preco,
+        firebase.database.ServerValue.TIMESTAMP)
+      this.jogoService.save(this.jogo).then((valueKey) => {
+        this.key = valueKey
         if (this.key) {
-          let cont = 0;
-          this.photo.reduce((current, currentValue, currentIndex, array) => {
-            this.jogoService.uploadPhoto(currentValue, this.key).then((value) => {
-              console.log('current', current, '+++currentValue', currentValue, 'index ', currentIndex);
-              cont++;
-              this.jogo.fotos.push(value);
-              if (cont == this.qtdPhotos) {
-                this.uploadToDatabase();
-                this.navCtrl.setRoot(HomePage);
-                loading.dismiss();
-                this.showToast('Anúncio Cadastrado com Sucesso!');
-              }
+          var cont = 0
+          if (this.photo.length === 1) {
+            this.jogoService.uploadPhoto(this.photo[0], this.key).then((value) => {
+              this.jogo.fotos.push(value)
+              this.uploadToDatabase().then(() => {
+                this.navCtrl.setRoot(HomePage)
+                loading.dismiss()
+                this.showToast('Anúncio Cadastrado com Sucesso!')
+              })
+            })
+          } else {
+            this.photo.reduce((value, index) => {
+              this.jogoService.uploadPhoto(value, this.key).then((value) => {
+                this.jogo.fotos.push(value)
+                cont++
+                if (cont === this.qtdPhotos) {
+                  this.uploadToDatabase().then(() => {
+                    this.navCtrl.setRoot(HomePage)
+                    loading.dismiss()
+                    this.showToast('Anúncio Cadastrado com Sucesso!')
+                  })
+                }
 
-            }).catch((error) => alert(error));
-
-          }, 0);
-
+              }).catch((error) => alert(error))
+            }, 0)
+          }
         }
+      }).catch((error) => {
+        console.log(error)
+        loading.dismiss()
+        this.showAlert(error)
+        this.navCtrl.getPrevious()
+      })
 
-      } catch (error) {
-        console.log(error);
-        loading.dismiss();
-        this.showAlert(error);
-        this.navCtrl.getPrevious();
-      };
 
     }
   }
 
   getQtdFotos() {
     if (this.qtdPhotos > 3) return false
-    else return true;
+    else return true
   }
+
   presentImage(myImage) {
-    const imageViewer = this._imageViewerCtrl.create(myImage);
-    imageViewer.present();
+    const imageViewer = this._imageViewerCtrl.create(myImage)
+    imageViewer.present()
   }
 
   removeItem(item) {
-    for (let i = 0; i < this.photo.length; i++) {
+    for (let i = 0 ;i < this.photo.length; i++) {
       if (this.photo[i] == item) {
-        this.photo.splice(i, 1);
-        this.qtdPhotos--;
+        this.photo.splice(i, 1)
+        this.qtdPhotos--
       }
     }
   }
+
   onActionSheet() {
     this.actionSheetCtrl.create({
       title: 'Selecione o camingo da imagem',
@@ -164,15 +175,14 @@ export class InserirAnuncioPage {
         {
           text: 'Ler da Galeria',
           handler: async () => {
-            this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY);
-
+            this.takePicture(this.camera.PictureSourceType.PHOTOLIBRARY)
           }
         }
         ,
         {
           text: "Tirar foto",
           handler: () => {
-            this.takePicture(this.camera.PictureSourceType.CAMERA);
+            this.takePicture(this.camera.PictureSourceType.CAMERA)
 
           }
         },
@@ -182,7 +192,7 @@ export class InserirAnuncioPage {
       ]
     }).present().then((value) => {
 
-    });
+    })
   }
 
 
@@ -197,28 +207,26 @@ export class InserirAnuncioPage {
       encodingType: 0,
       mediaType: 0,
       allowEdit: true
-    };
+    }
 
 
     this.camera.getPicture(cameraOptions)
       .then((fileUri: string) => {
-        console.log('File URI: ', fileUri);
+        console.log('File URI: ', fileUri)
         this.cameraService.saveFile(fileUri, sourceType)
           .then((entry: Entry) => {
-            this.photo.push(entry.nativeURL);
-            this.qtdPhotos++;
-            console.log('FOTOS:', this.photo);
-          });
+            this.photo.push(entry.nativeURL)
+            this.qtdPhotos++
+            console.log('FOTOS:', this.photo)
+          })
 
-      }).catch((err: Error) => console.log('Camera error: ', err));
+      }).catch((err: Error) => console.log('Camera error: ', err))
   }
 
 
   private uploadToDatabase() {
-    this.jogoService.edit(this.jogo, this.key).then((valor) => {
-      console.log('editou o jogo',valor);
-      
-    }).catch((error) => alert(error));
+    return this.jogoService.edit(this.jogo, this.key).then((valor) => {
+    }).catch((error) => alert(error))
   }
 
   private showToast(message: string): void {
@@ -234,7 +242,7 @@ export class InserirAnuncioPage {
     this.alertCtrl.create({
       message: message,
       buttons: ['Ok']
-    }).present();
+    }).present()
   }
 
 }

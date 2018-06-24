@@ -1,4 +1,5 @@
-import { auth } from 'firebase/app';
+import { Camera } from '@ionic-native/camera';
+import { auth, database } from 'firebase/app';
 import { Entry } from '@ionic-native/file';
 
 import { Injectable, Inject } from '@angular/core';
@@ -11,6 +12,7 @@ import { FirebaseApp } from 'angularfire2';
 import { BaseService } from '../base/base.service';
 import { Observable } from 'rxjs/Observable';
 import { map } from '@firebase/util';
+import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
 
 
 declare var window: any;
@@ -36,10 +38,8 @@ export class JogoService extends BaseService {
 
   getCategorias() {
     var result = [];
-    // load data from firebase...
     this.firedataCategorias.orderByKey().once('value', (snapshot: any) => {
       snapshot.forEach((childSnapshot) => {
-        // get the key/id and the data for display
         var element = childSnapshot.val();
         result.push(element);
       });
@@ -48,17 +48,38 @@ export class JogoService extends BaseService {
   }
 
   save(jogo: Jogo) {
-    return this.firedataJogo.push(jogo).key;
+    return new Promise<string>(resolve => {
+      let key = this.firedataJogo.push(jogo).key;
+      resolve(key);
+    })
+
+  }
+  userExistsCallback(userId, exists) {
+    if (exists) {
+      alert('user ' + userId + ' exists!');
+    } else {
+      alert('user ' + userId + ' does not exist!');
+    }
   }
 
   getJogo(jogoKey: string) {
-    let jogo;
-    this.firedataJogo.child(jogoKey).once(('value'), data => {
-      let item = data.val();
-      item.key = data.key;
-      jogo = item
-    });
-    return jogo;
+    var jogo;
+    return new Promise<any>((resolve, reject) => {
+      this.firedataJogo.child(jogoKey).on(('value'), data => {
+        if (data.val() !== null) {
+          let item = data.val()
+          item.key = data.key
+          jogo = item
+        } else {
+          jogo = false;
+        }
+      });
+
+      setTimeout(() => {
+        resolve(jogo);
+      }, 300);
+    })
+
   }
 
   getPorCategoria(limit?: number, categoria?: string) {
@@ -70,31 +91,31 @@ export class JogoService extends BaseService {
         .equalTo(categoria)
         .limitToFirst(limit)
         .on('child_added', this.handleData, this);
-
-
       observer.next(this._todos$);
     });
   }
 
-  async getAnunciosDoUser() {
-    return await new Observable<Jogo[]>((observer) => {
+  getAnunciosDoUser() {
+    return new Promise<Jogo[]>((resolve, reject) => {
       var meusAnuncios = [];
       this.firedataJogo
         .orderByChild('/user')
         .equalTo(firebase.auth().currentUser.uid)
-        .on('value', snap => {
-          meusAnuncios = snapshotToArray(snap);
-        });
-      observer.next(meusAnuncios);
-    });
-
+        .on('value', snapshot => {
+          snapshot.forEach(snap => {
+            let item = snap.val();
+            item.key = snap.key;
+            meusAnuncios.push(item);
+            return false;
+          })
+          resolve(meusAnuncios);
+        })
+    })
   }
 
-  async getAllAnuncios(limit: number, lastKey?: string) {
-  
-    return await new Observable<Jogo[]>((observer) => {
+  getAllAnuncios(limit: number, lastKey?: string) {
+    return new Promise<any[]>((resolve, reject) => {
       var item = [];
-      console.log("passou no observe");
       this.firedataJogo
         .orderByKey()
         .startAt(this.lastKey + 1)
@@ -113,30 +134,13 @@ export class JogoService extends BaseService {
             return false;
           })
         });
-        console.log(this.anuncios);
-      observer.next(this.anuncios);
+      setTimeout(() => {
+        resolve(this.anuncios);
+      }, 2000);
     });
   }
 
 
-  allOpened(limit: number, lastKey?: string): Observable<any[]> {
-    return new Observable<Jogo[]>((observer) => {
-      console.log("passou no observe");
-      if (this.finished) {
-
-      } else {
-        this.firedataJogo
-          .orderByKey()
-          .startAt(this.lastKey + 1)
-          .limitToFirst(limit)
-          .on('child_added', this.handleData, this);
-        this._todos$ = new ReplaySubject();
-      }
-
-
-      observer.next(this._todos$);
-    });
-  }
 
   edit(jogo: Jogo, key?: string): Promise<void> {
     return this.firedataJogo.child(key)
@@ -164,7 +168,7 @@ export class JogoService extends BaseService {
     var randomNumber = Math.floor(Math.random() * 256);
     console.log('Random number : ' + randomNumber);
     return new Promise((resolve, reject) => {
-      let storageRef = firebase.storage().ref(this.basePath + `${jogoId}/` + randomNumber + '.jpg');//Firebase storage main path
+      let storageRef = firebase.storage().ref(this.basePath + `/${jogoId}/` + randomNumber + '.jpg');//Firebase storage main path
 
       let metadata: firebase.storage.UploadMetadata = {
         contentType: 'image/jpeg',
@@ -198,11 +202,24 @@ export class JogoService extends BaseService {
     storageRef.child(fullPath).delete();
   }
 
-  public removeAnuncio(key: string) {
-    console.log('key', key);
-
-    return firebase.database().ref(`/jogos/${key}`)
-      .remove();
+  public removeAnuncio(jogo: Jogo) {
+    console.log('key', jogo);
+    var path = firebase.storage().ref(this.basePath + `/${jogo.key}`);
+    if(!jogo.fotos){
+      return firebase.database().ref(`/jogos/${jogo.key}`)
+      .remove()
+    }else{
+      jogo.fotos.forEach((value) => {
+        let name = value.substr(value.indexOf('%2F') + 3, (value.indexOf('?')) - (value.indexOf('%2F') + 3));
+        name = name.substr(name.indexOf('%2F') + 3, 8)
+        path.child(`${name}`).delete();
+      }, 0);
+      return firebase.database().ref(`/jogos/${jogo.key}`)
+      .remove()
+    }
+   
+    
+   
   }
 
   handleData(snap) {

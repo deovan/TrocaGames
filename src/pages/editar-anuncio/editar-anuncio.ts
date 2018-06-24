@@ -15,44 +15,47 @@ import { CameraService } from '../../providers/camera/camera.service';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Http } from '@angular/http';
 import { Entry } from '@ionic-native/file';
+import { UserService } from '../../providers/user/user.service';
+import { User } from '../../todo/user.model';
 
 @Component({
   selector: 'page-editar-anuncio',
   templateUrl: 'editar-anuncio.html',
 })
 export class EditarAnuncioPage {
-  photo: Array<any> = new Array;
-  key: string;
-  qtdPhotos: number = 0;
-  uploadProgress: number;
-  _imageViewerCtrl: ImageViewerController;
   private console: string;
   private categoria: string;
   private preco: string;
   public newAnuncio: any;
   public jogo: Jogo;
+  currentUser: User;
+  photo: Array<any> = new Array;
+  key: string;
+  qtdPhotos: number = 0;
+  uploadProgress: number;
+  _imageViewerCtrl: ImageViewerController;
   myDate: string = new Date().toISOString();
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
+    public alertCtrl: AlertController,
+    public authService: AuthService,
     public camera: Camera,
     public cameraService: CameraService,
-    public http: Http,
-    imageViewerCtrl: ImageViewerController,
-    public navCtrl: NavController,
-    public authService: AuthService,
-    public navParams: NavParams,
-    public jogoService: JogoService,
-    private toastCtrl: ToastController,
-    public loadingCtrl: LoadingController,
-    public alertCtrl: AlertController,
     private formBuilder: FormBuilder,
+    public jogoService: JogoService,
+    public http: Http,
+    public imageViewerCtrl: ImageViewerController,
+    public loadingCtrl: LoadingController,
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    private toastCtrl: ToastController,
+    public userService: UserService
   ) {
-    
+    this.loaduserdetails();
     this.jogo = navParams.get('jogo');
     this.qtdPhotos = this.jogo.fotos.length;
     this.photo = [];
-
     this._imageViewerCtrl = imageViewerCtrl;
     this.newAnuncio = formBuilder.group({
       'editarNome': [
@@ -79,53 +82,57 @@ export class EditarAnuncioPage {
     });
   }
   ionViewWillLeave() {
-   
+
   }
 
-  async save() {
+  loaduserdetails() {
+    this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
+      this.currentUser = res;
+    })
+  }
+
+  save() {
     if (!this.newAnuncio.valid) {
       console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`);
     } else {
       const loading: Loading = this.loadingCtrl.create();
       loading.present();
-      try {
-        this.jogo = new Jogo(
-          firebase.auth().currentUser.uid,
-          '',
-          this.newAnuncio.value.editarNome,
-          this.newAnuncio.value.editarConsole,
-          this.newAnuncio.value.editarCategoria,
-          this.newAnuncio.value.editarDescricao,
-          this.newAnuncio.value.editarPreco,
-          this.myDate);
-        this.key = this.jogoService.save(this.jogo);
-        if (this.key) {
-          let cont = 0;
-          this.photo.reduce((current, currentValue, currentIndex, array) => {
-            this.jogoService.uploadPhoto(currentValue, this.key).then((value) => {
-              console.log('current', current, '+++currentValue', currentValue, 'index ', currentIndex);
-              cont++;
-              this.jogo.fotos.push(value);
-              if (cont == this.qtdPhotos) {
-                this.uploadToDatabase();
-                this.navCtrl.setRoot(HomePage);
-                loading.dismiss();
-                this.showToast('Anúncio Cadastrado com Sucesso!');
-              }
+      this.jogo.nome = this.newAnuncio.value.editarNome
+      this.jogo.console=  this.newAnuncio.value.editarConsole,
+      this.jogo.categoria =  this.newAnuncio.value.editarCategoria,
+      this.jogo.descricao =  this.newAnuncio.value.editarDescricao,
+      this.jogo.preco =  this.newAnuncio.value.editarPreco,
+      this.jogoService.update(this.jogo, this.jogo.key)
+      // .then((valueKey) => {
+        // this.key = valueKey;
+        // if (this.key) {
+        //   var cont = 0;
+        //   this.photo.forEach((value, index) => {
+        //     this.jogoService.uploadPhoto(value, this.key).then((value) => {
+        //       this.jogo.fotos.push(value);
+        //       cont++;
+        //       if (cont === this.qtdPhotos) {
+        //         this.uploadToDatabase().then(() => {
+        //           this.navCtrl.setRoot(HomePage);
+        //           loading.dismiss();
+        //           this.showToast('Anúncio Cadastrado com Sucesso!');
+        //         });
+        //       }
 
-            }).catch((error) => alert(error));
+        //     }).catch((error) => alert(error));
 
-          }, 0);
+        //   });
 
-        }
+        // }
+      // }).catch((error) => {
+      //   console.log(error);
+      //   loading.dismiss();
+      //   this.showAlert(error);
+      //   this.navCtrl.getPrevious();
+      // })
 
-      } catch (error) {
-        console.log(error);
-        loading.dismiss();
-        this.showAlert(error);
-        this.navCtrl.getPrevious();
-      };
-
+      loading.dismiss();
+      this.navCtrl.pop();
     }
   }
 
@@ -204,9 +211,7 @@ export class EditarAnuncioPage {
 
 
   private uploadToDatabase() {
-    this.jogoService.edit(this.jogo, this.key).then((valor) => {
-      console.log('editou o jogo',valor);
-      
+    return this.jogoService.edit(this.jogo, this.key).then((valor) => {
     }).catch((error) => alert(error));
   }
 

@@ -15,8 +15,7 @@ import { timeout } from 'rxjs/operators';
   templateUrl: 'meus-anuncios.html',
 })
 export class MeusAnunciosPage {
-  private subAnunciosUser: Subscription = new Subscription();
-  private anuncios: any;
+  private anuncios = [];
   constructor(
     private alertCtrl: AlertController,
     public jogoService: JogoService,
@@ -25,15 +24,15 @@ export class MeusAnunciosPage {
     public navParams: NavParams,
     public toastCtrl: ToastController
   ) {
-    this.inicializarItems();
+
   }
 
-  async inicializarItems() {
+  inicializarItems() {
     this.anuncios = [];
-    await this.jogoService.getAnunciosDoUser().then(observable => {
-      this.subAnunciosUser = observable.subscribe(jogos => {
-        this.anuncios = jogos;
-      });
+    return this.jogoService.getAnunciosDoUser().then(jogos => {
+      jogos.forEach(jogo => {
+        this.anuncios.push(jogo)
+      })
     })
   }
 
@@ -42,14 +41,12 @@ export class MeusAnunciosPage {
       content: "",
     });
     loader.present().then(() => {
-      this.inicializarItems().then(() => {
-        loader.dismiss();
-      });
+      this.inicializarItems().then(() => loader.dismiss())
+
     })
   }
 
   ionViewWillLeave() {
-    this.subAnunciosUser.unsubscribe();
   }
 
   private doRefresh(refresher) {
@@ -92,7 +89,7 @@ export class MeusAnunciosPage {
   }
 
   private deleteAnuncio(todo: Jogo) {
-    this.jogoService.removeAnuncio(todo.key).then((sucess) => {
+    this.jogoService.removeAnuncio(todo).then((sucess) => {
       this.inicializarItems();
       this.showToast('Anuncio removido com Sucesso!')
     }).catch(error => alert(error))

@@ -32,8 +32,8 @@
     background-size: cover;
     background-position-x: 50%;
     color: transparentize($color: black, $amount:0.1);
-    margin:0;padding:0;
- 
+    margin: 0;
+    padding: 0;
     .card {
         border-radius: 3%;
         .label {
@@ -51,5 +51,36 @@
     }
     ion-label {
         background: transparent;
+    }
+}
+
+.custom-overlay {
+    background: transparentize($color: #000000, $amount: 0.96);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.loading{
+    font-family: 'Orbitron',sans-serif;
+    font-size: 7px;
+    animation: blink .9s ease-in-out infinite;
+}
+
+@keyframes dash{
+  
+    to{
+        stroke-dashoffset: 136;
+    }
+}
+.triangle{
+    stroke-dasharray: 17;
+    animation: dash 4.0s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity: 0;
     }
 }

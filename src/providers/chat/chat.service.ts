@@ -17,6 +17,7 @@ import { Events, NavController } from 'ionic-angular';
 
 @Injectable()
 export class ChatService extends BaseService {
+
   firechats = firebase.database().ref('/chats');
   firemessagens: any;
   jogo: any;
@@ -37,6 +38,8 @@ export class ChatService extends BaseService {
     this.jogo = jogo;
     this.sendTo = jogoSender;
   }
+
+
 
   getChatsUser(): Observable<any> {
     let userId = firebase.auth().currentUser.uid;
@@ -122,9 +125,13 @@ export class ChatService extends BaseService {
     }
   }
 
+  deleteChatUser(sender: any, key: string): any {
+    this.firechats.child(this.currentUser).child(sender).child(key).remove()
+  }
+
   getbuddymessages(userId1: string, userId2: string) {
 
-      return new Observable<Message[]>((observer) => {
+    return new Observable<Message[]>((observer) => {
 
 
       if (userId1 === this.jogo.user) {

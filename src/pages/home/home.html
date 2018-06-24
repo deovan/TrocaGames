@@ -1,3 +1,4 @@
+
 <ion-header>
   <ion-navbar color=primary>
     <button ion-button menuToggle>
@@ -28,18 +29,19 @@
 </ion-header>
 
 <ion-content>
-
   <ion-refresher (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div *ngIf="todos.length==0">
+
+
+  <!-- <div *ngIf="todos.length==0">
     <p align="center">Algo deu errado! Tente atualizar
       <i class="em em-arrow_down"></i>
     </p>
-  </div>
+  </div> -->
 
-  <ion-card *ngFor="let todo of todos" (click)="itemTapped($event, todo)">
+  <ion-card *ngFor="let todo of todos;asyn" (click)="itemTapped($event, todo)">
     <ion-item>
       <ion-thumbnail item-start>
         <img class="round" [src]="todo.fotos ||  assets/imgs/no-image-available.jpg || async">

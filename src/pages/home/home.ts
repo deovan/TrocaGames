@@ -1,22 +1,22 @@
-import { timeout } from 'rxjs/operators';
-import { LoadingController } from 'ionic-angular';
-import { Subscription } from 'rxjs/Subscription';
-import firebase from 'firebase';
-import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
-import { ChatPage } from './../chat/chat';
-import { PreloaderService } from './../../providers/preloader/preloader.service';
-import { AnuncioDetalhesPage } from './../anuncio-detalhes/anuncio-detalhes';
+import { timeout } from 'rxjs/operators'
+import { LoadingController } from 'ionic-angular'
+import { Subscription } from 'rxjs/Subscription'
+import firebase from 'firebase'
+import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio'
+import { ChatPage } from './../chat/chat'
+import { PreloaderService } from './../../providers/preloader/preloader.service'
+import { AnuncioDetalhesPage } from './../anuncio-detalhes/anuncio-detalhes'
 
-import { JogoService } from './../../providers/jogo/jogo.service';
-import { Observable } from 'rxjs';
-import { LoginPage } from './../login/login';
+import { JogoService } from './../../providers/jogo/jogo.service'
+import { Observable } from 'rxjs'
+import { LoginPage } from './../login/login'
 
-import { Component, ViewChild } from '@angular/core';
-import { NavController, MenuController, ToastController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core'
+import { NavController, MenuController, ToastController } from 'ionic-angular'
 
-import { AuthService } from '../../providers/auth/auth';
-import { Jogo } from '../../todo/jogo.model';
-import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
+import { AuthService } from '../../providers/auth/auth'
+import { Jogo } from '../../todo/jogo.model'
+import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free'
 
 
 @Component({
@@ -24,12 +24,13 @@ import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 })
 
 export class HomePage {
-  public todos: any;
-  private categorias = [];
-  limit: number = 20;
-  canSearch: boolean = false;
-  currentUser = '';
-  private _someListener: Subscription = new Subscription();
+  public todos = []
+  private categorias = []
+  limit: number = 20
+  canSearch: boolean = false
+  currentUser = ''
+  private _someListener: Subscription = new Subscription()
+  splash = true
 
 
   constructor(
@@ -41,12 +42,95 @@ export class HomePage {
     public menu: MenuController,
     public navCtrl: NavController,
     public toastCtrl: ToastController) {
-    this.todos = []
-    this.currentUser = firebase.auth().currentUser.uid;
-    menu.enable(true);
-    this.showBanner();
+
+    this.currentUser = firebase.auth().currentUser.uid
+    menu.enable(true)
+    this.showBanner()
+    // this.categorias = this._jogoService.getCategorias()
+
   }
 
+  ionViewDidLoad() {
+
+    this.initializeItems()
+
+  }
+
+  ionViewCanEnter() {
+
+  }
+
+
+  ionViewWillLeave() {
+    // this.todos = []
+    // this._jogoService.anuncios = []
+    // this._jogoService.lastKey = ''
+    // this._jogoService.finished = false
+  }
+
+  initializeItems() {
+    this.todos = []
+    return this._jogoService.getAllAnuncios(this.limit)
+      .then((value) => {
+        value.forEach((jogo: Jogo) => {
+          if (jogo.user != this.currentUser) this.todos.push(jogo)
+        })
+      })
+  }
+
+  exibirPorCategorias(categoria) {
+    // this._jogoService.finished = false
+    // this._jogoService.lastKey = ''
+    // this.buscaPorCategoria(categoria)
+  }
+
+  buscaPorCategoria(event) {
+    let that = this
+    this.todos = []
+    console.log(event)
+    this._jogoService.getPorCategoria(this.limit, event).subscribe((value) => {
+      value.forEach((jogo) => {
+        this.todos.push(jogo)
+      })
+    })
+  }
+
+  doRefresh(refresher) {
+    this.initializeItems()
+    setTimeout(() => {
+      // this.showToast('Atualizado com sucesso!')
+      refresher.complete()
+    }, 3000)
+  }
+
+  getItems(ev) {
+    // Reset items back to all of the items
+    // set val to the value of the ev target
+    var val = ev.target.value
+    // if the value is an empty string don't filter the items
+    if (val && val.trim() != '') {
+      this.todos = this._jogoService.anuncios.filter((todo) => {
+        if(todo.user !== this.currentUser)
+        return (todo.nome.toLowerCase().indexOf(val.toLowerCase()) > -1)
+      })
+    } else {
+      // this.initializeItems()
+      // this.todos = []
+      // this._jogoService.lastKey = ''
+      // this._jogoService.anuncios = []
+      // this._jogoService.finished = false
+      // this.initializeItems()
+    }
+  }
+
+  doInfinite(infiniteScroll) {
+    setTimeout(() => {
+      for (let i = 0 ;i < 1; i++) {
+        this.initializeItems()
+      }
+      infiniteScroll.complete()
+    }, 500)
+  }
 
   showBanner() {
 
@@ -55,123 +139,14 @@ export class HomePage {
       isTesting: true, // Remove in production
       autoShow: true,
       offsetTopBar: true
-    };
+    }
 
-    this.admob.banner.config(bannerConfig);
+    this.admob.banner.config(bannerConfig)
 
     this.admob.banner.prepare().then(() => {
       // success
-    }).catch(e => console.log(e));
+    }).catch(e => console.log(e))
 
-  }
-
-
-  ionViewCanEnter() {
-    console.log('passou no ionviewcanenter');
-    this.todos = [];
-    this.categorias = this._jogoService.getCategorias();
-    let loader = this.loadingCtrl.create({
-      content: "",
-    });
-    loader.present().then(() => {
-      this.initializeItems().then(() => {
-        loader.dismiss();
-      });
-    })
-  }
-
-
-  ionViewDidLoad() {
-    console.log('passou no ionViewDidLoad');
-
-
-  }
-
-
-  // ionViewDidLoad() {
-  //   console.log('passou no ionViewDidLoad');
-
-  //   let loader = this.loadingCtrl.create({
-  //     content: "Buscando Anúncios",
-  //     duration: 2000,
-  //   });
-  //   loader.present().then(() => {
-  //     console.log('loaderrssss');
-  //     this.initializeItems().then(() => {
-  //       loader.dismiss();
-  //     });
-  //   });
-
-  // }
-
-  ionViewWillLeave() {
-    this._someListener.unsubscribe();
-    this.todos = [];
-    this._jogoService.anuncios = [];
-    this._jogoService.lastKey = '';
-    this._jogoService.finished = false;
-  }
-
-  async initializeItems() {
-    this.todos = []
-    await this._jogoService.getAllAnuncios(this.limit).then((observer) => {
-      this._someListener = observer.subscribe((value) => {
-        value.forEach((jogo: Jogo) => {
-          if (jogo.user != this.currentUser) this.todos.push(jogo);
-        });
-      });
-    })
-  }
-
-
-  exibirPorCategorias(categoria) {
-    // this._jogoService.finished = false;
-    // this._jogoService.lastKey = '';
-    // this.buscaPorCategoria(categoria)
-  }
-
-  buscaPorCategoria(event) {
-    let that = this;
-    this.todos = [];
-    console.log(event);
-    this._jogoService.getPorCategoria(this.limit, event).subscribe((value) => {
-      value.forEach((jogo) => {
-        this.todos.push(jogo);
-      });
-    });
-  }
-
-  doRefresh(refresher) {
-    this.initializeItems();
-    setTimeout(() => {
-      // this.showToast('Atualizado com sucesso!')
-      refresher.complete();
-    }, 3000);
-  }
-
-  getItems(ev) {
-    // Reset items back to all of the items
-    // set val to the value of the ev target
-    var val = ev.target.value;
-    // if the value is an empty string don't filter the items
-    if (val && val.trim() != '') {
-      this.todos = this.todos.filter((todo) => {
-        return (todo.nome.toLowerCase().indexOf(val.toLowerCase()) > -1);
-      })
-    } else {
-      this.todos = [];
-      this._jogoService.lastKey = '';
-      this.initializeItems()
-    }
-  }
-
-  doInfinite(infiniteScroll) {
-    setTimeout(() => {
-      for (let i = 0; i < 1; i++) {
-        this.initializeItems();
-      }
-      infiniteScroll.complete();
-    }, 500);
   }
 
   private showToast(message: string): void {
@@ -185,6 +160,6 @@ export class HomePage {
   itemTapped(event, todo) {
     this.navCtrl.push(AnuncioDetalhesPage, {
       todo: todo
-    });
+    })
   }
 }
