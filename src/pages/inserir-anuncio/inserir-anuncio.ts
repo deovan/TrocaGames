@@ -98,52 +98,59 @@ export class InserirAnuncioPage {
       console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`)
     } else {
       const loading: Loading = this.loadingCtrl.create()
-      loading.present()
-      this.jogo = new Jogo(
-        firebase.auth().currentUser.uid,
-        this.currentUser.name,
-        this.newAnuncio.value.nome,
-        this.newAnuncio.value.console,
-        this.newAnuncio.value.categoria,
-        this.newAnuncio.value.descricao,
-        this.newAnuncio.value.preco,
-        firebase.database.ServerValue.TIMESTAMP)
-      this.jogoService.save(this.jogo).then((valueKey) => {
-        this.key = valueKey
-        if (this.key) {
-          var cont = 0
-          if (this.photo.length === 1) {
-            this.jogoService.uploadPhoto(this.photo[0], this.key).then((value) => {
-              this.jogo.fotos.push(value)
-              this.uploadToDatabase().then(() => {
-                this.navCtrl.setRoot(HomePage)
-                loading.dismiss()
-                this.showToast('Anúncio Cadastrado com Sucesso!')
-              })
-            })
-          } else {
-            this.photo.reduce((value, index) => {
-              this.jogoService.uploadPhoto(value, this.key).then((value) => {
+      loading.present().then(() => {
+        this.jogo = new Jogo(
+          firebase.auth().currentUser.uid,
+          this.currentUser.name,
+          this.newAnuncio.value.nome,
+          this.newAnuncio.value.console,
+          this.newAnuncio.value.categoria,
+          this.newAnuncio.value.descricao,
+          this.newAnuncio.value.preco,
+          firebase.database.ServerValue.TIMESTAMP)
+        this.jogoService.save(this.jogo).then((valueKey) => {
+          this.key = valueKey
+          console.log('key', valueKey, 'key',this.key);
+          if (this.key) {
+            if (this.photo.length === 1) {
+              console.log(this.photo[0]);              
+              this.jogoService.uploadPhoto(this.photo[0], this.key).then((value) => {
                 this.jogo.fotos.push(value)
-                cont++
-                if (cont === this.qtdPhotos) {
-                  this.uploadToDatabase().then(() => {
-                    this.navCtrl.setRoot(HomePage)
-                    loading.dismiss()
-                    this.showToast('Anúncio Cadastrado com Sucesso!')
-                  })
-                }
+                this.uploadToDatabase().then(() => {
+                  this.navCtrl.setRoot(HomePage)
+                  loading.dismiss()
+                  this.showToast('Anúncio Cadastrado com Sucesso!')
+                })
+              })
+            } else {
+              var cont = 0
+              this.photo.reduce((pValue,valueC, index) => {
+                this.jogoService.uploadPhoto(valueC, this.key).then((value) => {
+                  this.jogo.fotos.push(value)
+                  cont++
+                  if (cont === this.qtdPhotos) {
+                    this.uploadToDatabase().then(() => {
+                      this.navCtrl.setRoot(HomePage)
+                      loading.dismiss()
+                      this.showToast('Anúncio Cadastrado com Sucesso!')
+                    })
+                  }
 
-              }).catch((error) => alert(error))
-            }, 0)
+                }).catch((error) => alert(error))
+              }, 0)
+            }
           }
-        }
-      }).catch((error) => {
-        console.log(error)
-        loading.dismiss()
-        this.showAlert(error)
-        this.navCtrl.getPrevious()
+        }).catch((error) => {
+          console.log(error)
+          loading.dismiss()
+          this.showAlert(error)
+          this.navCtrl.getPrevious()
+        })
+
+
+
       })
+
 
 
     }
@@ -160,7 +167,7 @@ export class InserirAnuncioPage {
   }
 
   removeItem(item) {
-    for (let i = 0 ;i < this.photo.length; i++) {
+    for (let i = 0; i < this.photo.length; i++) {
       if (this.photo[i] == item) {
         this.photo.splice(i, 1)
         this.qtdPhotos--
@@ -183,7 +190,6 @@ export class InserirAnuncioPage {
           text: "Tirar foto",
           handler: () => {
             this.takePicture(this.camera.PictureSourceType.CAMERA)
-
           }
         },
         {
@@ -212,7 +218,6 @@ export class InserirAnuncioPage {
 
     this.camera.getPicture(cameraOptions)
       .then((fileUri: string) => {
-        console.log('File URI: ', fileUri)
         this.cameraService.saveFile(fileUri, sourceType)
           .then((entry: Entry) => {
             this.photo.push(entry.nativeURL)

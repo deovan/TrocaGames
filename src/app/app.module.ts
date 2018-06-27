@@ -42,11 +42,7 @@ import { CameraService } from '../providers/camera/camera.service'
 import { MeusAnunciosPage } from '../pages/meus-anuncios/meus-anuncios'
 import { IonicImageViewerModule } from 'ionic-img-viewer'
 import { EditarAnuncioPage } from '../pages/editar-anuncio/editar-anuncio' 
-import { firebaseConfigTesting } from './credentials.backup';
-
-
-
-
+import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
 @NgModule({
   declarations: [
     AnuncioDetalhesPage,
@@ -74,7 +70,7 @@ import { firebaseConfigTesting } from './credentials.backup';
     OrderModule,
     IonicModule.forRoot(MyApp),
     IonicImageViewerModule,
-    AngularFireModule.initializeApp(firebaseConfigTesting),
+    AngularFireModule.initializeApp(firebaseConfig),
     HttpModule,
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
     AngularFireAuthModule,
@@ -82,6 +78,7 @@ import { firebaseConfigTesting } from './credentials.backup';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
+   
     AnuncioDetalhesPage,
     ChatListPage,
     ChatPage,

@@ -26,11 +26,10 @@ import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free'
 export class HomePage {
   public todos = []
   private categorias = []
-  limit: number = 20
+  limit: number = 6
   canSearch: boolean = false
   currentUser = ''
   private _someListener: Subscription = new Subscription()
-  splash = true
 
 
   constructor(
@@ -42,34 +41,31 @@ export class HomePage {
     public menu: MenuController,
     public navCtrl: NavController,
     public toastCtrl: ToastController) {
-
     this.currentUser = firebase.auth().currentUser.uid
     menu.enable(true)
     this.showBanner()
     // this.categorias = this._jogoService.getCategorias()
-
   }
 
   ionViewDidLoad() {
-
+    this._jogoService.anuncios = []
+    this._jogoService.lastKey = ''
+    this._jogoService.finished = false
     this.initializeItems()
-
   }
 
   ionViewCanEnter() {
+
 
   }
 
 
   ionViewWillLeave() {
-    // this.todos = []
-    // this._jogoService.anuncios = []
-    // this._jogoService.lastKey = ''
-    // this._jogoService.finished = false
+
+
   }
 
   initializeItems() {
-    this.todos = []
     return this._jogoService.getAllAnuncios(this.limit)
       .then((value) => {
         value.forEach((jogo: Jogo) => {
@@ -100,7 +96,7 @@ export class HomePage {
     setTimeout(() => {
       // this.showToast('Atualizado com sucesso!')
       refresher.complete()
-    }, 3000)
+    }, 2000)
   }
 
   getItems(ev) {
@@ -110,12 +106,15 @@ export class HomePage {
     // if the value is an empty string don't filter the items
     if (val && val.trim() != '') {
       this.todos = this._jogoService.anuncios.filter((todo) => {
-        if(todo.user !== this.currentUser)
-        return (todo.nome.toLowerCase().indexOf(val.toLowerCase()) > -1)
+        if (todo.user !== this.currentUser)
+          return (todo.nome.toLowerCase().indexOf(val.toLowerCase()) > -1)
       })
     } else {
-      // this.initializeItems()
-      // this.todos = []
+      this._jogoService.lastKey = ''
+      this._jogoService.anuncios = []
+      this._jogoService.finished = false
+      this.todos = []
+      this.initializeItems()
       // this._jogoService.lastKey = ''
       // this._jogoService.anuncios = []
       // this._jogoService.finished = false
@@ -125,7 +124,7 @@ export class HomePage {
 
   doInfinite(infiniteScroll) {
     setTimeout(() => {
-      for (let i = 0 ;i < 1; i++) {
+      for (let i = 0; i < 1; i++) {
         this.initializeItems()
       }
       infiniteScroll.complete()
@@ -133,10 +132,9 @@ export class HomePage {
   }
 
   showBanner() {
-
     let bannerConfig: AdMobFreeBannerConfig = {
       id: 'ca-app-pub-9146010147596764/5044195931',
-      isTesting: true, // Remove in production
+      isTesting: false, // Remove in production
       autoShow: true,
       offsetTopBar: true
     }

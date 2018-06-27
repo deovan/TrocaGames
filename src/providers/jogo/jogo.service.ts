@@ -49,8 +49,8 @@ export class JogoService extends BaseService {
 
   save(jogo: Jogo) {
     return new Promise<string>(resolve => {
-      let key = this.firedataJogo.push(jogo).key;
-      resolve(key);
+      let key = this.firedataJogo.push(jogo).key
+      resolve(key)
     })
 
   }
@@ -113,7 +113,35 @@ export class JogoService extends BaseService {
     })
   }
 
+  searchAnuncio(nome: string) {
+    var anunciosList = []
+    return new Promise<any[]>((resolve, reject) => {
+      var item = [];
+      this.firedataJogo.child('nome').orderByValue().equalTo(nome)
+        .on('value', snapshotChanges => {
+          snapshotChanges.forEach((snap) => {
+            if (this.lastKey === snap.key) {
+              this.finished = true;
+            } else {
+              let item = snap.val();
+              item.key = snap.key;
+              this.lastKey = snap.key;
+              console.log(snap.key);
+              anunciosList.push(item);
+              this.anuncios.push(item);
+            }
+            return false;
+          })
+        });
+      setTimeout(() => {
+        resolve(anunciosList);
+      }, 2000);
+    });
+
+  }
+
   getAllAnuncios(limit: number, lastKey?: string) {
+    var anunciosList = []
     return new Promise<any[]>((resolve, reject) => {
       var item = [];
       this.firedataJogo
@@ -129,13 +157,14 @@ export class JogoService extends BaseService {
               item.key = snap.key;
               this.lastKey = snap.key;
               console.log(snap.key);
+              anunciosList.push(item);
               this.anuncios.push(item);
             }
             return false;
           })
         });
       setTimeout(() => {
-        resolve(this.anuncios);
+        resolve(anunciosList);
       }, 2000);
     });
   }
@@ -155,46 +184,36 @@ export class JogoService extends BaseService {
   }
 
   uploadPhoto(file: string, jogoId: string): Promise<string> {
-    return this.makeFileIntoBlob(file)
-      .then((fileBlob) => {
-        return this.uploadToFirebase(fileBlob, jogoId);
-      })
-      .then((uploadSnapshot: any) => {
-        return uploadSnapshot.downloadURL;
-      })
+    return new Promise((resolve, reject) => {
+      this.makeFileIntoBlob(file)
+        .then((fileBlob) => {
+          this.uploadToFirebase(fileBlob, jogoId).then((url) => {
+            setTimeout(() => {
+              resolve(url);
+            }, 500);
+          })
+
+        })
+    })
   }
 
-  uploadToFirebase(imgBlob: any, jogoId: string) {
+  uploadToFirebase(imgBlob: any, jogoId: string): Promise<string> {
     var randomNumber = Math.floor(Math.random() * 256);
     console.log('Random number : ' + randomNumber);
     return new Promise((resolve, reject) => {
       let storageRef = firebase.storage().ref(this.basePath + `/${jogoId}/` + randomNumber + '.jpg');//Firebase storage main path
-
       let metadata: firebase.storage.UploadMetadata = {
         contentType: 'image/jpeg',
       };
-
-      let uploadTask = storageRef.put(imgBlob, metadata);
-      uploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED,
-        (snapshot) => {
-          const snap = snapshot as firebase.storage.UploadTaskSnapshot
-          let uploadProgress = Math.round((snap.bytesTransferred / snap.totalBytes) * 100)
-          // upload in progress
-
+      storageRef.put(imgBlob, metadata)
+        .then((uploadTask) => {
+          let uploadProgress = Math.round((uploadTask.bytesTransferred / uploadTask.totalBytes) * 100)
           console.log(uploadProgress);
-        },
-        (error) => {
-          // upload failed
-          console.log(error);
-          reject(error);
-        },
-        () => {
-          // upload success
-          let url = uploadTask.snapshot.downloadURL
-          console.log('Saved picture url', url);
-          resolve(uploadTask.snapshot);
+          setTimeout(() => {
+            resolve(uploadTask.downloadURL);
+          }, 500);
         });
-    });
+    })
   }
 
   public removeFile(fullPath: string) {
@@ -205,21 +224,18 @@ export class JogoService extends BaseService {
   public removeAnuncio(jogo: Jogo) {
     console.log('key', jogo);
     var path = firebase.storage().ref(this.basePath + `/${jogo.key}`);
-    if(!jogo.fotos){
+    if (!jogo.fotos) {
       return firebase.database().ref(`/jogos/${jogo.key}`)
-      .remove()
-    }else{
+        .remove()
+    } else {
       jogo.fotos.forEach((value) => {
         let name = value.substr(value.indexOf('%2F') + 3, (value.indexOf('?')) - (value.indexOf('%2F') + 3));
         name = name.substr(name.indexOf('%2F') + 3, 8)
         path.child(`${name}`).delete();
       }, 0);
       return firebase.database().ref(`/jogos/${jogo.key}`)
-      .remove()
+        .remove()
     }
-   
-    
-   
   }
 
   handleData(snap) {
