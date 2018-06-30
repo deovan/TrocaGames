@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChatListPage } from './../pages/chat-list/chat-list'
 import { MessageService } from './../providers/message/message.service'
 import { MessageBoxComponent } from './../components/message-box/message-box.component'
@@ -8,7 +9,6 @@ import { HomePage } from "../pages/home/home"
 import { InserirAnuncioPage } from "../pages/inserir-anuncio/inserir-anuncio"
 import { LoginPage } from "../pages/login/login"
 import { MyApp } from "./app.component"
-import { ResetPasswordPage } from "../pages/reset-password/reset-password"
 import { SignupPage } from "../pages/signup/signup"
 import { UserInfoComponent } from "../components/user-info/user-info.component"
 import { UserMenuComponent } from "../components/user-menu/user-menu.component"
@@ -43,6 +43,9 @@ import { MeusAnunciosPage } from '../pages/meus-anuncios/meus-anuncios'
 import { IonicImageViewerModule } from 'ionic-img-viewer'
 import { EditarAnuncioPage } from '../pages/editar-anuncio/editar-anuncio' 
 import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
+import { EmailSignInComponent } from '../components/email-sign-in/email-sign-in';
+import { EmailSignUpComponent } from '../components/email-sign-up/email-sign-up';
+import { EmailValidator } from '../validators/email';
 @NgModule({
   declarations: [
     AnuncioDetalhesPage,
@@ -51,6 +54,8 @@ import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
     ChatPage,
     CustomLoggedHeaderComponent,
     EditarAnuncioPage,
+    EmailSignInComponent,
+    EmailSignUpComponent,
     HomePage,
     InserirAnuncioPage,
     LoginPage,
@@ -58,7 +63,6 @@ import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
     MessageBoxComponent,
     MyApp,
     ProgressBarComponent,
-    ResetPasswordPage,
     SignupPage,
     UserInfoComponent,
     UserMenuComponent,
@@ -67,6 +71,7 @@ import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
   imports: [
     BrMaskerModule,
     BrowserModule,
+    BrowserAnimationsModule,
     OrderModule,
     IonicModule.forRoot(MyApp),
     IonicImageViewerModule,
@@ -83,12 +88,13 @@ import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
     ChatListPage,
     ChatPage,
     EditarAnuncioPage,
+    EmailSignInComponent,
+    EmailSignUpComponent,
     HomePage,
     InserirAnuncioPage,
     LoginPage,
     MeusAnunciosPage,
     MyApp,
-    ResetPasswordPage,
     SignupPage,
     UserProfilePage
   ],
@@ -98,6 +104,7 @@ import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
     Camera,
     CameraService,
     ChatService,
+    EmailValidator,
     File,
     FileTransfer,
     FilePath,

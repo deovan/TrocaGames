@@ -37,6 +37,8 @@ export class InserirAnuncioPage {
   public newAnuncio: any
   public jogo: Jogo
   myDate: string = new Date().toISOString()
+  troca: boolean = false;
+  venda: boolean = false;
 
 
   constructor(
@@ -78,7 +80,6 @@ export class InserirAnuncioPage {
         '',
         Validators.compose([Validators.required])
       ]
-
     })
   }
 
@@ -107,38 +108,31 @@ export class InserirAnuncioPage {
           this.newAnuncio.value.categoria,
           this.newAnuncio.value.descricao,
           this.newAnuncio.value.preco,
-          firebase.database.ServerValue.TIMESTAMP)
+          firebase.database.ServerValue.TIMESTAMP,
+          [],
+          this.troca,
+          this.venda,
+        )
+        console.log(this.jogo);
         this.jogoService.save(this.jogo).then((valueKey) => {
           this.key = valueKey
-          console.log('key', valueKey, 'key',this.key);
+          console.log('key', valueKey, 'key', this.key);
           if (this.key) {
-            if (this.photo.length === 1) {
-              console.log(this.photo[0]);              
-              this.jogoService.uploadPhoto(this.photo[0], this.key).then((value) => {
+            var cont = 0
+            this.photo.reduce((pValue, valueC, index) => {
+              this.jogoService.uploadPhoto(valueC, this.key).then((value) => {
                 this.jogo.fotos.push(value)
-                this.uploadToDatabase().then(() => {
-                  this.navCtrl.setRoot(HomePage)
-                  loading.dismiss()
-                  this.showToast('Anúncio Cadastrado com Sucesso!')
-                })
-              })
-            } else {
-              var cont = 0
-              this.photo.reduce((pValue,valueC, index) => {
-                this.jogoService.uploadPhoto(valueC, this.key).then((value) => {
-                  this.jogo.fotos.push(value)
-                  cont++
-                  if (cont === this.qtdPhotos) {
-                    this.uploadToDatabase().then(() => {
-                      this.navCtrl.setRoot(HomePage)
-                      loading.dismiss()
-                      this.showToast('Anúncio Cadastrado com Sucesso!')
-                    })
-                  }
+                cont++
+                if (cont === this.qtdPhotos) {
+                  this.uploadToDatabase().then(() => {
+                    loading.dismiss()
+                    this.navCtrl.setRoot(HomePage)
+                    this.showToast('Anúncio Cadastrado com Sucesso!')
+                  })
+                }
 
-                }).catch((error) => alert(error))
-              }, 0)
-            }
+              }).catch((error) => alert(error))
+            }, 0)
           }
         }).catch((error) => {
           console.log(error)
@@ -146,13 +140,7 @@ export class InserirAnuncioPage {
           this.showAlert(error)
           this.navCtrl.getPrevious()
         })
-
-
-
       })
-
-
-
     }
   }
 
@@ -201,7 +189,6 @@ export class InserirAnuncioPage {
     })
   }
 
-
   public async takePicture(sourceType: number) {
     let cameraOptions: CameraOptions = {
       correctOrientation: true,
@@ -227,7 +214,6 @@ export class InserirAnuncioPage {
 
       }).catch((err: Error) => console.log('Camera error: ', err))
   }
-
 
   private uploadToDatabase() {
     return this.jogoService.edit(this.jogo, this.key).then((valor) => {

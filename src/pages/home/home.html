@@ -1,4 +1,3 @@
-
 <ion-header>
   <ion-navbar color=primary>
     <button ion-button menuToggle>
@@ -51,19 +50,27 @@
           <ion-col col-6 col-sm>
             <h1>{{todo.nome}}</h1>
           </ion-col>
-          <ion-col col-3 col-sm offset-2 pull-md-6>
-            <ion-badge>R${{todo.preco}}</ion-badge>
-          </ion-col>
         </ion-row>
         <ion-row>
           <p>{{todo.descricao}}</p>
         </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-badge>R${{todo.preco}}</ion-badge>
+          </ion-col>
+          <ion-col  *ngIf="todo?.venda">
+            <ion-badge color="secondary">Venda</ion-badge>
+          </ion-col>
+          <ion-col *ngIf="todo?.troca" >
+            <ion-badge color="secondary" >Troca</ion-badge>
+          </ion-col>
+        </ion-row>
       </ion-grid>
     </ion-item>
   </ion-card>
-  <p *ngIf="todos.length!=0" align="center"> Não temos mais anúncios
+  <!-- <p *ngIf="todos.length!=0" align="center"> Não temos mais anúncios
     <i class="em em-hushed"></i>
-  </p>
+  </p> -->
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
     <ion-infinite-scroll-content></ion-infinite-scroll-content>
   </ion-infinite-scroll>

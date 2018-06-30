@@ -13,5 +13,7 @@ export class Jogo {
     public preco: string,
     public datetime: any,
     public fotos: string[] = [],
+    public troca:boolean=true,
+    public venda:boolean=true, 
     public done: boolean = false) { }
 }

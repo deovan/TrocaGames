@@ -1,4 +1,3 @@
-
 <ion-header>
     <ion-navbar color="primary">
         <button ion-button menuToggle>
@@ -12,7 +11,7 @@
         </ion-buttons>
         <ion-title>
 
-          Editar Anúncio
+            Editar Anúncio
 
         </ion-title>
 
@@ -45,7 +44,7 @@
     <form [formGroup]="newAnuncio" (submit)="save()">
         <ion-item>
             <ion-label stacked>Nome</ion-label>
-            <ion-input type="text" placeholder="Nome" formControlName="editarNome"  [(ngModel)]="jogo.nome"></ion-input>
+            <ion-input type="text" placeholder="Nome" formControlName="editarNome" [(ngModel)]="jogo.nome"></ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!newAnuncio.controls.editarNome.valid &&
                             newAnuncio.controls.editarNome.touched">
@@ -109,16 +108,27 @@
 
         <ion-item>
             <ion-label stacked>Descrição</ion-label>
-            <ion-textarea  [(ngModel)]="jogo.descricao" type="text" placeholder="Descrição" formControlName="editarDescricao" autocorrect="on" #editarDescricao rows="4" id="editarDescricao"
-                maxLength="500" name="editarDescricao"></ion-textarea>
+            <ion-textarea [(ngModel)]="jogo.descricao" type="text" placeholder="Descrição" formControlName="editarDescricao" autocorrect="on"
+                #editarDescricao rows="4" id="editarDescricao" maxLength="500" name="editarDescricao"></ion-textarea>
         </ion-item>
         <ion-item class="error-message" *ngIf="!newAnuncio.controls.editarDescricao.valid &&
                             newAnuncio.controls.editarDescricao.touched">
             <p>Insira uma descrição</p>
         </ion-item>
-        <button ion-button block type="submit" [disabled]="!newAnuncio.valid">
-            Concluir
-        </button>
-    </form>
 
+    </form>
+    <ion-label>Objetivo</ion-label>
+    <ion-item>
+        <ion-label>Troca</ion-label>
+        <ion-checkbox [(ngModel)]="jogo.troca" color="secondary"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+        <ion-label>Venda</ion-label>
+        <ion-checkbox [(ngModel)]="jogo.venda" color="secondary"></ion-checkbox>
+    </ion-item>
 </ion-content>
+<ion-footer>
+    <button ion-button block type="submit" [disabled]="!newAnuncio.valid">
+        Concluir
+    </button>
+</ion-footer>

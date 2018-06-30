@@ -1,4 +1,3 @@
-
 <ion-header>
     <ion-navbar color="primary">
         <button ion-button menuToggle>
@@ -42,17 +41,19 @@
 </ion-header>
 
 <ion-content padding>
-    <form [formGroup]="newAnuncio" (submit)="save()">
+    <form [formGroup]="newAnuncio">
+        <ion-label stacked>Nome</ion-label>
         <ion-item>
-            <ion-label stacked>Nome</ion-label>
+
             <ion-input type="text" placeholder="Nome" formControlName="nome"></ion-input>
         </ion-item>
         <ion-item class="error-message" *ngIf="!newAnuncio.controls.nome.valid &&
                             newAnuncio.controls.nome.touched">
             <p>Insira um nome</p>
         </ion-item>
+        <ion-label stacked color="primary">Console</ion-label>
+
         <ion-item>
-            <ion-label stacked color="primary">Console</ion-label>
             <ion-select type="text" placeholder="Console" formControlName="console">
                 <ion-option value="Xbox One">Xbox One</ion-option>
                 <ion-option value="XBOX 360">XBOX 360</ion-option>
@@ -71,10 +72,10 @@
                             newAnuncio.controls.console.touched">
             <p>Selecione o console!</p>
         </ion-item>
+        <ion-label stacked color="primary">Categoria</ion-label>
 
         <ion-item>
-            <ion-label stacked color="primary">Categoria</ion-label>
-            <ion-select type="text" placeholder="Categoria" formControlName="categoria" >
+            <ion-select type="text" placeholder="Categoria" formControlName="categoria">
                 <ion-option value="Ação">Ação</ion-option>
                 <ion-option value="Aventura">Aventura</ion-option>
                 <ion-option value="Esportes">Esportes</ion-option>
@@ -96,9 +97,9 @@
                                 newAnuncio.controls.categoria.touched">
             <p>Selecione o console!</p>
         </ion-item>
-
+        <ion-label stacked>Preço</ion-label>
         <ion-item>
-            <ion-label stacked>Preço</ion-label>
+
             <ion-input formControlName="preco" type="text" name="money" placeholder="(R$) Real" [brmasker]="{money: true,decimal: 2,type:  'num'} ">
             </ion-input>
         </ion-item>
@@ -107,18 +108,31 @@
             <p>Insira um valor!</p>
         </ion-item>
 
+        <ion-label stacked>Descrição</ion-label>
         <ion-item>
-            <ion-label stacked>Descrição</ion-label>
             <ion-textarea type="text" placeholder="Descrição" formControlName="descricao" autocorrect="on" #descricao rows="4" id="descricao"
-                maxLength="500" name="descricao"></ion-textarea>
+                maxLength="250" name="descricao"></ion-textarea>
         </ion-item>
         <ion-item class="error-message" *ngIf="!newAnuncio.controls.descricao.valid &&
                             newAnuncio.controls.descricao.touched">
             <p>Insira uma descrição</p>
         </ion-item>
-        <button ion-button block type="submit" [disabled]="!newAnuncio.valid">
-            Concluir
-        </button>
+
     </form>
 
+    <ion-label>Objetivo</ion-label>
+    <ion-item>
+        <ion-label>Troca</ion-label>
+        <ion-checkbox [(ngModel)]="troca" color="secondary"></ion-checkbox>
+    </ion-item>
+    <ion-item>
+        <ion-label>Venda</ion-label>
+        <ion-checkbox [(ngModel)]="venda" color="secondary"></ion-checkbox>
+    </ion-item>
+
 </ion-content>
+<ion-footer>
+    <button ion-button block (click)="save()" [disabled]="!newAnuncio.valid || getQtdFotos===0">
+        Concluir
+    </button>
+</ion-footer>

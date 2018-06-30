@@ -162,10 +162,11 @@ export class JogoService extends BaseService {
             }
             return false;
           })
+
+          resolve(anunciosList);
         });
-      setTimeout(() => {
-        resolve(anunciosList);
-      }, 2000);
+
+
     });
   }
 

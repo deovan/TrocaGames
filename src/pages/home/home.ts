@@ -26,7 +26,7 @@ import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free'
 export class HomePage {
   public todos = []
   private categorias = []
-  limit: number = 6
+  limit: number = 20
   canSearch: boolean = false
   currentUser = ''
   private _someListener: Subscription = new Subscription()
@@ -96,7 +96,7 @@ export class HomePage {
     setTimeout(() => {
       // this.showToast('Atualizado com sucesso!')
       refresher.complete()
-    }, 2000)
+    }, 1000)
   }
 
   getItems(ev) {
@@ -124,25 +124,20 @@ export class HomePage {
 
   doInfinite(infiniteScroll) {
     setTimeout(() => {
-      for (let i = 0; i < 1; i++) {
-        this.initializeItems()
-      }
+      this.initializeItems()
       infiniteScroll.complete()
-    }, 500)
+    }, 1000)
   }
 
   showBanner() {
     let bannerConfig: AdMobFreeBannerConfig = {
       id: 'ca-app-pub-9146010147596764/5044195931',
-      isTesting: false, // Remove in production
+      isTesting: true, // Remove in production
       autoShow: true,
       offsetTopBar: true
     }
-
     this.admob.banner.config(bannerConfig)
-
     this.admob.banner.prepare().then(() => {
-      // success
     }).catch(e => console.log(e))
 
   }

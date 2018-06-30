@@ -16,11 +16,23 @@
 
 
   <ion-item>
-    <h1 style="white-space: nowrap ">{{jogo.nome}}</h1>
+    <h1 style="white-space: normal ">{{jogo.nome}}</h1>
   </ion-item>
 
   <ion-item>
-    <ion-badge danger>R${{jogo.preco}}</ion-badge>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-badge>R${{jogo.preco}}</ion-badge>
+        </ion-col>
+        <ion-col *ngIf="jogo?.venda">
+          <ion-badge color="secondary">Venda</ion-badge>
+        </ion-col>
+        <ion-col *ngIf="jogo?.troca">
+          <ion-badge color="secondary">Troca</ion-badge>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-item>
   <ion-item>
     <label>Descrição:</label>

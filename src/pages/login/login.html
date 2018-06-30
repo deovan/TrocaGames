@@ -6,39 +6,110 @@
 
 
 <ion-content padding class="auth-page">
-  <h1 text-center>
+  <div padding [@flyInBottomFast]="cloudState" id="cloud-layer">
+    <ion-row>
+      <ion-col>
+        <h1 [@flyInBottomSlow]="logoState">Troca Games!</h1>
+        <!-- <img [@flyInBottomSlow]="logoState" src="../../assets/imgs/avatar.jpg" /> -->
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-list inset [@bounceInBottom]="formState">
+          <form [formGroup]="loginForm" class="login_form" (submit)="loginUser()" novalidate>
+            <ion-item [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.touched" [class.valid]="loginForm.controls.email.valid && loginForm.controls.email.touched">
+              <ion-icon name="mail" item-left color="primary"></ion-icon>
+              <ion-input type="email" placeholder="Email" formControlName="email">
+
+              </ion-input>
+
+            </ion-item>
+            <span class="error-message" *ngIf="!loginForm.controls.email.valid &&
+            loginForm.controls.email.touched">
+             Insira um email valido!
+            </span>
+
+            <ion-item [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.touched" [class.valid]="loginForm.controls.password.valid && loginForm.controls.password.touched">
+              <ion-icon name="lock" item-left color="primary"></ion-icon>
+              <ion-input type="password" placeholder="Senha" formControlName="password">
+              </ion-input>
+            </ion-item>
+            <span class="error-message" *ngIf="!loginForm.controls.password.valid
+            && loginForm.controls.password.touched">
+             Senha inválida!
+            </span>
+
+            <button ion-button block type="submit" [disabled]="!loginForm.valid">
+              Log In
+            </button>
+          </form>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-buttons start>
+          <button ion-button block clear (click)="goToSignup()">
+            Criar nova conta?
+          </button>
+
+          <button ion-button block clear (click)="presentPrompt()">
+            Esqueçi minha senha :(
+          </button>
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+
+  </div>
+  <!-- <ion-card>
+    <ion-card-header text-center>
+      <form [formGroup]="loginForm" class="login_form" (submit)="loginUser()" novalidate>
+        <ion-item [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.touched" [class.valid]="loginForm.controls.email.valid && loginForm.controls.email.touched">
+          <ion-icon name="mail" item-left color="primary"></ion-icon>
+          <ion-label stacked>Email</ion-label>
+          <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid &&
+                   loginForm.controls.email.touched">
+          <p>Please enter a valid email address.</p>
+        </ion-item>
+
+        <ion-item [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.touched" [class.valid]="loginForm.controls.password.valid && loginForm.controls.password.touched">
+          <ion-icon name="lock" item-left color="primary"></ion-icon>
+          <ion-label stacked>Password</ion-label>
+          <ion-input type="password" placeholder="Senha" formControlName="password"></ion-input>
+        </ion-item>
+        <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid
+                  && loginForm.controls.password.touched">
+        </ion-item>
+        <button ion-button block type="submit" [disabled]="!loginForm.valid">
+          Log In
+        </button>
+      </form>
+
+    </ion-card-header>
+
+
+
+
+  </ion-card> -->
+  <!-- <h1 text-center>
     <img src="http://placehold.it/300x150" alt="Banner for the login page" />
-  </h1>
-  <form [formGroup]="loginForm" (submit)="loginUser()" novalidate>
-    <ion-item [class.invalid]="!loginForm.controls.email.valid && loginForm.controls.email.touched" [class.valid]="loginForm.controls.email.valid && loginForm.controls.email.touched">
-      <ion-icon name="mail" item-left color="primary"></ion-icon>
-      <ion-label stacked>Email</ion-label>
-      <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
-    </ion-item>
-    <ion-item class="error-message" *ngIf="!loginForm.controls.email.valid &&
-       loginForm.controls.email.touched">
-      <p>Please enter a valid email address.</p>
-    </ion-item>
+  </h1> -->
 
-    <ion-item [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.touched" [class.valid]="loginForm.controls.password.valid && loginForm.controls.password.touched">
-      <ion-icon name="lock" item-left color="primary"></ion-icon>
-      <ion-label stacked>Password</ion-label>
-      <ion-input type="password" placeholder="Senha" formControlName="password"></ion-input>
-    </ion-item>
-    <ion-item class="error-message" *ngIf="!loginForm.controls.password.valid
-      && loginForm.controls.password.touched">
-    </ion-item>
 
-    <button ion-button block type="submit" [disabled]="!loginForm.valid">
-      Log In
+
+
+
+
+
+  <!-- <button ion-button block clear (click)="goToSignup()">
+      Criar nova conta?
     </button>
-  </form>
+  
+    <button ion-button block clear (click)="goToResetPassword()">
+      Esqueçi minha senha :( 
+    </button> -->
 
-  <button ion-button block clear (click)="goToSignup()">
-    Criar nova conta?
-  </button>
 
-  <button ion-button block clear (click)="goToResetPassword()">
-    Esqueçi minha senha :( 
-  </button>
 </ion-content>
