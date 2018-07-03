@@ -46,6 +46,7 @@ import { firebaseConfigTesting, firebaseConfig } from './credentials.backup';
 import { EmailSignInComponent } from '../components/email-sign-in/email-sign-in';
 import { EmailSignUpComponent } from '../components/email-sign-up/email-sign-up';
 import { EmailValidator } from '../validators/email';
+import { HTTP } from '@ionic-native/http';
 @NgModule({
   declarations: [
     AnuncioDetalhesPage,
@@ -108,6 +109,7 @@ import { EmailValidator } from '../validators/email';
     File,
     FileTransfer,
     FilePath,
+    HTTP,
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },

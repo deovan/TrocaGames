@@ -50,7 +50,10 @@ export class JogoService extends BaseService {
   save(jogo: Jogo) {
     return new Promise<string>(resolve => {
       let key = this.firedataJogo.push(jogo).key
-      resolve(key)
+      setTimeout(() => {
+        resolve(key)
+      }, 300);
+
     })
 
   }

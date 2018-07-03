@@ -1,4 +1,4 @@
-
+import cep from 'cep-promise';
 import { Component } from '@angular/core';
 import {
   Alert,
@@ -18,12 +18,16 @@ import { AuthService } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
 
 
+
+
 @Component({
   selector: 'page-signup',
   templateUrl: 'signup.html'
 })
 export class SignupPage {
-  public signupForm: FormGroup;
+  public signupForm: FormGroup
+  public endereco:any
+
   constructor(
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
@@ -35,21 +39,30 @@ export class SignupPage {
     formBuilder: FormBuilder
   ) {
     this.signupForm = formBuilder.group({
-      name: [
+      'name': [
         '',
         [Validators.required, Validators.minLength(3)]],
-      email: [
+      'email': [
         '',
         Validators.compose([Validators.required, EmailValidator.isValid])
       ],
-      password: [
+      'password': [
         '',
         Validators.compose([Validators.required, Validators.minLength(6)])
       ],
-      telefone: [
+      'telefone': [
         '',
         Validators.compose([Validators.required])
       ],
+      'cep': [
+        '',
+        Validators.compose([Validators.minLength(9)])
+      ],
+      'cidade':[
+        '',
+        Validators.compose([])
+
+      ]
     });
   }
 
@@ -87,11 +100,17 @@ export class SignupPage {
     }
   }
 
-
+  public buscarCep(event) {
+    console.log(event.value)
+    cep(event.value).then((endereco) => {
+      console.log(endereco);
+      this.endereco = endereco.city
+    }).catch((error)=>this.showAlert(error))
+  }
   private showAlert(message: string): void {
-  this.alertCtrl.create({
-    message: message,
-    buttons: ['Ok']
-  }).present();
-}
+    this.alertCtrl.create({
+      message: message,
+      buttons: ['Ok']
+    }).present();
+  }
 }

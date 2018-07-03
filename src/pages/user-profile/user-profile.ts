@@ -1,3 +1,4 @@
+import  cep  from 'cep-promise';
 import { MeusAnunciosPage } from './../meus-anuncios/meus-anuncios';
 import { Input } from '@angular/core';
 import { User } from './../../todo/user.model';
@@ -26,9 +27,16 @@ export class UserProfilePage {
     public navParams: NavParams,
     public userService: UserService,
     public zone: NgZone) {
-
   }
 
+  public buscarCep(event) {
+    console.log(event.value)
+    cep(event.value).then((endereco) => {
+      console.log(endereco);
+      this.currentUser.cidade = endereco.city
+    }).catch((error)=>console.log(error))
+   
+  }
   loaduserdetails() {
     this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
       this.currentUser = res;
@@ -70,10 +78,7 @@ export class UserProfilePage {
 
   private editUser(photoUrl?: string): void {
     this.userService
-      .edit({
-        name: this.currentUser.name,
-        photo: photoUrl || this.currentUser.photo || ''
-      }).then(() => {
+      .edit(this.currentUser).then(() => {
         this.canEdit = false;
         this.filePhoto = undefined;
         this.uploadProgress = 0;

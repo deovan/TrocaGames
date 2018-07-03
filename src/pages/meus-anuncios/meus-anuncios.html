@@ -24,7 +24,7 @@
     </p>
   </div>
   <ion-list>
-    <ion-card *ngFor="let todo of anuncios">
+    <ion-card *ngFor="let todo of anuncios" (click)="editarAnuncio(todo)">
       <ion-item-sliding>
         <ion-item>
           <ion-thumbnail item-start>

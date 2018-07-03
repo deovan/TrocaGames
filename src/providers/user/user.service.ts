@@ -44,7 +44,8 @@ export class UserService extends BaseService {
   //     });
   //   }
 
-  edit(user: { name: string, photo: string }): Promise<void> {
+  edit(user): Promise<void> {
+    delete user.$key
     return this.firedata.child(firebase.auth().currentUser.uid)
       .update(user)
       .catch(this.handlePromiseError);

@@ -28,14 +28,29 @@
 
 
     <ion-item [class.invalid]="!signupForm.controls.telefone.valid && signupForm.controls.telefone.touched" [class.valid]="signupForm.controls.telefone.valid && signupForm.controls.telefone.touched">
-      <ion-icon ios="ios-call" md="md-call"  item-left color="primary"></ion-icon>
-      <ion-input formControlName="telefone" type="tel" placeholder="Telefone"  [brmasker]="{mask:'(00) 00000-0000', len:15,  type:'num'}">
+      <ion-icon ios="ios-call" md="md-call" item-left color="primary"></ion-icon>
+      <ion-input formControlName="telefone" type="tel" placeholder="Telefone" [brmasker]="{mask:'(00) 00000-0000', len:15,  type:'num'}">
       </ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!signupForm.controls.telefone.valid &&
     signupForm.controls.telefone.touched">
       <p>Por favor, insira um número válido</p>
     </ion-item>
+    <ion-item [class.invalid]="!signupForm.controls.cep.valid && signupForm.controls.cep.touched" [class.valid]="signupForm.controls.cep.valid && signupForm.controls.cep.touched">
+      <ion-icon ios="ios-home" md="md-home" item-left color="primary"></ion-icon>
+      <ion-input (ionBlur)="buscarCep($event)" formControlName="cep" type="text" placeholder="Cep" [brmasker]="{mask:'00000-000', len:9}">
+      </ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-icon ios="ios-home" md="md-home" item-left color="secondary"></ion-icon>
+      <ion-input placeholder="Cidade" formControlName="cidade" readonly="true" type="text" [value]="endereco">
+      </ion-input>
+    </ion-item>
+    <ion-item class="error-message" *ngIf="!signupForm.controls.cep.valid &&
+    signupForm.controls.cep.touched">
+      <p>Por favor, insira um número válido</p>
+    </ion-item>
+    <!-- <input type="text" pattern="\(\d{2}\)\d{4}-\d{4}" /> -->
 
     <ion-item [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.touched" [class.valid]="signupForm.controls.password.valid && signupForm.controls.password.touched">
       <ion-icon name="lock" item-left color="primary"></ion-icon>
@@ -46,10 +61,6 @@
         && signupForm.controls.password.touched">
       <p>Sua senha deve conter pelo menos 6 digitos.</p>
     </ion-item>
-
-
-
-
     <button ion-button block type="submit" [disabled]="!signupForm.valid">
       Cadastrar!
     </button>

@@ -1,3 +1,4 @@
+import { HTTP } from '@ionic-native/http';
 import { timeout } from 'rxjs/operators'
 import { LoadingController } from 'ionic-angular'
 import { Subscription } from 'rxjs/Subscription'
@@ -35,6 +36,7 @@ export class HomePage {
   constructor(
     public authService: AuthService,
     public admob: AdMobFree,
+    public http: HTTP,
     private _jogoService: JogoService,
     private _LOADER: PreloaderService,
     public loadingCtrl: LoadingController,
@@ -43,11 +45,16 @@ export class HomePage {
     public toastCtrl: ToastController) {
     this.currentUser = firebase.auth().currentUser.uid
     menu.enable(true)
-    this.showBanner()
+    // http.get('http://ddd.pricez.com.br/cep/86080520','',`content-type
+    // :
+    // "application/json"`).then((responde) => {
+    //   console.log(responde);
+    // })
     // this.categorias = this._jogoService.getCategorias()
   }
 
   ionViewDidLoad() {
+    this.showBanner();
     this._jogoService.anuncios = []
     this._jogoService.lastKey = ''
     this._jogoService.finished = false
@@ -61,7 +68,7 @@ export class HomePage {
 
 
   ionViewWillLeave() {
-
+    this.admob.banner.remove();
 
   }
 
@@ -132,13 +139,15 @@ export class HomePage {
   showBanner() {
     let bannerConfig: AdMobFreeBannerConfig = {
       id: 'ca-app-pub-9146010147596764/5044195931',
-      isTesting: true, // Remove in production
+      isTesting: false, // Remove in production
       autoShow: true,
       offsetTopBar: true
     }
     this.admob.banner.config(bannerConfig)
     this.admob.banner.prepare().then(() => {
     }).catch(e => console.log(e))
+
+
 
   }
 

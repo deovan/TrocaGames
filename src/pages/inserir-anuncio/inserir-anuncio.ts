@@ -17,6 +17,7 @@ import { Http } from '@angular/http'
 import { Entry } from '@ionic-native/file'
 import { UserService } from '../../providers/user/user.service'
 import { User } from '../../todo/user.model'
+import { timeout } from 'rxjs/operator/timeout';
 
 
 
@@ -109,31 +110,25 @@ export class InserirAnuncioPage {
           this.newAnuncio.value.descricao,
           this.newAnuncio.value.preco,
           firebase.database.ServerValue.TIMESTAMP,
-          [],
+          this.currentUser.cidade ? this.currentUser.cidade : null,
           this.troca,
           this.venda,
         )
         console.log(this.jogo);
         this.jogoService.save(this.jogo).then((valueKey) => {
-          this.key = valueKey
-          console.log('key', valueKey, 'key', this.key);
-          if (this.key) {
-            var cont = 0
-            this.photo.reduce((pValue, valueC, index) => {
-              this.jogoService.uploadPhoto(valueC, this.key).then((value) => {
-                this.jogo.fotos.push(value)
-                cont++
-                if (cont === this.qtdPhotos) {
-                  this.uploadToDatabase().then(() => {
-                    loading.dismiss()
-                    this.navCtrl.setRoot(HomePage)
-                    this.showToast('Anúncio Cadastrado com Sucesso!')
-                  })
-                }
+          this.key = valueKey;
+          if (valueKey) {
+            this.uploadToStorage(this.key, this.photo).then(() => {
+              loading.dismiss()
 
-              }).catch((error) => alert(error))
-            }, 0)
+            }).catch((error) => {
+              console.log(error)
+              loading.dismiss()
+              this.showAlert(error)
+              this.navCtrl.getPrevious()
+            })
           }
+
         }).catch((error) => {
           console.log(error)
           loading.dismiss()
@@ -143,6 +138,29 @@ export class InserirAnuncioPage {
       })
     }
   }
+
+  uploadToStorage(key: string, fotos: string | string[]): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.photo.reduce((vl, valueC, index) => {
+        this.jogoService.uploadPhoto(valueC, key).then((value) => {
+          this.jogo.fotos.push(value);
+          if (index === this.photo.length - 1) {
+            this.uploadToDatabase(this.key, this.jogo).then(() => {
+              this.navCtrl.setRoot(HomePage)
+              this.showToast('Anúncio Cadastrado com Sucesso!')
+              resolve();
+            })
+  
+          }
+        }).catch((error) => reject(error))
+    
+      }, 0)
+
+
+    })
+
+  }
+
 
   getQtdFotos() {
     if (this.qtdPhotos > 3) return false
@@ -189,6 +207,9 @@ export class InserirAnuncioPage {
     })
   }
 
+
+
+
   public async takePicture(sourceType: number) {
     let cameraOptions: CameraOptions = {
       correctOrientation: true,
@@ -215,8 +236,8 @@ export class InserirAnuncioPage {
       }).catch((err: Error) => console.log('Camera error: ', err))
   }
 
-  private uploadToDatabase() {
-    return this.jogoService.edit(this.jogo, this.key).then((valor) => {
+  private uploadToDatabase(key: string, jogo: Jogo) {
+    return this.jogoService.update(jogo, key).then((valor) => {
     }).catch((error) => alert(error))
   }
 
