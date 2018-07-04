@@ -38,18 +38,19 @@
     </ion-item>
     <ion-item [class.invalid]="!signupForm.controls.cep.valid && signupForm.controls.cep.touched" [class.valid]="signupForm.controls.cep.valid && signupForm.controls.cep.touched">
       <ion-icon ios="ios-home" md="md-home" item-left color="primary"></ion-icon>
-      <ion-input (ionBlur)="buscarCep($event)" formControlName="cep" type="text" placeholder="Cep" [brmasker]="{mask:'00000-000', len:9}">
-      </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-icon ios="ios-home" md="md-home" item-left color="secondary"></ion-icon>
-      <ion-input placeholder="Cidade" formControlName="cidade" readonly="true" type="text" [value]="endereco">
+      <ion-input (ionBlur)="buscarCep($event)" formControlName="cep" type="text" placeholder="Cep"   [brmasker]="{mask:'00000-000', len:9}">
       </ion-input>
     </ion-item>
     <ion-item class="error-message" *ngIf="!signupForm.controls.cep.valid &&
     signupForm.controls.cep.touched">
-      <p>Por favor, insira um número válido</p>
+      <p>Por favor, insira um CEP válido</p>
     </ion-item>
+    <ion-item>
+      <ion-icon ios="ios-home" md="md-home" item-left color="secondary"></ion-icon>
+      <ion-input placeholder="Cidade" formControlName="cidade" readonly="false" type="text" [value]="endereco">
+      </ion-input>
+    </ion-item>
+
     <!-- <input type="text" pattern="\(\d{2}\)\d{4}-\d{4}" /> -->
 
     <ion-item [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.touched" [class.valid]="signupForm.controls.password.valid && signupForm.controls.password.touched">

@@ -54,18 +54,47 @@ export class UserService extends BaseService {
     return this.db.object(`/users/${uuid}`)
       .set(user).catch(this.handlePromiseError);
   }
-  uploadPhoto(file: File, userId?: string): firebase.storage.UploadTask {
-    return this.firebaseApp
-      .storage()
-      .ref()
-      .child(`/users/` + firebase.auth().currentUser.uid + `/` + Math.random().toString(36).substr(2, 9) + `.jpg`)
-      .put(file);
+
+
+  uploadPhoto(file: File, userId?: string):Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.makeFileIntoBlob(file)
+        .then((fileBlob) => {
+          this.uploadToFirebase(fileBlob).then((url) => {
+            setTimeout(() => {
+              resolve(url);
+            }, 500);
+          })
+
+        })
+    })
   }
 
-  public removeFile(fullPath: string) {
+  uploadToFirebase(imgBlob: any): Promise<string> {
+    var randomNumber = Math.floor(Math.random() * 256);
+    console.log('Random number : ' + randomNumber);
+    return new Promise((resolve, reject) => {
+      let storageRef = firebase.storage()
+      .ref()      
+      .child(`/users/` + firebase.auth().currentUser.uid + `/` + Math.random().toString(36).substr(2, 9) + `.jpg`)
+      ;//Firebase storage main path
+      let metadata: firebase.storage.UploadMetadata = {
+        contentType: 'image/jpeg',
+      };
+      storageRef.put(imgBlob, metadata)
+        .then((uploadTask) => {
+          let uploadProgress = Math.round((uploadTask.bytesTransferred / uploadTask.totalBytes) * 100)
+          console.log(uploadProgress);
+          setTimeout(() => {
+            resolve(uploadTask.downloadURL);
+          }, 500);
+        });
+    })
+  }
 
+
+  public removeFile(fullPath: string) {
     let storageRef = this.firebaseApp.storage().ref();
     storageRef.child(fullPath).delete()
-
   }
 }

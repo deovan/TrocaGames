@@ -84,7 +84,6 @@ import { HTTP } from '@ionic-native/http';
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-   
     AnuncioDetalhesPage,
     ChatListPage,
     ChatPage,
@@ -97,6 +96,7 @@ import { HTTP } from '@ionic-native/http';
     MeusAnunciosPage,
     MyApp,
     SignupPage,
+    UserInfoComponent,
     UserProfilePage
   ],
   providers: [
@@ -117,7 +117,6 @@ import { HTTP } from '@ionic-native/http';
     MessageService,
     UserService,
     PreloaderService,
-
   ]
 })
 export class AppModule { }

@@ -16,6 +16,7 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AuthService } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
+import { PATTERN_VALIDATOR } from '@angular/forms/src/directives/validators';
 
 
 
@@ -26,7 +27,7 @@ import { EmailValidator } from '../../validators/email';
 })
 export class SignupPage {
   public signupForm: FormGroup
-  public endereco:any
+  public endereco: any
 
   constructor(
     public navCtrl: NavController,
@@ -56,9 +57,10 @@ export class SignupPage {
       ],
       'cep': [
         '',
-        Validators.compose([Validators.minLength(9)])
+        Validators.compose([Validators.required, Validators.minLength(9)]),
+       
       ],
-      'cidade':[
+      'cidade': [
         '',
         Validators.compose([])
 
@@ -105,7 +107,7 @@ export class SignupPage {
     cep(event.value).then((endereco) => {
       console.log(endereco);
       this.endereco = endereco.city
-    }).catch((error)=>this.showAlert(error))
+    }).catch((error) => this.showAlert(error))
   }
   private showAlert(message: string): void {
     this.alertCtrl.create({

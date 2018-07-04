@@ -77,6 +77,12 @@ export class EditarAnuncioPage {
       'editarPreco': [
         '',
         Validators.compose([Validators.required])
+      ],
+      'editarTroca':[
+        Validators.compose([])
+      ],
+      'editarVenda':[
+        Validators.compose([])
       ]
 
     });

@@ -107,6 +107,15 @@
         newAnuncio.controls.editarPreco.touched">
             <p>Insira um valor!</p>
         </ion-item>
+        <ion-label>Objetivo</ion-label>
+        <ion-item>
+            <ion-label>Troca</ion-label>
+            <ion-checkbox name="editarTroca" formControlName="editarTroca" [(ngModel)]="jogo.troca" color="secondary"></ion-checkbox>
+        </ion-item>
+        <ion-item>
+            <ion-label>Venda</ion-label>
+            <ion-checkbox name="editarVenda" formControlName="editarVenda" [(ngModel)]="jogo.venda" color="secondary"></ion-checkbox>
+        </ion-item>
 
         <ion-label stacked>Descrição</ion-label>
         <ion-item>
@@ -119,15 +128,7 @@
         </ion-item>
 
     </form>
-    <ion-label>Objetivo</ion-label>
-    <ion-item>
-        <ion-label>Troca</ion-label>
-        <ion-checkbox [(ngModel)]="jogo.troca" color="secondary"></ion-checkbox>
-    </ion-item>
-    <ion-item>
-        <ion-label>Venda</ion-label>
-        <ion-checkbox [(ngModel)]="jogo.venda" color="secondary"></ion-checkbox>
-    </ion-item>
+   
 </ion-content>
 <ion-footer>
     <button ion-button block (click)="save()" [disabled]="!newAnuncio.valid">

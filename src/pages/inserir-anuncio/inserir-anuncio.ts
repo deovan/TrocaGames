@@ -80,6 +80,12 @@ export class InserirAnuncioPage {
       'preco': [
         '',
         Validators.compose([Validators.required])
+      ],
+      'troca': [
+        Validators.compose([])
+      ],
+      'venda': [
+        Validators.compose([])
       ]
     })
   }
@@ -119,8 +125,8 @@ export class InserirAnuncioPage {
           this.key = valueKey;
           if (valueKey) {
             this.uploadToStorage(this.key, this.photo).then(() => {
+              this.navCtrl.setRoot(HomePage);
               loading.dismiss()
-
             }).catch((error) => {
               console.log(error)
               loading.dismiss()
@@ -146,14 +152,13 @@ export class InserirAnuncioPage {
           this.jogo.fotos.push(value);
           if (index === this.photo.length - 1) {
             this.uploadToDatabase(this.key, this.jogo).then(() => {
-              this.navCtrl.setRoot(HomePage)
               this.showToast('Anúncio Cadastrado com Sucesso!')
               resolve();
             })
-  
+
           }
         }).catch((error) => reject(error))
-    
+
       }, 0)
 
 

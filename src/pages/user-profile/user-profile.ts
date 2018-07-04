@@ -1,4 +1,4 @@
-import  cep  from 'cep-promise';
+import cep from 'cep-promise';
 import { MeusAnunciosPage } from './../meus-anuncios/meus-anuncios';
 import { Input } from '@angular/core';
 import { User } from './../../todo/user.model';
@@ -34,8 +34,8 @@ export class UserProfilePage {
     cep(event.value).then((endereco) => {
       console.log(endereco);
       this.currentUser.cidade = endereco.city
-    }).catch((error)=>console.log(error))
-   
+    }).catch((error) => console.log(error))
+
   }
   loaduserdetails() {
     this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
@@ -50,25 +50,11 @@ export class UserProfilePage {
   onSubmit(event: Event): void {
     event.preventDefault();
 
-    if (this.filePhoto) {
+    this.editUser();
 
-      let uploadTask = this.userService.uploadPhoto(this.filePhoto);
-
-      uploadTask.on('state_changed', (snapshot) => {
-        const snap = snapshot as firebase.storage.UploadTaskSnapshot
-        this.uploadProgress = Math.round((snap.bytesTransferred / snap.totalBytes) * 100)
-        console.log("Carregando imagens")
-      }, (error: Error) => {
-        console.log('erro ', error)
-      }, () => {
-        this.editUser(uploadTask.snapshot.downloadURL);
-      });
-    } else {
-      this.editUser();
-    }
   }
 
-  onMeusAnuncios(){
+  onMeusAnuncios() {
     this.navCtrl.push(MeusAnunciosPage);
   }
 
