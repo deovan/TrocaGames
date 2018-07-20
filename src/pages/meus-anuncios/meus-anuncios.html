@@ -31,20 +31,22 @@
             <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' ">
           </ion-thumbnail>
           <ion-grid>
-            <ion-row align-items-center>
-              <ion-col col-6 col-sm>
+            <ion-row>
+              <ion-col>
                 <h1>{{todo.nome}}</h1>
               </ion-col>
             </ion-row>
             <ion-row>
-              <p>{{todo.descricao}}</p>
+              <ion-col>
+                <p>{{todo.descricao}}</p>
+              </ion-col>
             </ion-row>
             <ion-row>
               <ion-col>
                 <ion-badge>R${{todo.preco}}</ion-badge>
               </ion-col>
               <ion-col *ngIf="todo?.venda">
-                <ion-badge color="secondary">Venda</ion-badge>
+                <ion-badge color="venda">Venda</ion-badge>
               </ion-col>
               <ion-col *ngIf="todo?.troca">
                 <ion-badge color="secondary">Troca</ion-badge>

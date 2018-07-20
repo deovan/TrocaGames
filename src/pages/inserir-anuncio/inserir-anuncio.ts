@@ -18,6 +18,7 @@ import { Entry } from '@ionic-native/file'
 import { UserService } from '../../providers/user/user.service'
 import { User } from '../../todo/user.model'
 import { timeout } from 'rxjs/operator/timeout';
+import { AdMobFreeInterstitialConfig, AdMobFree } from '../../../node_modules/@ionic-native/admob-free';
 
 
 
@@ -44,6 +45,7 @@ export class InserirAnuncioPage {
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
+    public admob: AdMobFree,
     public camera: Camera,
     public cameraService: CameraService,
     public http: Http,
@@ -124,15 +126,29 @@ export class InserirAnuncioPage {
         this.jogoService.save(this.jogo).then((valueKey) => {
           this.key = valueKey;
           if (valueKey) {
-            this.uploadToStorage(this.key, this.photo).then(() => {
-              this.navCtrl.setRoot(HomePage);
+            if (this.photo.length > 0) {
+              this.uploadToStorage(this.key, this.photo).then(() => {
+                loading.dismiss()
+                this.showBannerInterstitial();
+                setTimeout(() => {
+                  this.showToast('Anúncio Cadastrado com Sucesso!')
+                  this.navCtrl.setRoot(HomePage);
+                }, 300);
+              }).catch((error) => {
+                console.log(error)
+                loading.dismiss()
+                this.showAlert(error)
+                this.navCtrl.getPrevious()
+              })
+            } else {
               loading.dismiss()
-            }).catch((error) => {
-              console.log(error)
-              loading.dismiss()
-              this.showAlert(error)
-              this.navCtrl.getPrevious()
-            })
+              this.showBannerInterstitial();
+              setTimeout(() => {
+                this.showToast('Anúncio Cadastrado com Sucesso!')
+                this.navCtrl.setRoot(HomePage);
+              }, 300);
+            }
+
           }
 
         }).catch((error) => {
@@ -144,6 +160,31 @@ export class InserirAnuncioPage {
       })
     }
   }
+
+
+  showBannerInterstitial() {
+    let bannerConfig: AdMobFreeInterstitialConfig = {
+      /**
+       * Ad Unit ID
+       */
+      id: 'ca-app-pub-9146010147596764/3786556172',
+      /**
+       * Receiving test ad
+       */
+      isTesting: true,
+      /**
+       * Auto show ad when loaded
+       */
+      autoShow: true
+    }
+
+    this.admob.interstitial.config(bannerConfig)
+    this.admob.interstitial.prepare().then(() => {
+      this.admob.interstitial.show()
+    }).catch(e => console.log(e))
+
+  }
+
 
   uploadToStorage(key: string, fotos: string | string[]): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -173,7 +214,7 @@ export class InserirAnuncioPage {
   }
 
   presentImage(myImage) {
-    const imageViewer = this._imageViewerCtrl.create(myImage)
+    const imageViewer = this._imageViewerCtrl.create(myImage, )
     imageViewer.present()
   }
 

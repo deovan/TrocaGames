@@ -31,6 +31,7 @@ import { SplashScreen } from "@ionic-native/splash-screen"
 import { BrMaskerModule } from 'brmasker-ionic-3'
 import { AdMobFree } from '@ionic-native/admob-free'
 import { OrderModule } from 'ngx-order-pipe'
+import { Network } from '@ionic-native/network'
 
 import { CapitalizePipe } from "../pipes/capitalize/capitalize"
 import { CustomLoggedHeaderComponent } from "../components/custom-logged-header/custom-logged-header.component"
@@ -110,6 +111,7 @@ import { HTTP } from '@ionic-native/http';
     FileTransfer,
     FilePath,
     HTTP,
+    Network,
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },

@@ -28,6 +28,8 @@ export class UserInfoComponent {
 
   changedPhoto(file) {
     let uploadTask = this.userService.uploadPhoto(file).then((url) => {
+      console.log('chamou o changed photo');
+
       this.editUser(url);
     })
   }
@@ -75,24 +77,25 @@ export class UserInfoComponent {
       .then((fileUri: string) => {
         this.cameraService.saveFile(fileUri, sourceType)
           .then((entry: Entry) => {
-            this.filePhoto = entry.nativeURL;
-            this.changedPhoto(this.filePhoto);
-            console.log('FOTOS:', this.filePhoto)
+            this.filePhoto = entry.nativeURL
+            this.changedPhoto(this.filePhoto)
           })
       }).catch((err: Error) => console.log('Camera error: ', err))
   }
 
   editUser(url) {
     if (this.user.photo) {
-      this.userService.removeFile(this.user.photo);
-      this.user.photo = this.filePhoto;
+      console.log('ja possui foto');
+      console.log(this.user.photo);
+      this.userService.removeFile(this.user.photo)
+      this.user.photo = url
       this.userService.edit(this.user).then((value) => {
-        this.filePhoto = '';
+        this.filePhoto = ''
       })
     } else {
-      this.user.photo = this.filePhoto;
+      this.user.photo = url
       this.userService.edit(this.user).then((value) => {
-        this.filePhoto = '';
+        this.filePhoto = ''
       })
     }
 

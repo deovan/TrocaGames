@@ -45,16 +45,25 @@
                         <div *ngFor="let p of photo" class="scroll-item">
                             <img src="{{p}}" #myImage (click)="presentImage(myImage)" class="scroll-item" />
                             <ion-icon name="trash" class="deleteIcon" (click)="removeItem(p)"></ion-icon>
+
                         </div>
-                        <div *ngIf="getQtdFotos()" class="scroll-item">
-                                <ion-icon ios="ios-camera" md="md-camera" (click)="onActionSheet()"></ion-icon>
+                        <div (click)="onActionSheet()" *ngIf="getQtdFotos()" class="scroll-item">
+                            <svg  class="scroll-item" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                version="1.1" id="Layer_1" x="0px" y="0px" width="50px" height="50px" viewBox="0 0 512 512" enable-background="new 0 0 50 50"
+                                xml:space="preserve">
+                                <g>
+                                    <circle cx="255.811" cy="285.309" r="75.217" />
+                                    <path d="M477,137H352.718L349,108c0-16.568-13.432-30-30-30H191c-16.568,0-30,13.432-30,30l-3.718,29H34   c-11.046,0-20,8.454-20,19.5v258c0,11.046,8.954,20.5,20,20.5h443c11.046,0,20-9.454,20-20.5v-258C497,145.454,488.046,137,477,137   z M255.595,408.562c-67.928,0-122.994-55.066-122.994-122.993c0-67.928,55.066-122.994,122.994-122.994   c67.928,0,122.994,55.066,122.994,122.994C378.589,353.495,323.523,408.562,255.595,408.562z M474,190H369v-31h105V190z"
+                                    />
+                                </g>
+                            </svg>
+                            <!-- <img src="{{p}}"   (click)="onActionSheet()" class="scroll-item"/> -->
+                            <!-- <ion-icon ios="ios-camera" md="md-camera" (click)="onActionSheet()"></ion-icon> -->
                         </div>
                     </ion-avatar>
                 </ion-scroll>
             </ion-item>
         </ion-row>
-
-
     </ion-toolbar>
 </ion-header>
 
@@ -66,13 +75,14 @@
 
             <ion-input type="text" placeholder="Nome" formControlName="nome"></ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.nome.valid &&
+        <span class="error-message" *ngIf="!newAnuncio.controls.nome.valid &&
                             newAnuncio.controls.nome.touched">
             <p>Insira um nome</p>
-        </ion-item>
+        </span>
         <ion-label stacked color="primary">Console</ion-label>
 
         <ion-item>
+            <ion-label>Console</ion-label>
             <ion-select type="text" placeholder="Console" formControlName="console">
                 <ion-option value="Xbox One">Xbox One</ion-option>
                 <ion-option value="XBOX 360">XBOX 360</ion-option>
@@ -87,13 +97,14 @@
             </ion-select>
         </ion-item>
 
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.console.valid &&
+        <span class="error-message" *ngIf="!newAnuncio.controls.console.valid &&
                             newAnuncio.controls.console.touched">
             <p>Selecione o console!</p>
-        </ion-item>
+        </span>
         <ion-label stacked color="primary">Categoria</ion-label>
 
         <ion-item>
+            <ion-label>Categoria</ion-label>
             <ion-select type="text" placeholder="Categoria" formControlName="categoria">
                 <ion-option value="Ação">Ação</ion-option>
                 <ion-option value="Aventura">Aventura</ion-option>
@@ -112,20 +123,20 @@
             </ion-select>
         </ion-item>
 
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.categoria.valid &&
+        <span class="error-message" *ngIf="!newAnuncio.controls.categoria.valid &&
                                 newAnuncio.controls.categoria.touched">
             <p>Selecione o console!</p>
-        </ion-item>
+        </span>
         <ion-label stacked>Preço</ion-label>
         <ion-item>
 
             <ion-input formControlName="preco" type="text" name="money" placeholder="(R$) Real" [brmasker]="{money: true,decimal: 2,type:  'num'} ">
             </ion-input>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.preco.valid &&
+        <span class="error-message" *ngIf="!newAnuncio.controls.preco.valid &&
         newAnuncio.controls.preco.touched">
             <p>Insira um valor!</p>
-        </ion-item>
+        </span>
 
         <ion-label>Objetivo</ion-label>
         <ion-item>
@@ -142,18 +153,13 @@
             <ion-textarea type="text" placeholder="Descrição" formControlName="descricao" autocorrect="on" #descricao rows="4" id="descricao"
                 maxLength="250" name="descricao"></ion-textarea>
         </ion-item>
-        <ion-item class="error-message" *ngIf="!newAnuncio.controls.descricao.valid &&
+        <span class="error-message" *ngIf="!newAnuncio.controls.descricao.valid &&
                             newAnuncio.controls.descricao.touched">
             <p>Insira uma descrição</p>
-        </ion-item>
+        </span>
 
     </form>
-
-
-
-</ion-content>
-<ion-footer>
     <button ion-button block (click)="save()" [disabled]="!newAnuncio.valid || getQtdFotos===0">
         Concluir
     </button>
-</ion-footer>
+</ion-content>

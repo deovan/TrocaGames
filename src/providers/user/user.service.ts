@@ -15,6 +15,7 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class UserService extends BaseService {
   users: Observable<User[]>;
+  private basePath = '/users';
 
   firedata = firebase.database().ref('/users');
 
@@ -94,7 +95,10 @@ export class UserService extends BaseService {
 
 
   public removeFile(fullPath: string) {
-    let storageRef = this.firebaseApp.storage().ref();
-    storageRef.child(fullPath).delete()
+    var key = firebase.auth().currentUser.uid
+    var path = firebase.storage().ref(this.basePath).child(key);
+    let name = fullPath.substr(fullPath.indexOf('%2F') + 3, (fullPath.indexOf('?')) - (fullPath.indexOf('%2F') + 3));
+    name = name.substr(name.indexOf('%2F') + 3, 9)
+    path.child(`${name}`+'.jpg').delete();
   }
 }

@@ -28,7 +28,6 @@ export class AnuncioDetalhesPage {
     this.fotos = this.jogo.fotos;
   }
 
-
   onChatCreate(): void {
     this.chatService.initializebuddy(this.jogo, this.jogo.user);
     this.navCtrl.push(ChatPage, {
@@ -37,7 +36,6 @@ export class AnuncioDetalhesPage {
     });
 
   }
-
 
   goToSlide() {
     this.slides.slideTo(2, 500);
