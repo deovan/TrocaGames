@@ -10,21 +10,19 @@
       <ion-slide *ngFor="let img of fotos " class="swiper-zoom-container">
         <img class="slide-image" src="{{img}}">
       </ion-slide>
-
     </ion-slides>
   </div>
 
 
   <ion-item>
     <h1 style="white-space: normal ">{{jogo.nome}}</h1>
+    <p style="color: blue">R$ {{jogo.preco}}</p>
   </ion-item>
 
-  <ion-item>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-badge>R${{jogo.preco}}</ion-badge>
-        </ion-col>
+  <ion-item *ngIf="jogo?.venda || jogo?.troca">
+ 
+      <ion-row  >
+       
         <ion-col *ngIf="jogo?.venda">
           <ion-badge color="venda">Venda</ion-badge>
         </ion-col>
@@ -32,28 +30,30 @@
           <ion-badge color="secondary">Troca</ion-badge>
         </ion-col>
       </ion-row>
-    </ion-grid>
+
   </ion-item>
-  <ion-item>
-    <label>Descrição:</label>
-    <p style="white-space: normal ">{{jogo.descricao}}</p>
-  </ion-item>
+
   <ion-item>
     <label>Categoria:</label>
     <p>{{jogo.categoria}}</p>
     <br>
     <label>Console:</label>
     <p>{{jogo.console}}</p>
-    <br>
+
+  </ion-item>
+  <ion-item>
+    <label>Descrição:</label>
+    <p style="white-space: normal ">{{jogo.descricao}}</p>
+  </ion-item>
+  <ion-item>
     <label>Anunciado por :</label>
-    <p>{{jogo?.userNome||'----'}} em {{jogo.datetime | date:'dd/MM/y H:mm '}} {{jogo?.cidade}}</p>
+    <p> {{jogo?.userNome||'----'}} em {{jogo.datetime | date:'dd/MM/y H:mm '}} {{jogo?.cidade}}</p>
   </ion-item>
 
 
+    <button ion-button block (click)="onChatCreate()">
+      <h4>Tenho Interesse!</h4>
+    </button>
 
 </ion-content>
-<ion-footer>
-  <button ion-button block (click)="onChatCreate()">
-    <h4>Tenho Interesse!</h4>
-  </button>
-</ion-footer>
+

@@ -1,13 +1,13 @@
-<ion-header>
+<!-- <ion-header>
   <ion-navbar color="primary">
     <ion-title>Login</ion-title>
   </ion-navbar>
-</ion-header>
+</ion-header> -->
 
 
-<ion-content padding class="auth-page">
-  <div padding [@flyInBottomFast]="cloudState" id="cloud-layer">
-    <ion-row>
+<ion-content fullscreen >
+  <div  [@flyInBottomFast]="cloudState" id="cloud-layer">
+    <ion-row >
       <ion-col>
         <h1 [@flyInBottomSlow]="logoState">Troca Games!</h1>
         <!-- <img [@flyInBottomSlow]="logoState" src="../../assets/imgs/avatar.jpg" /> -->
@@ -26,8 +26,9 @@
             </ion-item>
             <span class="error-message" *ngIf="!loginForm.controls.email.valid &&
             loginForm.controls.email.touched">
-             Insira um email valido!
+              Insira um email valido!
             </span>
+            <br>
 
             <ion-item [class.invalid]="!loginForm.controls.password.valid && loginForm.controls.password.touched" [class.valid]="loginForm.controls.password.valid && loginForm.controls.password.touched">
               <ion-icon name="lock" item-left color="primary"></ion-icon>
@@ -36,9 +37,9 @@
             </ion-item>
             <span class="error-message" *ngIf="!loginForm.controls.password.valid
             && loginForm.controls.password.touched">
-             Senha inválida!
+              Senha inválida!
             </span>
-
+            <br>
             <button class="login-button" ion-button block type="submit" [disabled]="!loginForm.valid">
               Log In
             </button>
@@ -59,7 +60,7 @@
         </ion-buttons>
       </ion-col>
     </ion-row>
-
+    <ion-spinner align-center  name="dots"></ion-spinner>
   </div>
   <!-- <ion-card>
     <ion-card-header text-center>

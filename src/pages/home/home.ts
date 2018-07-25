@@ -1,8 +1,9 @@
 import { HTTP } from '@ionic-native/http';
 import { timeout } from 'rxjs/operators'
-import { LoadingController } from 'ionic-angular'
+import { LoadingController, PopoverController } from 'ionic-angular'
 import { Subscription } from 'rxjs/Subscription'
 import firebase from 'firebase'
+import { Geolocation } from '@ionic-native/geolocation';
 import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio'
 import { ChatPage } from './../chat/chat'
 import { PreloaderService } from './../../providers/preloader/preloader.service'
@@ -18,6 +19,8 @@ import { NavController, MenuController, ToastController } from 'ionic-angular'
 import { AuthService } from '../../providers/auth/auth'
 import { Jogo } from '../../todo/jogo.model'
 import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free'
+import { NativeGeocoder, NativeGeocoderOptions, NativeGeocoderReverseResult, NativeGeocoderForwardResult } from '@ionic-native/native-geocoder';
+import { PopoverComponent } from '../../components/popover/popover';
 
 
 @Component({
@@ -36,21 +39,54 @@ export class HomePage {
   constructor(
     public authService: AuthService,
     public admob: AdMobFree,
+    private geolocation: Geolocation,
     public http: HTTP,
     private _jogoService: JogoService,
     private _LOADER: PreloaderService,
     public loadingCtrl: LoadingController,
     public menu: MenuController,
     public navCtrl: NavController,
+    private nativeGeocoder: NativeGeocoder,
+    public popoverCtrl: PopoverController,
     public toastCtrl: ToastController) {
     this.currentUser = firebase.auth().currentUser.uid
     menu.enable(true)
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      console.log('resp',resp);
+      
+      // resp.coords.latitude
+      // resp.coords.longitude
+     }).catch((error) => {
+       console.log('Error getting location', error);
+     });
+
+    this.nativeGeocoder.reverseGeocode(-23.2813634,-51.1812797, options)
+      .then((result: NativeGeocoderReverseResult[]) => console.log(JSON.stringify(result[0])))
+      .catch((error: any) => console.log(error));
+
+    this.nativeGeocoder.forwardGeocode('Berlin', options)
+      .then((coordinates: NativeGeocoderForwardResult[]) => console.log('The coordinates are latitude=' + coordinates[0].latitude + ' and longitude=' + coordinates[0].longitude))
+      .catch((error: any) => console.log(error));
     // http.get('http://ddd.pricez.com.br/cep/86080520','',`content-type
     // :
     // "application/json"`).then((responde) => {
     //   console.log(responde);
     // })
     // this.categorias = this._jogoService.getCategorias()
+  }
+
+  
+  presentPopover(myEvent) {
+  
+    let popover = this.popoverCtrl.create(PopoverComponent);
+    popover.present({
+      ev: myEvent
+    });
   }
 
   ionViewDidLoad() {

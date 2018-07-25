@@ -9,6 +9,8 @@ import { HomePage } from "../pages/home/home"
 import { InserirAnuncioPage } from "../pages/inserir-anuncio/inserir-anuncio"
 import { LoginPage } from "../pages/login/login"
 import { MyApp } from "./app.component"
+import { NativeGeocoder} from '@ionic-native/native-geocoder';
+import { Geolocation } from '@ionic-native/geolocation';
 import { SignupPage } from "../pages/signup/signup"
 import { UserInfoComponent } from "../components/user-info/user-info.component"
 import { UserMenuComponent } from "../components/user-menu/user-menu.component"
@@ -27,6 +29,7 @@ import { AngularFireModule } from "angularfire2"
 import { HttpModule } from "@angular/http"
 import { AngularFireDatabaseModule } from "angularfire2/database"
 import { AngularFireAuthModule } from "angularfire2/auth"
+import {ScreenOrientation} from "@ionic-native/screen-orientation";
 import { SplashScreen } from "@ionic-native/splash-screen"
 import { BrMaskerModule } from 'brmasker-ionic-3'
 import { AdMobFree } from '@ionic-native/admob-free'
@@ -48,6 +51,7 @@ import { EmailSignInComponent } from '../components/email-sign-in/email-sign-in'
 import { EmailSignUpComponent } from '../components/email-sign-up/email-sign-up';
 import { EmailValidator } from '../validators/email';
 import { HTTP } from '@ionic-native/http';
+import { PopoverComponent } from '../components/popover/popover';
 @NgModule({
   declarations: [
     AnuncioDetalhesPage,
@@ -64,6 +68,7 @@ import { HTTP } from '@ionic-native/http';
     MeusAnunciosPage,
     MessageBoxComponent,
     MyApp,
+    PopoverComponent,
     ProgressBarComponent,
     SignupPage,
     UserInfoComponent,
@@ -77,7 +82,7 @@ import { HTTP } from '@ionic-native/http';
     OrderModule,
     IonicModule.forRoot(MyApp),
     IonicImageViewerModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(firebaseConfigTesting),
     HttpModule,
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
     AngularFireAuthModule,
@@ -96,6 +101,7 @@ import { HTTP } from '@ionic-native/http';
     LoginPage,
     MeusAnunciosPage,
     MyApp,
+    PopoverComponent,
     SignupPage,
     UserInfoComponent,
     UserProfilePage
@@ -110,8 +116,11 @@ import { HTTP } from '@ionic-native/http';
     File,
     FileTransfer,
     FilePath,
+    Geolocation,
     HTTP,
+    NativeGeocoder,
     Network,
+    ScreenOrientation,
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },

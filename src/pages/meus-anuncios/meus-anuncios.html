@@ -24,11 +24,11 @@
     </p>
   </div>
   <ion-list>
-    <ion-card *ngFor="let todo of anuncios" (click)="editarAnuncio(todo)">
+    <ion-card *ngFor="let todo of anuncios">
       <ion-item-sliding>
         <ion-item>
           <ion-thumbnail item-start>
-            <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' ">
+            <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' || async">
           </ion-thumbnail>
           <ion-grid>
             <ion-row>
@@ -39,12 +39,13 @@
             <ion-row>
               <ion-col>
                 <p>{{todo.descricao}}</p>
+                <p style="color:blue">
+                  R${{todo.preco}}
+                </p>
               </ion-col>
             </ion-row>
             <ion-row>
-              <ion-col>
-                <ion-badge>R${{todo.preco}}</ion-badge>
-              </ion-col>
+
               <ion-col *ngIf="todo?.venda">
                 <ion-badge color="venda">Venda</ion-badge>
               </ion-col>

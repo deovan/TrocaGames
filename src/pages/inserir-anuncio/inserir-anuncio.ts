@@ -81,7 +81,7 @@ export class InserirAnuncioPage {
       ],
       'preco': [
         '',
-        Validators.compose([Validators.required])
+        Validators.compose([Validators.required])     
       ],
       'troca': [
         Validators.compose([])
@@ -125,7 +125,7 @@ export class InserirAnuncioPage {
         console.log(this.jogo);
         this.jogoService.save(this.jogo).then((valueKey) => {
           this.key = valueKey;
-          if (valueKey) {
+          if (valueKey!=undefined) {
             if (this.photo.length > 0) {
               this.uploadToStorage(this.key, this.photo).then(() => {
                 loading.dismiss()

@@ -48,8 +48,8 @@
 
                         </div>
                         <div (click)="onActionSheet()" *ngIf="getQtdFotos()" class="scroll-item">
-                            <svg  class="scroll-item" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                version="1.1" id="Layer_1" x="0px" y="0px" width="50px" height="50px" viewBox="0 0 512 512" enable-background="new 0 0 50 50"
+                            <svg class="scroll-item" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1"
+                                x="0px" y="0px" width="50px" height="50px" viewBox="0 0 512 512" enable-background="new 0 0 50 50"
                                 xml:space="preserve">
                                 <g>
                                     <circle cx="255.811" cy="285.309" r="75.217" />
@@ -70,20 +70,20 @@
 <ion-content padding>
 
     <form [formGroup]="newAnuncio">
-        <ion-label stacked>Nome</ion-label>
-        <ion-item>
 
-            <ion-input type="text" placeholder="Nome" formControlName="nome"></ion-input>
+
+        <ion-item>
+            <ion-label floating>Nome</ion-label>
+            <ion-input type="text" formControlName="nome"></ion-input>
         </ion-item>
         <span class="error-message" *ngIf="!newAnuncio.controls.nome.valid &&
                             newAnuncio.controls.nome.touched">
             <p>Insira um nome</p>
         </span>
-        <ion-label stacked color="primary">Console</ion-label>
-
+        <br>
         <ion-item>
-            <ion-label>Console</ion-label>
-            <ion-select type="text" placeholder="Console" formControlName="console">
+            <ion-label floating>Console</ion-label>
+            <ion-select type="text" formControlName="console">
                 <ion-option value="Xbox One">Xbox One</ion-option>
                 <ion-option value="XBOX 360">XBOX 360</ion-option>
                 <ion-option value="PS4">PS4</ion-option>
@@ -101,11 +101,11 @@
                             newAnuncio.controls.console.touched">
             <p>Selecione o console!</p>
         </span>
-        <ion-label stacked color="primary">Categoria</ion-label>
+        <br>
 
         <ion-item>
-            <ion-label>Categoria</ion-label>
-            <ion-select type="text" placeholder="Categoria" formControlName="categoria">
+            <ion-label floating>Categoria</ion-label>
+            <ion-select type="text" formControlName="categoria">
                 <ion-option value="Ação">Ação</ion-option>
                 <ion-option value="Aventura">Aventura</ion-option>
                 <ion-option value="Esportes">Esportes</ion-option>
@@ -127,18 +127,19 @@
                                 newAnuncio.controls.categoria.touched">
             <p>Selecione o console!</p>
         </span>
-        <ion-label stacked>Preço</ion-label>
-        <ion-item>
 
-            <ion-input formControlName="preco" type="text" name="money" placeholder="(R$) Real" [brmasker]="{money: true,decimal: 2,type:  'num'} ">
+        <br>
+        <ion-item>
+            <ion-label floating>Preço</ion-label>
+            <ion-input formControlName="preco" name="money" [brmasker]="{money: true,decimal: 2,type:'num',len:6} ">
             </ion-input>
         </ion-item>
         <span class="error-message" *ngIf="!newAnuncio.controls.preco.valid &&
         newAnuncio.controls.preco.touched">
             <p>Insira um valor!</p>
         </span>
-
-        <ion-label>Objetivo</ion-label>
+        <br>
+        <ion-label stacked>Objetivo</ion-label>
         <ion-item>
             <ion-label>Troca</ion-label>
             <ion-checkbox name="troca" formControlName="troca" [(ngModel)]="troca" color="secondary"></ion-checkbox>
@@ -147,17 +148,16 @@
             <ion-label>Venda</ion-label>
             <ion-checkbox name="venda" formControlName="venda" [(ngModel)]="venda" color="secondary"></ion-checkbox>
         </ion-item>
-
+        <br>
         <ion-label stacked>Descrição</ion-label>
         <ion-item>
-            <ion-textarea type="text" placeholder="Descrição" formControlName="descricao" autocorrect="on" #descricao rows="4" id="descricao"
-                maxLength="250" name="descricao"></ion-textarea>
+            <ion-textarea type="text" formControlName="descricao" autocorrect="on" #descricao rows="4" id="descricao" maxLength="250"
+                name="descricao"></ion-textarea>
         </ion-item>
         <span class="error-message" *ngIf="!newAnuncio.controls.descricao.valid &&
                             newAnuncio.controls.descricao.touched">
             <p>Insira uma descrição</p>
         </span>
-
     </form>
     <button ion-button block (click)="save()" [disabled]="!newAnuncio.valid || getQtdFotos===0">
         Concluir

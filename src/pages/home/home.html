@@ -5,25 +5,19 @@
     </button>
 
     <ion-buttons end>
-      <button ion-button (click)="canSearch= !canSearch">
-        <ion-icon *ngIf="canSearch" ios="ios-close-circle" md="md-close-circle" icon-end></ion-icon>
-        <ion-icon *ngIf="!canSearch" ios="ios-earch" md="md-search" icon-end>
-        </ion-icon>
+      <button ion-button (click)="presentPopover($event)">
+          <ion-icon ios="ios-funnel" md="md-funnel"></ion-icon>
+       
       </button>
     </ion-buttons>
-    <ion-title *ngIf="!canSearch" style="background:transparent">
+    <ion-title style="background:transparent">
       Lista de Jogos
     </ion-title>
-    <ion-searchbar *ngIf="canSearch" (ionInput)="getItems($event)"></ion-searchbar>
   </ion-navbar>
-
-  <!-- <ion-toolbar no-border center toolbar-ios-height>
-    <ion-scroll scrollX="true" style="white-space:nowrap;height: 30px;">
-      <ion-buttons>
-        <button *ngFor="let i of categorias" ion-button (click)="exibirPorCategorias($event)">{{i}}</button>
-      </ion-buttons>
-    </ion-scroll>
-  </ion-toolbar> -->
+  <ion-toolbar>
+      <ion-searchbar  placeholder="Busca"[(ngModel)]="myInput" [showCancelButton]="shouldShowCancel" (ionInput)="getItems($event)" (ionCancel)="onCancel($event)">
+        </ion-searchbar>
+  </ion-toolbar>
 
 </ion-header>
 
@@ -46,7 +40,7 @@
         <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' || async">
       </ion-thumbnail>
       <ion-grid>
-        <ion-row >
+        <ion-row>
           <ion-col>
             <h1>{{todo.nome}}</h1>
           </ion-col>
@@ -54,12 +48,13 @@
         <ion-row>
           <ion-col>
             <p>{{todo.descricao}}</p>
+            <p style="color:blue">
+              R${{todo.preco}}
+            </p>
           </ion-col>
         </ion-row>
         <ion-row>
-          <ion-col>
-            <ion-badge>R${{todo.preco}}</ion-badge>
-          </ion-col>
+
           <ion-col *ngIf="todo?.venda">
             <ion-badge color="venda">Venda</ion-badge>
           </ion-col>

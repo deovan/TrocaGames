@@ -27,6 +27,8 @@ export class JogoService extends BaseService {
   anuncios = [];
   firedataJogo = firebase.database().ref('/jogos');
   firedataCategorias = firebase.database().ref('/categorias');
+  firedataConsoles = firebase.database().ref('/consoles');
+
   itemList: any[] = [];
   loadeditemList: any = [];
   lastKey: any = '';
@@ -36,7 +38,7 @@ export class JogoService extends BaseService {
     super();
   }
 
-  getCategorias() {
+  getCategorias(): Array<any> {
     var result = [];
     this.firedataCategorias.orderByKey().once('value', (snapshot: any) => {
       snapshot.forEach((childSnapshot) => {
@@ -47,16 +49,32 @@ export class JogoService extends BaseService {
     return result;
   }
 
-  save(jogo: Jogo) {
-    return new Promise<string>(resolve => {
+  getConsoles(): Array<any> {
+    var result = [];
+    this.firedataConsoles.orderByKey().once('value', (snapshot: any) => {
+      snapshot.forEach((childSnapshot) => {
+        var element = childSnapshot.val();
+        result.push(element);
+      });
+    });
+    return result;
+  }
+
+  save(jogo: Jogo): Promise<string> {
+    return new Promise<string>((resolve) => {
       this.firedataJogo.push(jogo).then((result) => {
-        console.log(result);
-        var key = result.key
-        resolve(key)
+        setTimeout(() => {
+          resolve(result.key);
+        }, 2000);
+
+        // console.log(result);
+        // let key = result.key
+        // console.log('key', key);
+        // resolve(key)
       })
     })
-
   }
+
   userExistsCallback(userId, exists) {
     if (exists) {
       alert('user ' + userId + ' exists!');
@@ -172,8 +190,6 @@ export class JogoService extends BaseService {
 
     });
   }
-
-
 
   edit(jogo: Jogo, key?: string): Promise<void> {
     return this.firedataJogo.child(key)
