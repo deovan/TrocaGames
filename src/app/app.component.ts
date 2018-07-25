@@ -74,6 +74,7 @@ export class MyApp {
 
     })
   }
+  
   hideSplashScreen() {
     if (this.splashScreen) {
       setTimeout(() => {

@@ -1,27 +1,14 @@
-import { HTTP } from '@ionic-native/http';
-import { timeout } from 'rxjs/operators'
-import { LoadingController, PopoverController } from 'ionic-angular'
-import { Subscription } from 'rxjs/Subscription'
-import firebase from 'firebase'
+import { AnuncioDetalhesPage } from './../anuncio-detalhes/anuncio-detalhes';
+import firebase  from 'firebase';
+import { Jogo } from './../../todo/jogo.model';
 import { Geolocation } from '@ionic-native/geolocation';
-import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio'
-import { ChatPage } from './../chat/chat'
-import { PreloaderService } from './../../providers/preloader/preloader.service'
-import { AnuncioDetalhesPage } from './../anuncio-detalhes/anuncio-detalhes'
-
-import { JogoService } from './../../providers/jogo/jogo.service'
-import { Observable } from 'rxjs'
-import { LoginPage } from './../login/login'
-
-import { Component, ViewChild } from '@angular/core'
-import { NavController, MenuController, ToastController } from 'ionic-angular'
-
-import { AuthService } from '../../providers/auth/auth'
-import { Jogo } from '../../todo/jogo.model'
-import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free'
-import { NativeGeocoder, NativeGeocoderOptions, NativeGeocoderReverseResult, NativeGeocoderForwardResult } from '@ionic-native/native-geocoder';
-import { PopoverComponent } from '../../components/popover/popover';
-
+import { NativeGeocoder, NativeGeocoderOptions, NativeGeocoderForwardResult, NativeGeocoderReverseResult } from '@ionic-native/native-geocoder';
+import { LoadingController, MenuController, NavController, PopoverController, ToastController } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { AuthService } from "../../providers/auth/auth";
+import { AdMobFree, AdMobFreeBannerConfig } from "@ionic-native/admob-free";
+import { JogoService } from "../../providers/jogo/jogo.service";
+import { PreloaderService } from "../../providers/preloader/preloader.service";
 
 @Component({
   templateUrl: 'home.html'
@@ -33,21 +20,20 @@ export class HomePage {
   limit: number = 20
   canSearch: boolean = false
   currentUser = ''
-  private _someListener: Subscription = new Subscription()
+  // private _someListener: Subscription = new Subscription()
 
 
   constructor(
     public authService: AuthService,
     public admob: AdMobFree,
-    private geolocation: Geolocation,
-    public http: HTTP,
+    public geolocation: Geolocation,
     private _jogoService: JogoService,
     private _LOADER: PreloaderService,
     public loadingCtrl: LoadingController,
     public menu: MenuController,
     public navCtrl: NavController,
     private nativeGeocoder: NativeGeocoder,
-    public popoverCtrl: PopoverController,
+    // public popoverCtrl: PopoverController,
     public toastCtrl: ToastController) {
     this.currentUser = firebase.auth().currentUser.uid
     menu.enable(true)
@@ -56,7 +42,7 @@ export class HomePage {
       maxResults: 5
     };
 
-    this.geolocation.getCurrentPosition().then((resp) => {
+    geolocation.getCurrentPosition().then((resp) => {
       console.log('resp',resp);
       
       // resp.coords.latitude
@@ -72,22 +58,16 @@ export class HomePage {
     this.nativeGeocoder.forwardGeocode('Berlin', options)
       .then((coordinates: NativeGeocoderForwardResult[]) => console.log('The coordinates are latitude=' + coordinates[0].latitude + ' and longitude=' + coordinates[0].longitude))
       .catch((error: any) => console.log(error));
-    // http.get('http://ddd.pricez.com.br/cep/86080520','',`content-type
-    // :
-    // "application/json"`).then((responde) => {
-    //   console.log(responde);
-    // })
-    // this.categorias = this._jogoService.getCategorias()
   }
 
   
-  presentPopover(myEvent) {
+  // presentPopover(myEvent) {
   
-    let popover = this.popoverCtrl.create(PopoverComponent);
-    popover.present({
-      ev: myEvent
-    });
-  }
+  //   let popover = this.popoverCtrl.create(PopoverComponent);
+  //   popover.present({
+  //     ev: myEvent
+  //   });
+  // }
 
   ionViewDidLoad() {
     this.showBanner();
