@@ -211,7 +211,7 @@ export class LoginPage {
         }
         loading.dismiss();
         const alert: Alert = this.alertCtrl.create({
-          message:msg,
+          message: msg,
           buttons: [{ text: 'Ok', role: 'cancel' }]
         });
         alert.present();

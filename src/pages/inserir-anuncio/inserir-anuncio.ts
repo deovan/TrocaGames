@@ -105,15 +105,15 @@ export class InserirAnuncioPage {
     })
   }
 
-  save() {
+  async save() {
     if (!this.newAnuncio.valid) {
       console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`)
     } else {
- 
+
       const loading: Loading = this.loadingCtrl.create({
         spinner: 'dots'
       })
-    
+
       loading.present().then(() => {
         this.jogo = new Jogo(
           firebase.auth().currentUser.uid,
@@ -129,45 +129,51 @@ export class InserirAnuncioPage {
           this.venda,
         )
         console.log(this.jogo);
-         this.jogoService.save(this.jogo).then((valueKey) => {
-          console.log('value',valueKey);
-          this.key = valueKey;
-          if (valueKey != undefined && valueKey != null ) {
-            if (this.photo.length > 0) {
-              this.uploadToStorage(this.key, this.photo).then(() => {
-                loading.dismiss()
-                this.showBannerInterstitial();
-                setTimeout(() => {
-                  this.showToast('Anúncio Cadastrado com Sucesso!')
-                  this.navCtrl.setRoot(HomePage);
-                }, 300);
-              }).catch((error) => {
-                console.log(error)
-                loading.dismiss()
-                this.showAlert(error)
-                this.navCtrl.getPrevious()
-              })
-            } else {
-              loading.dismiss()
-              this.showBannerInterstitial();
-              setTimeout(() => {
-                this.showToast('Anúncio Cadastrado com Sucesso!')
-                this.navCtrl.setRoot(HomePage);
-              }, 300);
-            }
-
+        this.jogoService.save(this.jogo).subscribe((valueKey) => {
+          console.log('value', valueKey);
+          if (valueKey !== undefined && valueKey !== null) {
+            console.log('value confirmado', valueKey);
+            this.savePhotosAndUpdateProfile(
+              valueKey, loading)
           }
-
-        }).catch((error) => {
-          console.log(error)
+        }), (error => {
+          console.log()
           loading.dismiss()
-          this.showAlert(error)
+          this.showAlert(error.message)
           this.navCtrl.getPrevious()
         })
+
       })
+
     }
   }
 
+
+  savePhotosAndUpdateProfile(valueKey, loading) {
+    this.key = valueKey;
+    if (this.photo.length > 0) {
+      this.uploadToStorage(this.key, this.photo).then(() => {
+        loading.dismiss()
+        this.showBannerInterstitial();
+        setTimeout(() => {
+          this.showToast('Anúncio Cadastrado com Sucesso!')
+          this.navCtrl.setRoot(HomePage);
+        }, 300);
+      }).catch((error) => {
+        console.log(error)
+        loading.dismiss()
+        this.showAlert(error)
+        this.navCtrl.getPrevious()
+      })
+    } else {
+      loading.dismiss()
+      this.showBannerInterstitial();
+      setTimeout(() => {
+        this.showToast('Anúncio Cadastrado com Sucesso!')
+        this.navCtrl.setRoot(HomePage);
+      }, 300);
+    }
+  }
 
   presentLoadingCustom() {
     const loading = this.loadingCtrl.create({
@@ -177,7 +183,7 @@ export class InserirAnuncioPage {
           <div class="custom-spinner-box">
           <ion-spinner align-center  name="dots"></ion-spinner></div>
         </div>`,
-  
+
     });
 
     loading.onDidDismiss(() => {
@@ -187,20 +193,20 @@ export class InserirAnuncioPage {
     loading.present();
   }
 
-  myModelVariable='';
+  myModelVariable = '';
   getCurrency(amount: string) {
-    console.log('amout',amount);
+    console.log('amout', amount);
 
     this.myModelVariable = amount
     // this.myModelVariable = amount.replace(/[^\d\.]/g ,'');
-    let v = amount.replace("R$","")
+    let v = amount.replace("R$", "")
 
-    console.log('v',v);
-    
-  
+    console.log('v', v);
+
+
     // this.myModelVariable =  this.currencyPipe.transform(v, 'BRL', true, '3.2-2');
 
-    console.log('new:', this.myModelVariable); 
+    console.log('new:', this.myModelVariable);
   }
   showBannerInterstitial() {
     let bannerConfig: AdMobFreeInterstitialConfig = {
@@ -306,7 +312,7 @@ export class InserirAnuncioPage {
       sourceType: sourceType,
       encodingType: 0,
       mediaType: 0,
-      allowEdit: true
+      allowEdit: false
     }
 
 

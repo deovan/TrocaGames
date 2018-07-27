@@ -1,3 +1,5 @@
+import { Observable } from 'rxjs';
+import { timeout } from 'rxjs/operators';
 import { Camera } from '@ionic-native/camera';
 import { auth, database } from 'firebase/app';
 import { Entry } from '@ionic-native/file';
@@ -10,9 +12,8 @@ import { Jogo } from '../../todo/jogo.model';
 
 import { FirebaseApp } from 'angularfire2';
 import { BaseService } from '../base/base.service';
-import { Observable } from 'rxjs/Observable';
+
 import { map } from '@firebase/util';
-import { PromiseObservable } from 'rxjs/observable/PromiseObservable';
 
 
 declare var window: any;
@@ -60,11 +61,27 @@ export class JogoService extends BaseService {
     return result;
   }
 
-  async save(jogo: Jogo): Promise<string> {
-    return await new Promise<string>((resolve) => {
-      this.firedataJogo.push(jogo).then((result) => {
+  verificarKey(key: string): boolean {
+    if (key != undefined && key != null) {
+      return true;
+    } else {
+      return false
+    }
+  }
 
-        resolve(result.key);
+ save(jogo: Jogo): Observable<any> {
+    return new Observable<string>((resolve) => {
+      this.firedataJogo.push(jogo).then((result) => {
+        if (this.verificarKey(result.key)) {
+          resolve.next(result.key)
+        }
+
+
+        // while(this.verificarKey(result.key)){
+        //   if(this.verificarKey(result.key))
+        //   resolve(result.key);
+        // }
+
 
 
         // console.log(result);
