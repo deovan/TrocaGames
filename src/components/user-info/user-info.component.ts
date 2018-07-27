@@ -14,7 +14,7 @@ import { Entry } from '@ionic-native/file';
 export class UserInfoComponent {
   @Input() user: User;
   @Input() isMenu: boolean = true;
-  filePhoto: any;
+  private filePhoto: string;
   uploadProgress: number;
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -70,7 +70,7 @@ export class UserInfoComponent {
       sourceType: sourceType,
       encodingType: 0,
       mediaType: 0,
-      allowEdit: true
+      allowEdit: false
     }
 
     this.camera.getPicture(cameraOptions)

@@ -1,3 +1,4 @@
+import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
 import { AnuncioDetalhesPage } from './../anuncio-detalhes/anuncio-detalhes';
 import firebase  from 'firebase';
 import { Jogo } from './../../todo/jogo.model';
@@ -26,13 +27,14 @@ export class HomePage {
   constructor(
     public authService: AuthService,
     public admob: AdMobFree,
-    public geolocation: Geolocation,
+    
     private _jogoService: JogoService,
     private _LOADER: PreloaderService,
     public loadingCtrl: LoadingController,
     public menu: MenuController,
     public navCtrl: NavController,
-    private nativeGeocoder: NativeGeocoder,
+    // public geolocation: Geolocation,
+    // private nativeGeocoder: NativeGeocoder,
     // public popoverCtrl: PopoverController,
     public toastCtrl: ToastController) {
     this.currentUser = firebase.auth().currentUser.uid
@@ -42,22 +44,22 @@ export class HomePage {
       maxResults: 5
     };
 
-    geolocation.getCurrentPosition().then((resp) => {
-      console.log('resp',resp);
+    // geolocation.getCurrentPosition().then((resp) => {
+    //   console.log('resp',resp);
       
-      // resp.coords.latitude
-      // resp.coords.longitude
-     }).catch((error) => {
-       console.log('Error getting location', error);
-     });
+    //   // resp.coords.latitude
+    //   // resp.coords.longitude
+    //  }).catch((error) => {
+    //    console.log('Error getting location', error);
+    //  });
 
-    this.nativeGeocoder.reverseGeocode(-23.2813634,-51.1812797, options)
-      .then((result: NativeGeocoderReverseResult[]) => console.log(JSON.stringify(result[0])))
-      .catch((error: any) => console.log(error));
+    // this.nativeGeocoder.reverseGeocode(-23.2813634,-51.1812797, options)
+    //   .then((result: NativeGeocoderReverseResult[]) => console.log(JSON.stringify(result[0])))
+    //   .catch((error: any) => console.log(error));
 
-    this.nativeGeocoder.forwardGeocode('Berlin', options)
-      .then((coordinates: NativeGeocoderForwardResult[]) => console.log('The coordinates are latitude=' + coordinates[0].latitude + ' and longitude=' + coordinates[0].longitude))
-      .catch((error: any) => console.log(error));
+    // this.nativeGeocoder.forwardGeocode('Berlin', options)
+    //   .then((coordinates: NativeGeocoderForwardResult[]) => console.log('The coordinates are latitude=' + coordinates[0].latitude + ' and longitude=' + coordinates[0].longitude))
+    //   .catch((error: any) => console.log(error));
   }
 
   
@@ -112,6 +114,10 @@ export class HomePage {
         this.todos.push(jogo)
       })
     })
+  }
+
+  openPage(event:Event){
+    this.navCtrl.push(InserirAnuncioPage)
   }
 
   doRefresh(refresher) {

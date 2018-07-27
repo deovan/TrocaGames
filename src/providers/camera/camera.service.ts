@@ -35,7 +35,7 @@ export class CameraService {
     const fileTransfer: FileTransferObject = this.transfer.create();
 
     let loading: Loading = this.loadingCtrl.create({
-      content: 'Carregando'
+      spinner: 'dots'
     });
 
     loading.present();

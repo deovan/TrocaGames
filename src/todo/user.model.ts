@@ -7,6 +7,7 @@ export class User {
         public email: string,
         public telefone:string,
         public photo: string,
+        localization?:any,
         public cidade:string=''
     ) { }
 

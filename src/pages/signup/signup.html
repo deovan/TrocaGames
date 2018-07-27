@@ -1,67 +1,76 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-title>Signup</ion-title>
+    <ion-title>Cadastro</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding class="auth-page">
-  <h1 text-center>
+  <!-- <h1 text-center>
     <ion-icon class="auth-icon" name="person-add" color="primary"></ion-icon>
-  </h1>
+  </h1> -->
 
   <form [formGroup]="signupForm" (submit)="signupUser()" novalidate>
     <ion-item>
-      <ion-icon name="person" item-left color="primary"></ion-icon>
-      <ion-input type="text" placeholder="Seu nome" formControlName="name"></ion-input>
+      <ion-label floating> Nome</ion-label>
+      <ion-input type="text" formControlName="name"></ion-input>
     </ion-item>
-
-
+    <br>
     <ion-item [class.invalid]="!signupForm.controls.email.valid && signupForm.controls.email.touched" [class.valid]="signupForm.controls.email.valid && signupForm.controls.email.touched">
-      <ion-icon name="mail" item-left color="primary"></ion-icon>
-      <ion-input formControlName="email" type="email" placeholder="Seu email">
+      <ion-label floating> Email</ion-label>
+      <ion-input formControlName="email" type="email">
       </ion-input>
     </ion-item>
-    <ion-item class="error-message" *ngIf="!signupForm.controls.email.valid &&
+    <span class="error-message" *ngIf="!signupForm.controls.email.valid &&
          signupForm.controls.email.touched">
-      <p>Por favor, insira uma email válido.</p>
-    </ion-item>
-
+      Por favor, insira uma email válido!
+    </span>
+    <br>
 
     <ion-item [class.invalid]="!signupForm.controls.telefone.valid && signupForm.controls.telefone.touched" [class.valid]="signupForm.controls.telefone.valid && signupForm.controls.telefone.touched">
-      <ion-icon ios="ios-call" md="md-call" item-left color="primary"></ion-icon>
-      <ion-input formControlName="telefone" type="tel" placeholder="Telefone" [brmasker]="{mask:'(00) 00000-0000', len:15,  type:'num'}">
+      <ion-label floating> Telefone</ion-label>
+
+      <ion-input formControlName="telefone" type="tel" [brmasker]="{mask:'(00) 00000-0000', len:15,  type:'num'}">
       </ion-input>
     </ion-item>
-    <ion-item class="error-message" *ngIf="!signupForm.controls.telefone.valid &&
+    <span class="error-message" *ngIf="!signupForm.controls.telefone.valid &&
     signupForm.controls.telefone.touched">
-      <p>Por favor, insira um número válido</p>
-    </ion-item>
+      Por favor, insira um número válido!
+    </span>
+    <br>
+    <ion-item [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.touched" [class.valid]="signupForm.controls.password.valid && signupForm.controls.password.touched">
+        <ion-label floating> Senha</ion-label>
+        <ion-input formControlName="password" type="password">
+        </ion-input>
+      </ion-item>
+      <span class="error-message" *ngIf="!signupForm.controls.password.valid
+            && signupForm.controls.password.touched">
+        Sua senha deve conter pelo menos 6 digitos!
+      </span>
+     
+    <!-- <br>
     <ion-item [class.invalid]="!signupForm.controls.cep.valid && signupForm.controls.cep.touched" [class.valid]="signupForm.controls.cep.valid && signupForm.controls.cep.touched">
-      <ion-icon ios="ios-home" md="md-home" item-left color="primary"></ion-icon>
-      <ion-input (ionBlur)="buscarCep($event)" formControlName="cep" type="text" placeholder="Cep"   [brmasker]="{mask:'00000-000', len:9}">
+      <ion-label floating> CEP</ion-label>
+
+      <ion-input (ionBlur)="buscarCep($event)" formControlName="cep" type="text" [brmasker]="{mask:'00000-000', len:9}">
       </ion-input>
     </ion-item>
-    <ion-item class="error-message" *ngIf="!signupForm.controls.cep.valid &&
+    <span class="error-message" *ngIf="!signupForm.controls.cep.valid &&
     signupForm.controls.cep.touched">
-      <p>Por favor, insira um CEP válido</p>
-    </ion-item>
+      Por favor, insira um CEP válido!
+    </span> -->
+    <br>
+    <ion-label> Você está em:</ion-label>
     <ion-item>
-      <ion-icon ios="ios-home" md="md-home" item-left color="secondary"></ion-icon>
-      <ion-input placeholder="Cidade" formControlName="cidade" readonly="false" type="text" [value]="endereco">
+      <ion-label floating> Cidade</ion-label>
+      <ion-input  formControlName="cidade" readonly="true" type="text" [value]="localization?.locality">
       </ion-input>
+
     </ion-item>
 
     <!-- <input type="text" pattern="\(\d{2}\)\d{4}-\d{4}" /> -->
 
-    <ion-item [class.invalid]="!signupForm.controls.password.valid && signupForm.controls.password.touched" [class.valid]="signupForm.controls.password.valid && signupForm.controls.password.touched">
-      <ion-icon name="lock" item-left color="primary"></ion-icon>
-      <ion-input formControlName="password" type="password" placeholder="Sua senha">
-      </ion-input>
-    </ion-item>
-    <ion-item class="error-message" *ngIf="!signupForm.controls.password.valid
-        && signupForm.controls.password.touched">
-      <p>Sua senha deve conter pelo menos 6 digitos.</p>
-    </ion-item>
+
+    <br>
     <button ion-button block type="submit" [disabled]="!signupForm.valid">
       Cadastrar!
     </button>

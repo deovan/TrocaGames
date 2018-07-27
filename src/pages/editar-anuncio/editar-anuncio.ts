@@ -54,7 +54,11 @@ export class EditarAnuncioPage {
   ) {
     this.loaduserdetails();
     this.jogo = navParams.get('jogo');
-    this.qtdPhotos = this.jogo.fotos.length;
+    if(this.jogo.fotos){
+      this.qtdPhotos = this.jogo.fotos.length;
+    }else{
+      this.qtdPhotos =0
+    }
     this.photo = [];
     this._imageViewerCtrl = imageViewerCtrl;
     this.newAnuncio = formBuilder.group({
@@ -101,7 +105,9 @@ export class EditarAnuncioPage {
     if (!this.newAnuncio.valid) {
       console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`);
     } else {
-      const loading: Loading = this.loadingCtrl.create();
+      const loading: Loading = this.loadingCtrl.create({
+        spinner: 'dots'
+      });
       loading.present();
       this.jogo.nome = this.newAnuncio.value.editarNome
       this.jogo.console=  this.newAnuncio.value.editarConsole,

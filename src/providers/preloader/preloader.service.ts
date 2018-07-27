@@ -22,7 +22,7 @@ export class PreloaderService {
 
   displayPreloader(): void {
     this.loading = this.loadingCtrl.create({
-      content: 'Please wait...'
+      spinner: 'dots'
     });
 
     this.loading.present();

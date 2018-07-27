@@ -38,7 +38,7 @@ export class MeusAnunciosPage {
 
   ionViewDidLoad() {
     let loader = this.loadingCtrl.create({
-      content: "",
+      spinner: 'dots'
     });
     loader.present().then(() => {
       this.inicializarItems().then(() => loader.dismiss())
@@ -50,10 +50,9 @@ export class MeusAnunciosPage {
   }
 
   private doRefresh(refresher) {
-    console.log('Begin async operation', refresher);
     this.inicializarItems();
     setTimeout(() => {
-      this.showToast('Atualizado com sucesso!')
+      // this.showToast('Atualizado com sucesso!')
       refresher.complete();
     }, 2000);
   }

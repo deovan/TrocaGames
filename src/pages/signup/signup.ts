@@ -16,7 +16,9 @@ import { AngularFireDatabase } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AuthService } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
+import { Geolocation } from '@ionic-native/geolocation';
 import { PATTERN_VALIDATOR } from '@angular/forms/src/directives/validators';
+import { NativeGeocoderOptions, NativeGeocoderReverseResult, NativeGeocoderForwardResult, NativeGeocoder } from "@ionic-native/native-geocoder";
 
 
 
@@ -28,6 +30,7 @@ import { PATTERN_VALIDATOR } from '@angular/forms/src/directives/validators';
 export class SignupPage {
   public signupForm: FormGroup
   public endereco: any
+  localization :any;
 
   constructor(
     public navCtrl: NavController,
@@ -35,10 +38,40 @@ export class SignupPage {
     public alertCtrl: AlertController,
     public authService: AuthService,
     public userService: UserService,
+    public geolocation: Geolocation,
+    private nativeGeocoder: NativeGeocoder,
     public db: AngularFireDatabase,
     public afAuth: AngularFireAuth,
     formBuilder: FormBuilder
   ) {
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+
+    geolocation.getCurrentPosition().then((resp) => {
+      console.log('resp', resp);
+      this.nativeGeocoder.reverseGeocode(resp.coords.latitude, resp.coords.longitude, options)
+        .then((result: NativeGeocoderReverseResult[]) => {
+          console.log(JSON.stringify(result[0]))
+          this.localization =result[0]
+          console.log('local',this.localization);
+          
+        })
+        .catch((error: any) => console.log(error));
+      // 
+      // r
+    }).catch((error) => {
+      console.log('Error getting location', error);
+    });
+
+
+
+    this.nativeGeocoder.forwardGeocode('Berlin', options)
+      .then((coordinates: NativeGeocoderForwardResult[]) => console.log('The coordinates are latitude=' + coordinates[0].latitude + ' and longitude=' + coordinates[0].longitude))
+      .catch((error: any) => console.log(error));
+
+
     this.signupForm = formBuilder.group({
       'name': [
         '',
@@ -57,8 +90,8 @@ export class SignupPage {
       ],
       'cep': [
         '',
-        Validators.compose([Validators.required, Validators.minLength(9)]),
-       
+        Validators.compose([]),
+
       ],
       'cidade': [
         '',
@@ -74,7 +107,9 @@ export class SignupPage {
         `Form is not valid yet, current value: ${this.signupForm.value}`
       );
     } else {
-      const loading: Loading = this.loadingCtrl.create();
+      const loading: Loading = this.loadingCtrl.create({
+        spinner: 'dots'
+      });
       loading.present();
       let formUser = this.signupForm.value;
       formUser.admin = false;
@@ -83,6 +118,7 @@ export class SignupPage {
       this.authService.signupUser(email, password)
         .then((authState: firebase.User) => {
           delete formUser.password;
+          formUser.localization = this.localization
           let uuid: string = authState.uid;
           this.userService.create(formUser, uuid)
             .then(() => {

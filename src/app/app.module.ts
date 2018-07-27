@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { UserService } from './../providers/user/user.service';
 import { MessageService } from './../providers/message/message.service';
 import { JogoService } from './../providers/jogo/jogo.service';
@@ -55,6 +56,7 @@ import { UserInfoComponent } from "../components/user-info/user-info.component";
 import { UserProfilePage } from "../pages/user-profile/user-profile";
 import { UserMenuComponent } from "../components/user-menu/user-menu.component";
 import { StatusBar } from "@ionic-native/status-bar";
+import { CurrencyFormatPipe } from "../pipes/currency-format/currency-format";
 
 @NgModule({
   declarations: [
@@ -111,6 +113,7 @@ import { StatusBar } from "@ionic-native/status-bar";
   providers: [
     AdMobFree,
     AuthService,
+    CurrencyPipe,
     Camera,
     CameraService,
     ChatService,

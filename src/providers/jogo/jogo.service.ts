@@ -34,7 +34,7 @@ export class JogoService extends BaseService {
   lastKey: any = '';
   finished = false;
 
-  constructor(@Inject(FirebaseApp) public firebaseApp: any, ) {
+  constructor( @Inject(FirebaseApp) public firebaseApp: any, ) {
     super();
   }
 
@@ -60,12 +60,12 @@ export class JogoService extends BaseService {
     return result;
   }
 
-  save(jogo: Jogo): Promise<string> {
-    return new Promise<string>((resolve) => {
+  async save(jogo: Jogo): Promise<string> {
+    return await new Promise<string>((resolve) => {
       this.firedataJogo.push(jogo).then((result) => {
-        setTimeout(() => {
-          resolve(result.key);
-        }, 2000);
+
+        resolve(result.key);
+
 
         // console.log(result);
         // let key = result.key

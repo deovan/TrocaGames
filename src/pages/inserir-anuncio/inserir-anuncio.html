@@ -131,14 +131,18 @@
         <br>
         <ion-item>
             <ion-label floating>Preço</ion-label>
-            <ion-input formControlName="preco" name="money" [brmasker]="{money: true,decimal: 2,type:'num',len:6} ">
+          
+            <ion-input type="tel" max=5 formControlName="preco" (keyup)="getCurrency($event.target.value)">
+                    <p>{{myModelVariable |  number:'3.2-5'}}</p>
             </ion-input>
         </ion-item>
         <span class="error-message" *ngIf="!newAnuncio.controls.preco.valid &&
         newAnuncio.controls.preco.touched">
             <p>Insira um valor!</p>
         </span>
+      
         <br>
+      
         <ion-label stacked>Objetivo</ion-label>
         <ion-item>
             <ion-label>Troca</ion-label>

@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { AuthService } from './../../providers/auth/auth'
 import { auth } from 'firebase/app'
 import { JogoService } from './../../providers/jogo/jogo.service'
@@ -58,7 +59,8 @@ export class InserirAnuncioPage {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     private formBuilder: FormBuilder,
-    public userService: UserService
+    public userService: UserService,
+    private currencyPipe: CurrencyPipe
   ) {
     this.loaduserdetails()
     this._imageViewerCtrl = imageViewerCtrl
@@ -81,7 +83,7 @@ export class InserirAnuncioPage {
       ],
       'preco': [
         '',
-        Validators.compose([Validators.required])     
+        Validators.compose([Validators.required])
       ],
       'troca': [
         Validators.compose([])
@@ -107,7 +109,11 @@ export class InserirAnuncioPage {
     if (!this.newAnuncio.valid) {
       console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`)
     } else {
-      const loading: Loading = this.loadingCtrl.create()
+ 
+      const loading: Loading = this.loadingCtrl.create({
+        spinner: 'dots'
+      })
+    
       loading.present().then(() => {
         this.jogo = new Jogo(
           firebase.auth().currentUser.uid,
@@ -123,9 +129,10 @@ export class InserirAnuncioPage {
           this.venda,
         )
         console.log(this.jogo);
-        this.jogoService.save(this.jogo).then((valueKey) => {
+         this.jogoService.save(this.jogo).then((valueKey) => {
+          console.log('value',valueKey);
           this.key = valueKey;
-          if (valueKey!=undefined) {
+          if (valueKey != undefined && valueKey != null ) {
             if (this.photo.length > 0) {
               this.uploadToStorage(this.key, this.photo).then(() => {
                 loading.dismiss()
@@ -162,6 +169,39 @@ export class InserirAnuncioPage {
   }
 
 
+  presentLoadingCustom() {
+    const loading = this.loadingCtrl.create({
+      spinner: 'hide',
+      content: `
+        <div class="custom-spinner-container">
+          <div class="custom-spinner-box">
+          <ion-spinner align-center  name="dots"></ion-spinner></div>
+        </div>`,
+  
+    });
+
+    loading.onDidDismiss(() => {
+      console.log('Dismissed loading');
+    });
+
+    loading.present();
+  }
+
+  myModelVariable='';
+  getCurrency(amount: string) {
+    console.log('amout',amount);
+
+    this.myModelVariable = amount
+    // this.myModelVariable = amount.replace(/[^\d\.]/g ,'');
+    let v = amount.replace("R$","")
+
+    console.log('v',v);
+    
+  
+    // this.myModelVariable =  this.currencyPipe.transform(v, 'BRL', true, '3.2-2');
+
+    console.log('new:', this.myModelVariable); 
+  }
   showBannerInterstitial() {
     let bannerConfig: AdMobFreeInterstitialConfig = {
       /**

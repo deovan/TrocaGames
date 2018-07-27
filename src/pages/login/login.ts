@@ -133,8 +133,14 @@ export class LoginPage {
             if (this.emailValidator.validateEmail(data.email)) {
               this.resetPassword(data.email)
             } else {
-              console.log('error');
-              return
+              const alert: Alert = this.alertCtrl.create({
+                message: 'Email inválido!',
+                buttons: [{ text: 'Ok', role: 'cancel', }],
+              });
+              alert.present().then(() => {
+                return
+              });
+
 
             }
           }
@@ -152,7 +158,9 @@ export class LoginPage {
         `Form is not valid yet, current value: ${this.loginForm.value}`
       );
     } else {
-      const loading: Loading = this.loadingCtrl.create();
+      const loading: Loading = this.loadingCtrl.create({
+        spinner: 'dots'
+      });
       loading.present();
 
       const email = this.loginForm.value.email;
@@ -176,32 +184,49 @@ export class LoginPage {
     }
   }
 
-  async resetPassword(email: string): Promise<void> {
-    const loading: Loading = this.loadingCtrl.create();
-    loading.present()
-    try {
-      const loginUser: void = await this.authService.resetPassword(email);
-      await loading.dismiss();
-      const alert: Alert = this.alertCtrl.create({
-        message: 'Verefique seu email, para redefinir sua senha!',
-        buttons: [
-          {
-            text: 'Ok',
-            handler: data => {
+  resetPassword(email: string) {
+    const loading: Loading = this.loadingCtrl.create({
+      spinner: 'dots'
+    });
+    loading.present().then(() => {
+      this.authService.resetPassword(email).then((_) => {
+        loading.dismiss();
+        const alert: Alert = this.alertCtrl.create({
+          message: 'Verifique seu email, para redefinir sua senha!',
+          buttons: [
+            {
+              text: 'Ok',
+              handler: data => {
 
+              }
             }
-          }
-        ]
-      });
-      alert.present();
-    } catch (error) {
-      await loading.dismiss();
+          ]
+        });
+        alert.present();
+      }).catch((error) => {
+        console.log('error firebase', error);
+        let msg = '';
+        if (error.code === 'auth/user-not-found') {
+          msg = 'Este email não foi encontrado, verifique e tente novamente!'
+        }
+        loading.dismiss();
+        const alert: Alert = this.alertCtrl.create({
+          message:msg,
+          buttons: [{ text: 'Ok', role: 'cancel' }]
+        });
+        alert.present();
+
+      })
+    }).catch((error) => {
+      loading.dismiss();
+      console.log('error geral', error);
       const alert: Alert = this.alertCtrl.create({
         message: error.message,
         buttons: [{ text: 'Ok', role: 'cancel' }]
       });
       alert.present();
-    }
+    })
   }
+
 
 }

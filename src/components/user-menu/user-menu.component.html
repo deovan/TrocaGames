@@ -3,11 +3,12 @@
   <user-info [user]="currentUser" [isMenu]=true></user-info>
 
   <ion-list>
-    <button menuClose  ion-item *ngFor="let p of pages" (click)="openPage(p)">
+    <ion-item icon-right  *ngFor="let p of pages" (click)="openPage(p)">
+        <ion-icon  item-start name="{{p.icon}}"></ion-icon>
       {{p.title}}
-    </button>
+    </ion-item>
    
-    <button color="primary" ion-item icon-right detail-nome menuClose="user-menu" (click)="logoutUser()">
+    <button icon-right block ion-button menuClose="user-menu" (click)="logoutUser()">
       Sair
       <ion-icon name="log-out" item-end >  </ion-icon>
     </button>

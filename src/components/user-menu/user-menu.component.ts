@@ -18,7 +18,7 @@ export class UserMenuComponent extends BaseComponent {
   @Input() userId: string;
   currentUser: User;
   @Input('isMenu') isMenu: boolean;
-  pages: Array<{ title: string, component: any }>;
+  pages: Array<{ title: string,icon:string, component: any }>;
 
   constructor(
     public userService: UserService,
@@ -35,10 +35,10 @@ export class UserMenuComponent extends BaseComponent {
         this.userService.getUser(user.uid).subscribe((user: User) => {
           this.currentUser = user;
           this.pages = [
-            { title: 'Home', component: HomePage },
-            { title: 'Perfil', component: UserProfilePage },
-            { title: 'Anunciar', component: InserirAnuncioPage },
-            { title: 'Chat', component: ChatListPage },
+            { title: 'Home',icon: 'home', component: HomePage, },
+            { title: 'Perfil',icon:'contact', component: UserProfilePage },
+            { title: 'Anunciar',icon:'add', component: InserirAnuncioPage },
+            { title: 'Chat', icon:'chatbubbles', component: ChatListPage },
           ]
         });
       }

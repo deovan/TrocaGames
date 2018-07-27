@@ -51,7 +51,7 @@ export class UserService extends BaseService {
       .update(user)
       .catch(this.handlePromiseError);
   }
-  create(user: User, uuid: string): Promise<void> {
+  create(user: User, uuid: string,localization?:any): Promise<void> {
     return this.db.object(`/users/${uuid}`)
       .set(user).catch(this.handlePromiseError);
   }

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="io.ionic.trocagames" version="0.0.6" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>TrocaGames</name>
+    <name>Troca Games</name>
     <description>Aplicativo para facilitar a troca de games </description>
     <author email="dedezanol9@gmail.com" href="">Deovan Zanol</author>
     <content src="index.html" />
@@ -90,11 +90,11 @@
     <plugin name="cordova-plugin-admob-free" spec="^0.17.0" />
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-plugin-advanced-http" spec="^1.11.1" />
-    <engine name="android" spec="~7.0.0" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
     <plugin name="cordova-plugin-nativegeocoder" spec="^3.1.2" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
         <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
     </plugin>
+    <engine name="android" spec="~7.0.0" />
 </widget>

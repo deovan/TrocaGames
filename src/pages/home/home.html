@@ -6,8 +6,8 @@
 
     <ion-buttons end>
       <button ion-button (click)="presentPopover($event)">
-          <ion-icon ios="ios-funnel" md="md-funnel"></ion-icon>
-       
+        <ion-icon ios="ios-funnel" md="md-funnel"></ion-icon>
+
       </button>
     </ion-buttons>
     <ion-title style="background:transparent">
@@ -15,15 +15,27 @@
     </ion-title>
   </ion-navbar>
   <ion-toolbar>
-      <ion-searchbar  placeholder="Busca"[(ngModel)]="myInput" [showCancelButton]="shouldShowCancel" (ionInput)="getItems($event)" (ionCancel)="onCancel($event)">
-        </ion-searchbar>
+    <ion-searchbar placeholder="Busca" [(ngModel)]="myInput" [showCancelButton]="shouldShowCancel" (ionInput)="getItems($event)"
+      (ionCancel)="onCancel($event)">
+    </ion-searchbar>
   </ion-toolbar>
 
 </ion-header>
 
 <ion-content>
   <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content
+    pullingIcon="arrow-dropdown"
+    pullingText="Puxe para atualizar"
+    refreshingSpinner="dots"
+    refreshingText="Atualizando..." >
+
+    </ion-refresher-content>
+
+    <!-- <ion-spinner style="position:flex;top:50%;left:50%" name="dots"></ion-spinner> -->
+
+
+
   </ion-refresher>
 
 
@@ -68,7 +80,16 @@
   <!-- <p *ngIf="todos.length!=0" align="center"> Não temos mais anúncios
     <i class="em em-hushed"></i>
   </p> -->
+  <ion-fab right bottom>
+    <button edge ion-fab (click)="openPage($event)">
+      <ion-icon name="add"></ion-icon>
+    </button>
+
+  </ion-fab>
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    <ion-infinite-scroll-content loadingSpinner="dots">
+
+
+    </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 </ion-content>
