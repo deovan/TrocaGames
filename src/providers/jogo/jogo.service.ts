@@ -61,12 +61,10 @@ export class JogoService extends BaseService {
     return result;
   }
 
-  save(jogo: Jogo): Promise<any> {
-    return new Promise<string>((resolve) => {
-      return this.firedataJogo.push(jogo).then((result) => {
-        resolve(result.key)
-      })
-    })
+  save(jogo: Jogo): PromiseLike<any> {
+
+    return this.firedataJogo.push(jogo)
+
   }
 
   userExistsCallback(userId, exists) {
@@ -189,7 +187,8 @@ export class JogoService extends BaseService {
     return new Promise((resolve, reject) => {
       this.makeFileIntoBlob(file)
         .then((fileBlob) => {
-          return this.uploadToFirebase(fileBlob, jogoId).then((url) => {
+          this.uploadToFirebase(fileBlob, jogoId).then((url) => {
+            console.log('url', url);
             resolve(url)
           })
         })

@@ -30,7 +30,6 @@ import { AdMobFreeInterstitialConfig, AdMobFree } from '../../../node_modules/@i
 export class InserirAnuncioPage {
   currentUser: User
   photo: Array<any> = new Array
-  key: string
   qtdPhotos: number = 0
   uploadProgress: number
   _imageViewerCtrl: ImageViewerController
@@ -129,10 +128,27 @@ export class InserirAnuncioPage {
           this.venda,
         )
         console.log(this.jogo);
-        this.jogoService.save(this.jogo).then((valueKey) => {
-          console.log('value confirmado', valueKey);
-          this.savePhotosAndUpdateProfile(
-            valueKey, loading)
+        this.jogoService.save(this.jogo).then((value) => {
+          console.log('value confirmado', value.key);
+          var key = value.key;
+          if (this.photo.length > 0) {
+            this.uploadToStorage(key, this.photo).then(() => {
+              loading.dismiss()
+              this.showToast('Anúncio Cadastrado com Sucesso!')
+              this.showBannerInterstitial();
+              this.navCtrl.setRoot(HomePage);
+            }).catch((error) => {
+              console.log(error)
+              loading.dismiss()
+              this.showAlert(error)
+              this.navCtrl.getPrevious()
+            })
+          } else {
+            loading.dismiss()
+            this.showToast('Anúncio Cadastrado com Sucesso!')
+            this.showBannerInterstitial();
+            this.navCtrl.setRoot(HomePage);
+          }
 
         }), (error => {
           console.log()
@@ -145,52 +161,6 @@ export class InserirAnuncioPage {
 
     }
   }
-
-
-  savePhotosAndUpdateProfile(valueKey, loading) {
-    this.key = valueKey;
-    if (this.photo.length > 0) {
-      this.uploadToStorage(this.key, this.photo).then(() => {
-        loading.dismiss()
-        this.showBannerInterstitial();
-        setTimeout(() => {
-          this.showToast('Anúncio Cadastrado com Sucesso!')
-          this.navCtrl.setRoot(HomePage);
-        }, 300);
-      }).catch((error) => {
-        console.log(error)
-        loading.dismiss()
-        this.showAlert(error)
-        this.navCtrl.getPrevious()
-      })
-    } else {
-      loading.dismiss()
-      this.showBannerInterstitial();
-      setTimeout(() => {
-        this.showToast('Anúncio Cadastrado com Sucesso!')
-        this.navCtrl.setRoot(HomePage);
-      }, 300);
-    }
-  }
-
-  presentLoadingCustom() {
-    const loading = this.loadingCtrl.create({
-      spinner: 'hide',
-      content: `
-        <div class="custom-spinner-container">
-          <div class="custom-spinner-box">
-          <ion-spinner align-center  name="dots"></ion-spinner></div>
-        </div>`,
-
-    });
-
-    loading.onDidDismiss(() => {
-      console.log('Dismissed loading');
-    });
-
-    loading.present();
-  }
-
   myModelVariable = '';
   getCurrency(amount: string) {
     console.log('amout', amount);
@@ -229,11 +199,10 @@ export class InserirAnuncioPage {
         this.jogoService.uploadPhoto(valueC, key).then((value) => {
           this.jogo.fotos.push(value);
           if (index === this.photo.length - 1) {
-            return this.uploadToDatabase(this.key, this.jogo).then(() => {
+           return this.uploadToDatabase(key, this.jogo).then(() => {
               this.showToast('Anúncio Cadastrado com Sucesso!')
               resolve();
             })
-
           }
         }).catch((error) => reject(error))
       }, 0)

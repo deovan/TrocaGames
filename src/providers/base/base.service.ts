@@ -36,9 +36,7 @@ export abstract class BaseService {
                     reader.onloadend = (evt: any) => {
                         var imgBlob: any = new Blob([evt.target.result], { type: 'image/jpeg' })
                         imgBlob.name = 'sample.jpg'
-
                         console.log('imablob',imgBlob);
-                        
                         resolve(imgBlob)
                     }
                     reader.onerror = (e) => {
