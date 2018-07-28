@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CurrencyPipe } from '@angular/common';
 import { UserService } from './../providers/user/user.service';
 import { MessageService } from './../providers/message/message.service';
@@ -23,7 +24,6 @@ import { AuthService } from './../providers/auth/auth';
 import { CameraService } from './../providers/camera/camera.service';
 import { AdMobFree } from '@ionic-native/admob-free';
 import { IonicApp } from 'ionic-angular';
-import { SuperTabsModule } from 'ionic2-super-tabs';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { HttpModule } from '@angular/http';
@@ -32,7 +32,6 @@ import { firebaseConfigTesting } from './credentials.backup';
 import { IonicImageViewerModule } from 'ionic-img-viewer';
 import { IonicModule } from 'ionic-angular';
 import { OrderModule } from 'ngx-order-pipe';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrMaskerModule } from 'brmasker-ionic-3';
 import { ProgressBarComponent } from './../components/progress-bar/progress-bar.component';
@@ -57,6 +56,7 @@ import { UserProfilePage } from "../pages/user-profile/user-profile";
 import { UserMenuComponent } from "../components/user-menu/user-menu.component";
 import { StatusBar } from "@ionic-native/status-bar";
 import { CurrencyFormatPipe } from "../pipes/currency-format/currency-format";
+
 
 @NgModule({
   declarations: [
@@ -90,8 +90,7 @@ import { CurrencyFormatPipe } from "../pipes/currency-format/currency-format";
     AngularFireModule.initializeApp(firebaseConfigTesting),
     HttpModule,
     AngularFireDatabaseModule, // imports firebase/database, only needed for database features
-    AngularFireAuthModule,
-    SuperTabsModule.forRoot()// imports firebase/auth, only needed for auth features
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -122,17 +121,19 @@ import { CurrencyFormatPipe } from "../pipes/currency-format/currency-format";
     FileTransfer,
     FilePath,
     Geolocation,
+    JogoService,
     HTTP,
+    MessageService,
     NativeGeocoder,
     Network,
+    PreloaderService,
     ScreenOrientation,
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    JogoService,
-    MessageService,
+
     UserService,
-    PreloaderService,
+
   ]
 })
 export class AppModule { }

@@ -39,10 +39,6 @@ export class MyApp {
     //   { title: 'Perfil', component: UserProfilePage },
     //   { title: 'Novo', component: NovoEstabelecimentoPage }
     // ];
-
-
-
-
     this.platform.ready().then(() => {
       // this.hideSplashScreen();
       // this.splashScreen.hide();

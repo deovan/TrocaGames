@@ -61,33 +61,10 @@ export class JogoService extends BaseService {
     return result;
   }
 
-  verificarKey(key: string): boolean {
-    if (key != undefined && key != null) {
-      return true;
-    } else {
-      return false
-    }
-  }
-
- save(jogo: Jogo): Observable<any> {
-    return new Observable<string>((resolve) => {
-      this.firedataJogo.push(jogo).then((result) => {
-        if (this.verificarKey(result.key)) {
-          resolve.next(result.key)
-        }
-
-
-        // while(this.verificarKey(result.key)){
-        //   if(this.verificarKey(result.key))
-        //   resolve(result.key);
-        // }
-
-
-
-        // console.log(result);
-        // let key = result.key
-        // console.log('key', key);
-        // resolve(key)
+  save(jogo: Jogo): Promise<any> {
+    return new Promise<string>((resolve) => {
+      return this.firedataJogo.push(jogo).then((result) => {
+        resolve(result.key)
       })
     })
   }
@@ -100,43 +77,37 @@ export class JogoService extends BaseService {
     }
   }
 
-  getJogo(jogoKey: string) {
+  getJogo(jogoKey: string): Promise<any> {
     var jogo;
     return new Promise<any>((resolve, reject) => {
-      this.firedataJogo.child(jogoKey).on(('value'), data => {
+      return this.firedataJogo.child(jogoKey).on(('value'), data => {
         if (data.val() !== null) {
           let item = data.val()
           item.key = data.key
           jogo = item
-        } else {
-          jogo = false;
+          resolve(jogo)
         }
-      });
-
-      setTimeout(() => {
-        resolve(jogo);
-      }, 300);
+      })
     })
-
   }
 
   getPorCategoria(limit?: number, categoria?: string) {
-    return new Observable<Jogo[]>((observer) => {
+    return new Promise<Jogo[]>((resolve) => {
       var item = [];
       console.log("passou no observe");
-      this.firedataJogo
+      return this.firedataJogo
         .orderByChild('categoria')
         .equalTo(categoria)
         .limitToFirst(limit)
         .on('child_added', this.handleData, this);
-      observer.next(this._todos$);
+      // resolve(this._todos$);
     });
   }
 
   getAnunciosDoUser() {
     return new Promise<Jogo[]>((resolve, reject) => {
       var meusAnuncios = [];
-      this.firedataJogo
+      return this.firedataJogo
         .orderByChild('/user')
         .equalTo(firebase.auth().currentUser.uid)
         .on('value', snapshot => {
@@ -155,7 +126,7 @@ export class JogoService extends BaseService {
     var anunciosList = []
     return new Promise<any[]>((resolve, reject) => {
       var item = [];
-      this.firedataJogo.child('nome').orderByValue().equalTo(nome)
+      return this.firedataJogo.child('nome').orderByValue().equalTo(nome)
         .on('value', snapshotChanges => {
           snapshotChanges.forEach((snap) => {
             if (this.lastKey === snap.key) {
@@ -170,19 +141,16 @@ export class JogoService extends BaseService {
             }
             return false;
           })
+          resolve(anunciosList);
         });
-      setTimeout(() => {
-        resolve(anunciosList);
-      }, 2000);
     });
-
   }
 
   getAllAnuncios(limit: number, lastKey?: string) {
     var anunciosList = []
     return new Promise<any[]>((resolve, reject) => {
       var item = [];
-      this.firedataJogo
+      return this.firedataJogo
         .orderByKey()
         .startAt(this.lastKey + 1)
         .limitToFirst(limit)
@@ -200,11 +168,8 @@ export class JogoService extends BaseService {
             }
             return false;
           })
-
           resolve(anunciosList);
         });
-
-
     });
   }
 
@@ -224,12 +189,9 @@ export class JogoService extends BaseService {
     return new Promise((resolve, reject) => {
       this.makeFileIntoBlob(file)
         .then((fileBlob) => {
-          this.uploadToFirebase(fileBlob, jogoId).then((url) => {
-            setTimeout(() => {
-              resolve(url);
-            }, 500);
+          return this.uploadToFirebase(fileBlob, jogoId).then((url) => {
+            resolve(url)
           })
-
         })
     })
   }
@@ -242,20 +204,18 @@ export class JogoService extends BaseService {
       let metadata: firebase.storage.UploadMetadata = {
         contentType: 'image/jpeg',
       };
-      storageRef.put(imgBlob, metadata)
+      return storageRef.put(imgBlob, metadata)
         .then((uploadTask) => {
           let uploadProgress = Math.round((uploadTask.bytesTransferred / uploadTask.totalBytes) * 100)
           console.log(uploadProgress);
-          setTimeout(() => {
-            resolve(uploadTask.downloadURL);
-          }, 500);
+          resolve(uploadTask.downloadURL);
         });
     })
   }
 
   public removeFile(fullPath: string) {
     let storageRef = this.firebaseApp.storage().ref();
-    storageRef.child(fullPath).delete();
+    return storageRef.child(fullPath).delete();
   }
 
   public removeAnuncio(jogo: Jogo) {

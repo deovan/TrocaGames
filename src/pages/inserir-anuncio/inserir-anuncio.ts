@@ -129,13 +129,11 @@ export class InserirAnuncioPage {
           this.venda,
         )
         console.log(this.jogo);
-        this.jogoService.save(this.jogo).subscribe((valueKey) => {
-          console.log('value', valueKey);
-          if (valueKey !== undefined && valueKey !== null) {
-            console.log('value confirmado', valueKey);
-            this.savePhotosAndUpdateProfile(
-              valueKey, loading)
-          }
+        this.jogoService.save(this.jogo).then((valueKey) => {
+          console.log('value confirmado', valueKey);
+          this.savePhotosAndUpdateProfile(
+            valueKey, loading)
+
         }), (error => {
           console.log()
           loading.dismiss()
@@ -196,16 +194,11 @@ export class InserirAnuncioPage {
   myModelVariable = '';
   getCurrency(amount: string) {
     console.log('amout', amount);
-
     this.myModelVariable = amount
     // this.myModelVariable = amount.replace(/[^\d\.]/g ,'');
     let v = amount.replace("R$", "")
-
     console.log('v', v);
-
-
     // this.myModelVariable =  this.currencyPipe.transform(v, 'BRL', true, '3.2-2');
-
     console.log('new:', this.myModelVariable);
   }
   showBannerInterstitial() {
@@ -223,7 +216,6 @@ export class InserirAnuncioPage {
        */
       autoShow: true
     }
-
     this.admob.interstitial.config(bannerConfig)
     this.admob.interstitial.prepare().then(() => {
       this.admob.interstitial.show()
@@ -231,24 +223,20 @@ export class InserirAnuncioPage {
 
   }
 
-
   uploadToStorage(key: string, fotos: string | string[]): Promise<any> {
     return new Promise((resolve, reject) => {
       this.photo.reduce((vl, valueC, index) => {
         this.jogoService.uploadPhoto(valueC, key).then((value) => {
           this.jogo.fotos.push(value);
           if (index === this.photo.length - 1) {
-            this.uploadToDatabase(this.key, this.jogo).then(() => {
+            return this.uploadToDatabase(this.key, this.jogo).then(() => {
               this.showToast('Anúncio Cadastrado com Sucesso!')
               resolve();
             })
 
           }
         }).catch((error) => reject(error))
-
       }, 0)
-
-
     })
 
   }
@@ -298,9 +286,6 @@ export class InserirAnuncioPage {
 
     })
   }
-
-
-
 
   public async takePicture(sourceType: number) {
     let cameraOptions: CameraOptions = {

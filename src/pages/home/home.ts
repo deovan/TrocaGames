@@ -1,6 +1,6 @@
 import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
 import { AnuncioDetalhesPage } from './../anuncio-detalhes/anuncio-detalhes';
-import firebase  from 'firebase';
+import firebase from 'firebase';
 import { Jogo } from './../../todo/jogo.model';
 import { Geolocation } from '@ionic-native/geolocation';
 import { NativeGeocoder, NativeGeocoderOptions, NativeGeocoderForwardResult, NativeGeocoderReverseResult } from '@ionic-native/native-geocoder';
@@ -27,7 +27,7 @@ export class HomePage {
   constructor(
     public authService: AuthService,
     public admob: AdMobFree,
-    
+
     private _jogoService: JogoService,
     private _LOADER: PreloaderService,
     public loadingCtrl: LoadingController,
@@ -46,7 +46,7 @@ export class HomePage {
 
     // geolocation.getCurrentPosition().then((resp) => {
     //   console.log('resp',resp);
-      
+
     //   // resp.coords.latitude
     //   // resp.coords.longitude
     //  }).catch((error) => {
@@ -62,9 +62,9 @@ export class HomePage {
     //   .catch((error: any) => console.log(error));
   }
 
-  
+
   // presentPopover(myEvent) {
-  
+
   //   let popover = this.popoverCtrl.create(PopoverComponent);
   //   popover.present({
   //     ev: myEvent
@@ -77,6 +77,9 @@ export class HomePage {
     this._jogoService.lastKey = ''
     this._jogoService.finished = false
     this.initializeItems()
+    // console.log('consoles', this._jogoService.getConsoles())
+
+
   }
 
   ionViewCanEnter() {
@@ -109,14 +112,14 @@ export class HomePage {
     let that = this
     this.todos = []
     console.log(event)
-    this._jogoService.getPorCategoria(this.limit, event).subscribe((value) => {
+    this._jogoService.getPorCategoria(this.limit, event).then((value) => {
       value.forEach((jogo) => {
         this.todos.push(jogo)
       })
     })
   }
 
-  openPage(event:Event){
+  openPage(event: Event) {
     this.navCtrl.push(InserirAnuncioPage)
   }
 
