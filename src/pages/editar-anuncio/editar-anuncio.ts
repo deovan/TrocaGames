@@ -80,7 +80,7 @@ export class EditarAnuncioPage {
       ],
       'editarPreco': [
         '',
-        Validators.compose([Validators.required])
+        Validators.compose([])
       ],
       'editarTroca':[
         Validators.compose([])

@@ -103,7 +103,7 @@
 
         <ion-item>
             <ion-label floating>Preço</ion-label>
-            <ion-input type="tel" name="money" formControlName="editarPreco" [(ngModel)]="jogo.preco" [brmasker]="{money: true, thousand: ',',  decimalCaracter: '.', decimal: '3',len='6'}">
+            <ion-input type="tel" name="money" formControlName="editarPreco" [(ngModel)]="jogo.preco" [brmasker]="{money: true, thousand: ',',  decimalCaracter: '.', decimal: '3'}">
             </ion-input>
         </ion-item>
         <span class="error-message" *ngIf="!newAnuncio.controls.editarPreco.valid &&
