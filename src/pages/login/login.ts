@@ -140,8 +140,6 @@ export class LoginPage {
               alert.present().then(() => {
                 return
               });
-
-
             }
           }
         }
@@ -184,6 +182,34 @@ export class LoginPage {
     }
   }
 
+  // doGoogleLogin(){
+  //   let nav = this.navCtrl;
+  //   let loading = this.loadingCtrl.create({
+  //     content: 'Please wait...'
+  //   });
+  //   loading.present();
+  //   this.googlePlus.login({
+  //     'scopes': '', // optional, space-separated list of scopes, If not included or empty, defaults to `profile` and `email`.
+  //     'webClientId': '1091419544653-nhncrb7n0sk43t3unhqk3q8h6smnbt22.apps.googleusercontent.com', // optional clientId of your Web application from Credentials settings of your project - On Android, this MUST be included to get an idToken. On iOS, it is not required.
+  //     'offline': true
+  //   })
+  //   .then((user) => {
+  //     loading.dismiss();
+
+  //     this.nativeStorage.setItem('user', {
+  //       name: user.displayName,
+  //       email: user.email,
+  //       picture: user.imageUrl
+  //     })
+  //     .then(() => {
+  //       nav.push(UserPage);
+  //     }, (error) => {
+  //       console.log(error);
+  //     })
+  //   }, (error) => {
+  //     loading.dismiss();
+  //   });
+  // }
   resetPassword(email: string) {
     const loading: Loading = this.loadingCtrl.create({
       spinner: 'dots'
