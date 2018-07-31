@@ -96,7 +96,7 @@ export class EditarAnuncioPage {
   }
 
   loaduserdetails() {
-    this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
+    this.userService.getUser(firebase.auth().currentUser.uid).subscribe((res: User) => {
       this.currentUser = res;
     })
   }

@@ -1,3 +1,4 @@
+import { Platform } from 'ionic-angular';
 import { Response } from '@angular/http'
 import { Observable } from 'rxjs'
 import firebase from 'firebase'
@@ -29,26 +30,32 @@ export abstract class BaseService {
     }
 
     makeFileIntoBlob(_imagePath) {
+        console.log('make', _imagePath);
+        // INSTALL PLUGIN - cordova plugin add cordova-plugin-file
         return new Promise((resolve, reject) => {
             window.resolveLocalFileSystemURL(_imagePath, (fileEntry) => {
-                fileEntry.file((resFile) => {
-                    var reader = new FileReader()
-                    reader.onloadend = (evt: any) => {
-                        var imgBlob: any = new Blob([evt.target.result], { type: 'image/jpeg' })
-                        imgBlob.name = 'sample.jpg'
-                        console.log('imablob',imgBlob);
-                        resolve(imgBlob)
-                    }
-                    reader.onerror = (e) => {
-                        console.log('Failed file read: ' + e.toString())
-                        reject(e)
-                    }
+                console.log('window resolve', fileEntry);
 
+                fileEntry.file((resFile) => {
+                    var reader = new FileReader();
+                    reader.onloadend = (evt: any) => {
+                        console.log('evt', evt);
+                        var imgBlob: any = new Blob([evt.target.result], { type: 'image/jpeg' });
+                        imgBlob.name = 'sample.jpg';
+                        console.log(imgBlob);
+                        resolve(imgBlob);
+                    };
+                    reader.onerror = (e) => {
+                        console.log('Failed file read: ' + e.toString());
+                        reject(e);
+                    };
                     reader.readAsArrayBuffer(resFile);
-                })
-            })
-        })
+                });
+            });
+        });
+
     }
+
 
 
 

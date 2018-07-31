@@ -26,7 +26,7 @@
   <ion-list>
     <ion-card *ngFor="let todo of anuncios">
       <ion-item-sliding>
-        <ion-item>
+        <ion-item (click)="editarAnuncio(todo)">
           <ion-thumbnail item-start>
             <img class="round" [src]="todo?.fotos ||  'assets/imgs/no-image-available.jpg' || async">
           </ion-thumbnail>

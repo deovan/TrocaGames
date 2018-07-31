@@ -30,7 +30,7 @@ import { NativeGeocoderOptions, NativeGeocoderReverseResult, NativeGeocoderForwa
 export class SignupPage {
   public signupForm: FormGroup
   public endereco: any
-  localization :any;
+  localization: any;
 
   constructor(
     public navCtrl: NavController,
@@ -54,19 +54,13 @@ export class SignupPage {
       this.nativeGeocoder.reverseGeocode(resp.coords.latitude, resp.coords.longitude, options)
         .then((result: NativeGeocoderReverseResult[]) => {
           console.log(JSON.stringify(result[0]))
-          this.localization =result[0]
-          console.log('local',this.localization);
-          
+          this.localization = result[0]
+          console.log('local', this.localization);
         })
         .catch((error: any) => console.log(error));
-      // 
-      // r
     }).catch((error) => {
       console.log('Error getting location', error);
     });
-
-
-
     this.nativeGeocoder.forwardGeocode('Berlin', options)
       .then((coordinates: NativeGeocoderForwardResult[]) => console.log('The coordinates are latitude=' + coordinates[0].latitude + ' and longitude=' + coordinates[0].longitude))
       .catch((error: any) => console.log(error));
@@ -101,7 +95,7 @@ export class SignupPage {
     });
   }
 
-  async signupUser() {
+  signupUser() {
     if (!this.signupForm.valid) {
       console.log(
         `Form is not valid yet, current value: ${this.signupForm.value}`
@@ -115,21 +109,29 @@ export class SignupPage {
       formUser.admin = false;
       let email: string = formUser.email;
       let password: string = formUser.password
+      let nome: string = formUser.name
+      let telefone: string = formUser.telefone
       this.authService.signupUser(email, password)
         .then((authState: firebase.User) => {
           delete formUser.password;
-          formUser.localization = this.localization
+          formUser.localization = this.localization ? this.localization : 'teste'
           let uuid: string = authState.uid;
-          this.userService.create(formUser, uuid)
-            .then(() => {
-              console.log('Usuário Cadastrado!');
-              this.navCtrl.setRoot(HomePage);
-              loading.dismiss();
-            }).catch((error: any) => {
-              console.log(error);
-              loading.dismiss();
-              this.showAlert(error);
-            });
+          authState.updateProfile({
+            displayName: nome,
+            photoURL: '',
+          }).then((v) => {
+            this.userService.create(formUser, uuid)
+              .then(() => {
+                authState.sendEmailVerification();
+                console.log('Usuário Cadastrado!');
+                this.navCtrl.setRoot(HomePage);
+                loading.dismiss();
+              }).catch((error: any) => {
+                console.log(error);
+                loading.dismiss();
+                this.showAlert(error);
+              });
+          })
         }).catch((error: any) => {
           console.log(error);
           loading.dismiss();

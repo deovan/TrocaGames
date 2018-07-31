@@ -27,9 +27,7 @@ export class UserInfoComponent {
 
 
   changedPhoto(file) {
-    let uploadTask = this.userService.uploadPhoto(file).then((url) => {
-      console.log('chamou o changed photo');
-
+    let uploadTask = this.userService.uploadPhoto64(file).then((url) => {
       this.editUser(url);
     })
   }

@@ -38,7 +38,7 @@ export class UserProfilePage {
 
   }
   loaduserdetails() {
-    this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
+    this.userService.getUser(firebase.auth().currentUser.uid).subscribe((res: User) => {
       this.currentUser = res;
     })
   }
@@ -48,10 +48,8 @@ export class UserProfilePage {
   }
 
   onSubmit(event: Event): void {
-    event.preventDefault();
-
+    event.preventDefault()
     this.editUser();
-
   }
 
   onMeusAnuncios() {

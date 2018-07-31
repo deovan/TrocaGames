@@ -16,6 +16,7 @@ import { AuthService } from '../../providers/auth/auth';
 import { EmailValidator } from '../../validators/email';
 import { EmailSignInComponent } from '../../components/email-sign-in/email-sign-in';
 import { EmailSignUpComponent } from '../../components/email-sign-up/email-sign-up';
+import { NativeStorage } from "@ionic-native/native-storage";
 
 
 @Component({
@@ -85,9 +86,9 @@ export class LoginPage {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     public authService: AuthService,
+    private nativeStorage: NativeStorage,
     public emailValidator: EmailValidator,
-    formBuilder: FormBuilder,
-    public modalCtrl: ModalController
+    formBuilder: FormBuilder
   ) {
     this.loginForm = formBuilder.group({
       email: [
@@ -104,11 +105,11 @@ export class LoginPage {
   ionViewCanEnter() {
     this.menu.enable(false);
   }
+
   goToSignup(): void {
     this.navCtrl.push(SignupPage);
   }
 
-  // goToResetPassword(): void {
   presentPrompt() {
     let alert = this.alertCtrl.create({
       title: 'Enviar email de recuperação',
@@ -149,10 +150,8 @@ export class LoginPage {
     });
     alert.present();
   }
-  // this.navCtrl.push(ResetPasswordPage);
-  // }
 
-  async loginUser(): Promise<void> {
+  loginUser() {
     if (!this.loginForm.valid) {
       console.log(
         `Form is not valid yet, current value: ${this.loginForm.value}`
@@ -161,28 +160,37 @@ export class LoginPage {
       const loading: Loading = this.loadingCtrl.create({
         spinner: 'dots'
       });
-      loading.present();
-
-      const email = this.loginForm.value.email;
-      const password = this.loginForm.value.password;
-
-      try {
-        const loginUser: firebase.User = await this.authService.loginUser(
+      loading.present().then(()=>{
+        const email = this.loginForm.value.email;
+        const password = this.loginForm.value.password; this.authService.loginUser(
           email,
           password
-        );
-        await loading.dismiss();
-        this.navCtrl.setRoot(HomePage);
-      } catch (error) {
-        await loading.dismiss();
-        const alert: Alert = this.alertCtrl.create({
-          message: error.message,
-          buttons: [{ text: 'Ok', role: 'cancel' }]
+        ).then((user) => {
+          this.nativeStorage.setItem('user', { nome: `${user.displayName}`, email: `${user.email}`, fone: `${user.uid}` })
+            .then(
+            () => console.log('Stored item!'),
+            error => console.error('Error storing item', error)
+            );
+          loading.dismiss();
+          this.navCtrl.setRoot(HomePage);
+        }).catch((error) => {
+          loading.dismiss();
+          const alert: Alert = this.alertCtrl.create({
+            message: error.message,
+            buttons: [{ text: 'Ok', role: 'cancel' }]
+          });
+          alert.present();
         });
-        alert.present();
-      }
+
+
+
+
+
+
+      });
     }
   }
+
 
   resetPassword(email: string) {
     const loading: Loading = this.loadingCtrl.create({
@@ -235,7 +243,7 @@ export class LoginPage {
 
 
 
-  
+
 
 
 }

@@ -18,9 +18,9 @@
         <i class="em em--1"></i>
     </p>
   </div>
-  <ion-list>
-    <ion-item-sliding *ngFor="let chat of chats |  orderBy: order:reverse " (click)="buddychat(chat)">
-      <ion-item>
+  <ion-list  >
+    <ion-item-sliding *ngFor="let chat of chats |  orderBy: order:reverse ">
+      <ion-item  (click)="buddychat(chat)">
         <ion-avatar item-start>
           <img [src]="chat?.foto ||  'assets/imgs/no-image-available.jpg'">
         </ion-avatar>
@@ -35,7 +35,7 @@
 
       </ion-item>
       <ion-item-options>
-        <button ion-button color=danger (click)="deleteChat(chat)">
+        <button ion-button color=danger (click)="excluirChat(chat)">
           <ion-icon name="trash"></ion-icon>
           Excluir
         </button>

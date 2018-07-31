@@ -1,3 +1,4 @@
+import { Base64 } from '@ionic-native/base64';
 import { Observable } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 import { Camera } from '@ionic-native/camera';
@@ -16,7 +17,6 @@ import { BaseService } from '../base/base.service';
 import { map } from '@firebase/util';
 
 
-declare var window: any;
 
 @Injectable()
 export class JogoService extends BaseService {
@@ -35,7 +35,7 @@ export class JogoService extends BaseService {
   lastKey: any = '';
   finished = false;
 
-  constructor( @Inject(FirebaseApp) public firebaseApp: any, ) {
+  constructor( @Inject(FirebaseApp) public firebaseApp: any, public base64: Base64) {
     super();
   }
 
@@ -62,9 +62,7 @@ export class JogoService extends BaseService {
   }
 
   save(jogo: Jogo): PromiseLike<any> {
-
     return this.firedataJogo.push(jogo)
-
   }
 
   userExistsCallback(userId, exists) {
@@ -78,12 +76,14 @@ export class JogoService extends BaseService {
   getJogo(jogoKey: string): Promise<any> {
     var jogo;
     return new Promise<any>((resolve, reject) => {
-      return this.firedataJogo.child(jogoKey).on(('value'), data => {
+      this.firedataJogo.child(jogoKey).on(('value'), data => {
         if (data.val() !== null) {
           let item = data.val()
           item.key = data.key
           jogo = item
           resolve(jogo)
+        } else {
+          reject(false)
         }
       })
     })
@@ -183,43 +183,43 @@ export class JogoService extends BaseService {
       .catch(this.handlePromiseError);
   }
 
-  uploadPhoto(file: string, jogoId: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      this.makeFileIntoBlob(file)
-        .then((fileBlob) => {
-          this.uploadToFirebase(fileBlob, jogoId).then((url) => {
-            console.log('url', url);
-            resolve(url)
-          })
-        })
-    })
+  uploadPhoto64(file: string, jogoId: string): Promise<string> {
+    return this.makeFileIntoBase64(file)
+      .then(imgBase64 => this.uploadToFirebaseImg64(imgBase64, jogoId))
+      .then(url => url)
+      .catch(this.handlePromiseError)
   }
 
-  uploadToFirebase(imgBlob: any, jogoId: string): Promise<string> {
-    var randomNumber = Math.floor(Math.random() * 256);
-    console.log('Random number : ' + randomNumber);
-    return new Promise((resolve, reject) => {
-      let storageRef = firebase.storage().ref(this.basePath + `/${jogoId}/` + randomNumber + '.jpg');//Firebase storage main path
-      let metadata: firebase.storage.UploadMetadata = {
-        contentType: 'image/jpeg',
-      };
-      return storageRef.put(imgBlob, metadata)
-        .then((uploadTask) => {
-          let uploadProgress = Math.round((uploadTask.bytesTransferred / uploadTask.totalBytes) * 100)
-          console.log(uploadProgress);
-          resolve(uploadTask.downloadURL);
-        });
-    })
+  makeFileIntoBase64(imagePath): Promise<string> {
+    return this.base64.encodeFile(imagePath).then((base64File: string) => {
+      console.log(base64File)
+      return base64File;
+    }, this.handlePromiseError);
   }
+
+
+  uploadToFirebaseImg64(img64: string, jogoId: string): Promise<string> {
+    var randomNumber = Math.floor(Math.random() * 256);
+    let storageRef = firebase.storage().ref(this.basePath + `/${jogoId}/` + randomNumber + '.jpg');//Firebase storage main path
+    let metadata: firebase.storage.UploadMetadata = {
+      contentType: 'image/jpeg',
+    };
+    console.log('uptoFirebase');
+    return storageRef.putString(img64, 'data_url', metadata)
+      .then((uploadTask) =>
+        // let uploadProgress = Math.round((uploadTask.bytesTransferred / uploadTask.totalBytes) * 100)
+        uploadTask.downloadURL
+      ).catch(error => this.handlePromiseError);
+  }
+
 
   public removeFile(fullPath: string) {
     let storageRef = this.firebaseApp.storage().ref();
     return storageRef.child(fullPath).delete();
   }
 
-  public removeAnuncio(jogo: Jogo) {
-    console.log('key', jogo);
-    var path = firebase.storage().ref(this.basePath + `/${jogo.key}`);
+  public removeAnuncio(jogo: Jogo): Promise<any> {
+    let path = firebase.storage().ref(this.basePath + `/${jogo.key}`);
     if (!jogo.fotos) {
       return firebase.database().ref(`/jogos/${jogo.key}`)
         .remove()
@@ -249,7 +249,6 @@ export class JogoService extends BaseService {
         console.log('catching', error);
       }
     }
-
   }
 }
 
@@ -260,7 +259,5 @@ export const snapshotToArray = snapshot => {
     item.key = childSnapshot.key;
     returnArr.push(item);
   });
-  console.log(returnArr);
-
   return returnArr;
 };

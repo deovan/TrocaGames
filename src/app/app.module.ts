@@ -6,14 +6,14 @@ import { JogoService } from './../providers/jogo/jogo.service';
 import { IonicErrorHandler } from 'ionic-angular';
 import { ErrorHandler } from '@angular/core';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
+import { NativeStorage } from '@ionic-native/native-storage';
+import { Base64 } from '@ionic-native/base64';
 
 import { Geolocation } from '@ionic-native/geolocation'
 import { File } from '@ionic-native/file';
 import { Network } from '@ionic-native/network';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 import { NativeGeocoder } from '@ionic-native/native-geocoder';
-import { PreloaderService } from './../providers/preloader/preloader.service';
 import { HTTP } from '@ionic-native/http';
 import { FilePath } from '@ionic-native/file-path';
 import { FileTransfer } from '@ionic-native/file-transfer';
@@ -112,6 +112,7 @@ import { CurrencyFormatPipe } from "../pipes/currency-format/currency-format";
   providers: [
     AdMobFree,
     AuthService,
+    Base64,
     CurrencyPipe,
     Camera,
     CameraService,
@@ -125,15 +126,13 @@ import { CurrencyFormatPipe } from "../pipes/currency-format/currency-format";
     HTTP,
     MessageService,
     NativeGeocoder,
+    NativeStorage,
     Network,
-    PreloaderService,
     ScreenOrientation,
     StatusBar,
     SplashScreen,
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-
     UserService,
-
   ]
 })
 export class AppModule { }

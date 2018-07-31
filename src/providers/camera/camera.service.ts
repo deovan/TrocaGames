@@ -16,54 +16,8 @@ export class CameraService {
     public file: File,
     public filePath: FilePath,
     public loadingCtrl: LoadingController,
-    public platform: Platform,
-    public toastCtrl: ToastController,
-    public transfer: FileTransfer) {
+    public platform: Platform) {
   }
-  onUpload(): void {
-    let serverURL: string = 'https://node-file-upload-ionic3.now.sh';
-    let options: FileUploadOptions = {
-      fileKey: 'photo',
-      fileName: this.photo.name,
-      chunkedMode: false,
-      mimeType: 'multipart/form-data',
-      params: {
-        upload: new Date().getTime()
-      }
-    };
-
-    const fileTransfer: FileTransferObject = this.transfer.create();
-
-    let loading: Loading = this.loadingCtrl.create({
-      spinner: 'dots'
-    });
-
-    loading.present();
-
-    fileTransfer.upload(this.photo.nativeURL, `${serverURL}/upload`, options)
-      .then((data: FileUploadResult) => {
-
-        this.showToast('Imagem carregada com sucesso!');
-        console.log('Upload to: ', `${serverURL}/upload/${this.photo.name}`);
-        loading.dismiss();
-
-      }).catch((error: FileTransferError) => {
-
-        this.showToast('Error while uploading file');
-        console.log('Error while uploading file: ', error);
-        loading.dismiss();
-      });
-  }
-
-  private showToast(message: string): void {
-    this.toastCtrl.create({
-      message: message,
-      duration: 3000,
-      position: 'top'
-    }).present()
-  }
-
-
 
   private correctPathAndGetFileName(fileUri: string, sourceType: number): Promise<void | { oldFilePath: string, oldFileName: string }> {
 
@@ -85,7 +39,6 @@ export class CameraService {
       oldFilePath: fileUri.substr(0, fileUri.lastIndexOf('/') + 1),
       oldFileName: fileUri.substr(fileUri.lastIndexOf('/') + 1)
     });
-
   }
 
   private createNewFileName(oldFileName: string): string {
@@ -96,11 +49,8 @@ export class CameraService {
   public saveFile(fileUri: string, sourceType: number): Promise<Entry | void> {
     return this.correctPathAndGetFileName(fileUri, sourceType)
       .then((data: { oldFilePath: string, oldFileName: string }) => {
-
         return this.file.copyFile(data.oldFilePath, data.oldFileName, this.file.dataDirectory, this.createNewFileName(data.oldFileName))
           .catch(err => console.log('Erro ao copiar arquivo: ', err));
-
       }).catch(err => console.log('Erro na chamada do método correctPathAndGetFileName', err));
   }
-
 }

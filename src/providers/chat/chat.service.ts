@@ -1,23 +1,18 @@
-import { Observable } from 'rxjs/Observable';
-import { Message } from './../../todo/message.model';
-
-
+import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFireDatabase } from 'angularfire2/database';
+import { Events, NavController } from 'ionic-angular';
+import { FirebaseObjectObservable } from 'angularfire2/database-deprecated';
+import firebase from 'firebase'
+import { Http } from "@angular/http";
 import { Injectable } from "@angular/core";
+import { Observable } from 'rxjs/Observable';
+
 import { BaseService } from "../base/base.service";
 import { ChatModel } from "../../todo/chat.model";
-import { Http } from "@angular/http";
-import { AngularFireAuth } from 'angularfire2/auth';
-import { importExpr } from '@angular/compiler/src/output/output_ast';
-
-import firebase from 'firebase'
-import { FirebaseObjectObservable } from 'angularfire2/database-deprecated';
-import { Events, NavController } from 'ionic-angular';
-
+import { Message } from './../../todo/message.model';
 
 @Injectable()
 export class ChatService extends BaseService {
-
   firechats = firebase.database().ref('/chats');
   firemessagens: any;
   jogo: any;
@@ -39,11 +34,8 @@ export class ChatService extends BaseService {
     this.sendTo = jogoSender;
   }
 
-
-
   getChatsUser(): Observable<any> {
     let userId = firebase.auth().currentUser.uid;
-
     return new Observable<any>((observable) => {
       this.firechats.child(userId).on('value', dataSnapshot => {
         var temp = [];
@@ -125,15 +117,12 @@ export class ChatService extends BaseService {
     }
   }
 
-  deleteChatUser(sender: any, key: string): any {
-    this.firechats.child(this.currentUser).child(sender).child(key).remove()
+  deleteChatUser(sender: any, key: string): Promise<any> {
+    return this.firechats.child(this.currentUser).child(sender).child(key).remove()
   }
 
   getbuddymessages(userId1: string, userId2: string) {
-
     return new Observable<Message[]>((observer) => {
-
-
       if (userId1 === this.jogo.user) {
         this.firemessagens = firebase.database().ref(`/mensagens/${userId2}-${userId1}${this.jogo.key}`)
       } else {
@@ -147,11 +136,8 @@ export class ChatService extends BaseService {
         for (var tempkey in temp) {
           this.buddymessages.push(temp[tempkey]);
         }
-        // this.events.publish('newMessage');
         observer.next(this.buddymessages);
       });
-
-
     });
   }
 }

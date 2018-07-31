@@ -21,46 +21,42 @@
 
   <form *ngIf="canEdit" #profileForm="ngForm">
     <ion-item>
-      <ion-icon name="person" item-left></ion-icon>
-      <ion-input type="text" placeholder="Nome" name="name" [(ngModel)]="currentUser.name" required minlenght="3">
+      <ion-label floating> Nome</ion-label>
+      <ion-input type="text" name="name" [(ngModel)]="currentUser.name" required minlenght="3" required="true">
       </ion-input>
     </ion-item>
-    <ion-item>
-      <ion-icon name="at" item-left></ion-icon>
-      <ion-input type="text" placeholder="Username" disabled="true" name="username" [(ngModel)]="currentUser.email" required="false" minlenght="3">
-      </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-icon ios="ios-call" md="md-call" item-left></ion-icon>
-      <ion-input type="tel" placeholder="Telefone" name="telefone"[(ngModel)]="currentUser.telefone" required="false"  maxlength="15" pattern="\([0-9]{2}\) [0-9]{4,6}-[0-9]{3,4}$" >
-      </ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-icon ios="ios-home" md="md-home" item-left></ion-icon>
-      <ion-input (ionBlur)="buscarCep($event)"  name="cep" type="text" [(ngModel)]="currentUser.cep" required="false"  placeholder="Cep">
-      </ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-icon ios="ios-home" md="md-home" item-left></ion-icon>
-      <ion-input placeholder="Cidade" name="cidade"  type="text" [(ngModel)]="currentUser.cidade" required="false"  readonly="true">
-      </ion-input>
-    </ion-item>
-    <!-- <ion-item>
-      <ion-icon name="image" item-left></ion-icon>
-      <input type="file" accept="image/*" (change)="onPhoto($event)">
-    </ion-item> -->
-
-
-    <!-- <progress-bar *ngIf="uploadProgress" [progress]="uploadProgress"></progress-bar> -->
-
-
     <br>
-
-    <button ion-button block light  (click)="onSubmit($event)" [disabled]="!profileForm.form.invalid"> Salvar</button>
-
+    <ion-item>
+      <ion-label floating> Username</ion-label>
+      <ion-input type="text"  disabled="true" name="username" [(ngModel)]="currentUser.email" required="true"
+        minlenght="3">
+      </ion-input>
+    </ion-item>
+    <br>
+    <ion-item>
+      <ion-label floating> Telefone</ion-label>
+      <ion-input type="tel"  name="telefone" [(ngModel)]="currentUser.telefone" required="true" maxlength="15"
+        pattern="\([0-9]{2}\) [0-9]{4,6}-[0-9]{3,4}$">
+      </ion-input>
+    </ion-item>
+    <br>
+    <ion-label> Você está em:</ion-label>
+    <ion-item>
+      <ion-label floating> CEP</ion-label>
+      <ion-input (ionBlur)="buscarCep($event)" name="cep" type="text" [(ngModel)]="currentUser.cep" required="true">
+      </ion-input>
+    </ion-item>
+    <br>
+    <ion-item>
+      <ion-label floating> Cidade</ion-label>
+      <ion-input  [(ngModel)]="currentUser.cidade" name="cidade" readonly="false" type="text" required="true">
+      </ion-input>
+    </ion-item>
+    <!-- <progress-bar *ngIf="uploadProgress" [progress]="uploadProgress"></progress-bar> -->
+    <br>
+    <button ion-button block  (click)="onSubmit($event)" [disabled]="!profileForm.form.invalid"> Salvar</button>
   </form>
 
-  <button ion-button block (click)="onMeusAnuncios()"> Meus Anúncios</button>
+  <button ion-button block *ngIf="!canEdit" (click)="onMeusAnuncios()"> Meus Anúncios</button>
 
 </ion-content>

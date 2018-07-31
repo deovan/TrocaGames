@@ -1,3 +1,4 @@
+import { NativeStorage } from '@ionic-native/native-storage';
 import { InserirAnuncioPage } from './../inserir-anuncio/inserir-anuncio';
 import { AnuncioDetalhesPage } from './../anuncio-detalhes/anuncio-detalhes';
 import firebase from 'firebase';
@@ -9,7 +10,7 @@ import { Component } from '@angular/core';
 import { AuthService } from "../../providers/auth/auth";
 import { AdMobFree, AdMobFreeBannerConfig } from "@ionic-native/admob-free";
 import { JogoService } from "../../providers/jogo/jogo.service";
-import { PreloaderService } from "../../providers/preloader/preloader.service";
+import { PopoverComponent } from "../../components/popover/popover";
 
 @Component({
   templateUrl: 'home.html'
@@ -22,20 +23,14 @@ export class HomePage {
   canSearch: boolean = false
   currentUser = ''
   // private _someListener: Subscription = new Subscription()
-
-
   constructor(
     public authService: AuthService,
     public admob: AdMobFree,
-
     private _jogoService: JogoService,
-    private _LOADER: PreloaderService,
     public loadingCtrl: LoadingController,
     public menu: MenuController,
     public navCtrl: NavController,
-    // public geolocation: Geolocation,
-    // private nativeGeocoder: NativeGeocoder,
-    // public popoverCtrl: PopoverController,
+    public nativeStorage: NativeStorage,
     public toastCtrl: ToastController) {
     this.currentUser = firebase.auth().currentUser.uid
     menu.enable(true)
@@ -43,33 +38,16 @@ export class HomePage {
       useLocale: true,
       maxResults: 5
     };
-
-    // geolocation.getCurrentPosition().then((resp) => {
-    //   console.log('resp',resp);
-
-    //   // resp.coords.latitude
-    //   // resp.coords.longitude
-    //  }).catch((error) => {
-    //    console.log('Error getting location', error);
-    //  });
-
-    // this.nativeGeocoder.reverseGeocode(-23.2813634,-51.1812797, options)
-    //   .then((result: NativeGeocoderReverseResult[]) => console.log(JSON.stringify(result[0])))
-    //   .catch((error: any) => console.log(error));
-
-    // this.nativeGeocoder.forwardGeocode('Berlin', options)
-    //   .then((coordinates: NativeGeocoderForwardResult[]) => console.log('The coordinates are latitude=' + coordinates[0].latitude + ' and longitude=' + coordinates[0].longitude))
-    //   .catch((error: any) => console.log(error));
   }
 
 
-  // presentPopover(myEvent) {
+  presentPopover(myEvent) {
 
-  //   let popover = this.popoverCtrl.create(PopoverComponent);
-  //   popover.present({
-  //     ev: myEvent
-  //   });
-  // }
+    // let popover = this.popoverCtrl.create(PopoverComponent);
+    // popover.present({
+    //   ev: myEvent
+    // });
+  }
 
   ionViewDidLoad() {
     this.showBanner();
@@ -78,6 +56,11 @@ export class HomePage {
     this._jogoService.finished = false
     this.initializeItems()
     // console.log('consoles', this._jogoService.getConsoles())
+    this.nativeStorage.getItem('user')
+      .then(
+      data => console.log(data.nome, data.email),
+      error => console.error(error)
+      );
 
 
   }
@@ -171,9 +154,6 @@ export class HomePage {
     this.admob.banner.config(bannerConfig)
     this.admob.banner.prepare().then(() => {
     }).catch(e => console.log(e))
-
-
-
   }
 
   private showToast(message: string): void {

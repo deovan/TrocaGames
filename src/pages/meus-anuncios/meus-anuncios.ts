@@ -70,11 +70,12 @@ export class MeusAnunciosPage {
           }
         },
         {
+          cssClass: 'alertDanger',
           text: 'Confirmar',
           handler: () => {
             this.deleteAnuncio(todo);
           },
-          cssClass: '.alertDanger'
+          
         }
       ]
     });

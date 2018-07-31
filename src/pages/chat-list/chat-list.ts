@@ -31,33 +31,55 @@ export class ChatListPage {
   }
 
   buddychat(chat) {
-    console.log('aqeui');
     this.jogoService.getJogo(chat.key).then((jogoP) => {
       let jogoDados = jogoP;
-      if (jogoP === false) {
-        this.presentConfirm("O anúncio foi removido. Deseja excluir a conversa?", chat)
-      } else {
-        console.log('jogo', jogoP);
-        this.chatService.initializebuddy(jogoDados, chat.sender);
-        this.navCtrl.push(ChatPage, {
-          jogo: jogoDados,
-          sender: chat.sender
-        });
-      }
+      this.chatService.initializebuddy(jogoDados, chat.sender);
+      this.navCtrl.push(ChatPage, {
+        jogo: jogoDados,
+        sender: chat.sender
+      });
+    }, err => {
+      this.presentConfirm(chat, "O anúncio foi removido. Deseja excluir a conversa?", "Anúncio Removido")
     }).catch((error) => {
-
+      console.log(error);
     })
   }
 
-  deleteChat(chat: any) {
-    console.log('chat a deletar', chat);
-    this.chatService.deleteChatUser(chat.sender,chat.key);
+  excluirChat(chat: any) {
+    let alert = this.alertCtrl.create({
+      title: 'Excluir',
+      cssClass: 'color:red',
+      message: 'Deseja exluir?',
+      buttons: [
+        {
+          text: 'Não',
+          role: 'nao',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Sim',
+          handler: () => {
+            this.deleteChat(chat)
+            console.log('Buy clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
 
-  presentConfirm(msg: String, chat: any) {
+  deleteChat(chat: any) {
+    console.log('chat a deletar', chat);
+    this.chatService.deleteChatUser(chat.sender, chat.key);
+  }
+
+
+  presentConfirm(chat: any, msg: String, title?: string) {
     let alert = this.alertCtrl.create({
-      title: 'Anúncio Removido',
+      title: title ? title : 'Anúncio Removido',
       cssClass: 'color:red',
       message: '' + msg,
       buttons: [

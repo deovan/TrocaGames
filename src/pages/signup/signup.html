@@ -62,14 +62,11 @@
     <ion-label> Você está em:</ion-label>
     <ion-item>
       <ion-label floating> Cidade</ion-label>
-      <ion-input  formControlName="cidade" readonly="true" type="text" [value]="localization?.locality">
+      <ion-input  formControlName="cidade" readonly="false" type="text" [value]="localization?.locality">
       </ion-input>
-
     </ion-item>
 
     <!-- <input type="text" pattern="\(\d{2}\)\d{4}-\d{4}" /> -->
-
-
     <br>
     <button ion-button block type="submit" [disabled]="!signupForm.valid">
       Cadastrar!

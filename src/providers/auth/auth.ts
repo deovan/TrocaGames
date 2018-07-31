@@ -13,27 +13,14 @@ export class AuthService extends BaseService {
     super();
   }
 
-  
   loginUser(email: string, password: string): Promise<User> {
     this.emailUser = email;
     return firebase.auth().signInWithEmailAndPassword(email, password);
   }
 
-  async signupUser(email: string, password: string): Promise<User> {
-    try {
-      const newUser: User = await firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-
-      await firebase
-        .database()
-        .ref(`/users/${newUser.uid}/email`)
-        .set(email);
-      await firebase
-      return newUser;
-    } catch (error) {
-      throw error;
-    }
+  signupUser(email: string, password: string): Promise<any> {
+    return firebase.auth()
+      .createUserWithEmailAndPassword(email, password)
   }
 
   logout(): Promise<void> {
@@ -49,7 +36,6 @@ export class AuthService extends BaseService {
     return new Promise((resolve, reject) => {
       auth.authState.first().subscribe((authState: firebase.User) => {
         (authState) ? resolve(true) : reject(false);
-
       });
     });
   }

@@ -1,3 +1,4 @@
+import { map } from '@firebase/util';
 import { CurrencyPipe } from '@angular/common';
 import { AuthService } from './../../providers/auth/auth'
 import { auth } from 'firebase/app'
@@ -61,7 +62,6 @@ export class InserirAnuncioPage {
     public userService: UserService,
     private currencyPipe: CurrencyPipe
   ) {
-    this.loaduserdetails()
     this._imageViewerCtrl = imageViewerCtrl
     this.newAnuncio = formBuilder.group({
       'nome': [
@@ -93,26 +93,28 @@ export class InserirAnuncioPage {
     })
   }
 
+  ionViewDidLoad(){
+    this.loadUserDetails()
+  }
+
   ionViewWillLeave() {
     this.qtdPhotos = 0
     this.photo = []
   }
 
-  loaduserdetails() {
-    this.userService.getuserdetails(firebase.auth().currentUser.uid).subscribe((res: User) => {
+  loadUserDetails() {
+    this.userService.getUser(firebase.auth().currentUser.uid).subscribe((res: User) => {
       this.currentUser = res
     })
   }
 
-  async save() {
+  save() {
     if (!this.newAnuncio.valid) {
       console.log(`Form is not valid yet, current value: ${this.newAnuncio.value}`)
     } else {
-
       const loading: Loading = this.loadingCtrl.create({
         spinner: 'dots'
       })
-
       loading.present().then(() => {
         this.jogo = new Jogo(
           firebase.auth().currentUser.uid,
@@ -128,15 +130,19 @@ export class InserirAnuncioPage {
           this.venda,
         )
         console.log(this.jogo);
+
         this.jogoService.save(this.jogo).then((value) => {
           console.log('value confirmado', value.key);
-          var key = value.key;
+          ;
           if (this.photo.length > 0) {
-            this.uploadToStorage(key, this.photo).then(() => {
-              loading.dismiss()
-              this.showToast('Anúncio Cadastrado com Sucesso!')
-              this.showBannerInterstitial();
-              this.navCtrl.setRoot(HomePage);
+            console.log('entrou');
+            this.uploadToStorage(value.key, this.photo).then(() => {
+              this.jogoService.update(this.jogo, value.key).then(() => {
+                loading.dismiss()
+                this.showToast('Anúncio Cadastrado com Sucesso!')
+                this.showBannerInterstitial();
+                this.navCtrl.setRoot(HomePage);
+              })
             }).catch((error) => {
               console.log(error)
               loading.dismiss()
@@ -149,7 +155,6 @@ export class InserirAnuncioPage {
             this.showBannerInterstitial();
             this.navCtrl.setRoot(HomePage);
           }
-
         }), (error => {
           console.log()
           loading.dismiss()
@@ -161,16 +166,7 @@ export class InserirAnuncioPage {
 
     }
   }
-  myModelVariable = '';
-  getCurrency(amount: string) {
-    console.log('amout', amount);
-    this.myModelVariable = amount
-    // this.myModelVariable = amount.replace(/[^\d\.]/g ,'');
-    let v = amount.replace("R$", "")
-    console.log('v', v);
-    // this.myModelVariable =  this.currencyPipe.transform(v, 'BRL', true, '3.2-2');
-    console.log('new:', this.myModelVariable);
-  }
+
   showBannerInterstitial() {
     let bannerConfig: AdMobFreeInterstitialConfig = {
       /**
@@ -194,22 +190,19 @@ export class InserirAnuncioPage {
   }
 
   uploadToStorage(key: string, fotos: string | string[]): Promise<any> {
-    return new Promise((resolve, reject) => {
-      this.photo.reduce((vl, valueC, index) => {
-        this.jogoService.uploadPhoto(valueC, key).then((value) => {
-          this.jogo.fotos.push(value);
-          if (index === this.photo.length - 1) {
-           return this.uploadToDatabase(key, this.jogo).then(() => {
-              this.showToast('Anúncio Cadastrado com Sucesso!')
-              resolve();
-            })
-          }
-        }).catch((error) => reject(error))
-      }, 0)
+    let p: Array<any> = [];
+    this.photo.forEach((valueC, index) => {
+      p.push(this.jogoService.uploadPhoto64(valueC, key)
+        .then(value => this.jogo.fotos.push(value))
+        .catch((error) => {
+          console.log(error);
+          
+          this.showAlert(error)
+        }))
     })
-
+    return Promise.all(p).then(v => { return Promise.resolve('ok') })
+    .catch(error => console.log('promiseAll',error));
   }
-
 
   getQtdFotos() {
     if (this.qtdPhotos > 3) return false
@@ -268,8 +261,6 @@ export class InserirAnuncioPage {
       mediaType: 0,
       allowEdit: false
     }
-
-
     this.camera.getPicture(cameraOptions)
       .then((fileUri: string) => {
         this.cameraService.saveFile(fileUri, sourceType)
@@ -284,7 +275,7 @@ export class InserirAnuncioPage {
 
   private uploadToDatabase(key: string, jogo: Jogo) {
     return this.jogoService.update(jogo, key).then((valor) => {
-    }).catch((error) => alert(error))
+    }).catch((error) => this.showAlert(error))
   }
 
   private showToast(message: string): void {

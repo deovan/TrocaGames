@@ -22,6 +22,7 @@
     "@angular/platform-browser": "5.0.3",
     "@angular/platform-browser-dynamic": "5.0.3",
     "@ionic-native/admob-free": "^4.10.1",
+    "@ionic-native/base64": "^4.11.0",
     "@ionic-native/camera": "^4.10.1",
     "@ionic-native/core": "4.4.0",
     "@ionic-native/file": "^4.10.1",
@@ -31,6 +32,7 @@
     "@ionic-native/geolocation": "^4.10.1",
     "@ionic-native/http": "^4.10.1",
     "@ionic-native/native-geocoder": "^4.10.1",
+    "@ionic-native/native-storage": "^4.10.1",
     "@ionic-native/network": "^4.10.1",
     "@ionic-native/screen-orientation": "^4.10.1",
     "@ionic-native/splash-screen": "4.4.0",
@@ -40,6 +42,7 @@
     "brmasker-ionic": "^1.0.12",
     "brmasker-ionic-3": "^1.0.8",
     "cep-promise": "^3.0.0",
+    "com-badrit-base64": "^0.2.0",
     "cordova-admob-sdk": "^0.17.0",
     "cordova-android": "~7.0.0",
     "cordova-plugin-admob-free": "^0.17.0",
@@ -100,7 +103,9 @@
       "cordova-plugin-geolocation": {
         "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
       },
-      "cordova-plugin-screen-orientation": {}
+      "cordova-plugin-screen-orientation": {},
+      "cordova-plugin-nativestorage": {},
+      "com-badrit-base64": {}
     }
   }
 }
